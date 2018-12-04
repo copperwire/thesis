@@ -1,0 +1,38 @@
+\documentclass{uiofysmaster}
+\usepackage[english]{babel}
+
+\usepackage{amsmath}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+% set space around equations
+\setlength{\belowdisplayskip}{12pt} \setlength{\belowdisplayshortskip}{12pt}
+\setlength{\abovedisplayskip}{12pt} \setlength{\abovedisplayshortskip}{12pt}
+
+\usepackage{amssymb}
+\usepackage{import}
+
+
+% \usepackage{biblatex}
+\usepackage{natbib}
+
+\author{Robert Solli}
+\title{Modern Machine Learning Algorithms: Applications in Nuclear Physics}
+
+\begin{document}
+\maketitle
+
+
+\subimport*{abstract/}{abstract.tex}
+\subimport*{introduction/}{introduction.tex}
+
+\subimport*{theory/}{theory.tex}
+\subimport*{theory/neural_network/}{neural_network.tex}
+\subimport*{theory/autoencoder/}{autoencoder.tex}
+
+% \bibliographystyle{te}
+\bibliographystyle{dinat}
+\bibliography{link.bib}
+
+\end{document}

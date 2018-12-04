@@ -102,3 +102,15 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+# auxilliary files
+*.aux
+*.bbl
+*.bcf
+*.fdb_latexmk
+*.fls
+
+#output
+*.out
+*run.xml

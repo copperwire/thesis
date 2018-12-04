@@ -1,0 +1,33 @@
+\section{Autoencoder}
+An Autoencoder is an attempt at learning a directed reconstruction model of some input.
+The simplest possible such model is a neural network composed of two parts; an encoder and a decoder.
+Where the encoder is in general a non linear map $\psi$
+
+\begin{align*}
+  \psi: \mathcal{X} \rightarrow \mathcal{Z}
+\end{align*}
+
+\noindent Where $\mathcal{X} $ and $\mathcal{Z}$ are arbitrary vector spaces with $\text{dim}(\mathcal{X}) > \text{dim}(\mathcal{Z})$.
+The second part of the network is the decoder that maps back to the original space.
+
+
+\begin{align*}
+  \phi: \mathcal{Z} \rightarrow \mathcal{X}
+\end{align*}
+
+\noindent The objective is then to find the configuration of the two maps $\phi$ and $\psi$
+that gives the best possible reconstruction, i.e the objective $\mathcal{O}$ is given as
+
+\begin{align}\label{eq:objective_autoenc}
+  \mathcal{O} = \argmin_{\phi, \psi} || X - \phi \circ \psi(X)||^2
+\end{align}
+
+\noindent As the name implies the encoder creates a lower-dimensional "encoded" representation of the input.
+This representation can be useful for identifying the information-carrying variations
+in the data. This can be thought of as an analogue to Principal Component Analysis (PCA)\cite{Marsland2009}.
+More recently the Machine Learning community discovered that the decoder part of the network could be used for generating
+new samples form the sample distribution, dubbed "Variational Autoencoders" they are among the most useful generative algorithms in modern machine learning.
+
+\subsection{Variational Autoencoder}
+
+Originally presented by \citet{Kingma2013} the variational autoencoder is a twist upon the traditional
