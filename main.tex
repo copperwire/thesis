@@ -1,7 +1,8 @@
 \documentclass{uiofysmaster}
-\usepackage[english]{babel}
-
+\usepackage[UKenglish]{babel}
+\usepackage{tikz}
 \usepackage{amsmath}
+\usepackage{float}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -12,6 +13,12 @@
 
 \usepackage{amssymb}
 \usepackage{import}
+
+% defined commands
+\newcommand{\inner}[2]{\langle #1 | #2 \rangle}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\wij}{W_{ij}}
+\newcommand{\loss}{\mathcal{L}}
 
 
 % \usepackage{biblatex}
