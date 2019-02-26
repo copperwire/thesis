@@ -12,6 +12,9 @@
         "builder": "thesisBuilder",
         "builder_path": "User/LaTeXTools-Builders",
         "builder_settings": {
-            "options": "--shell-escape"}
+            "options": "--shell-escape"},
+
+        "spell_check": true,
+        "dictionary": "Packages/Language - English/en_US.dic"
     }
 }
