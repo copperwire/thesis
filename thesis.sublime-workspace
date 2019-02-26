@@ -1,0 +1,375 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main.tex",
+			"settings":
+			{
+				"buffer_size": 1071,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "% !TEX spellckeck=en_GB\n\n\\section{Neural networks}\n\nWhile the basis for the modern neural network was laid more than a hundred years ago in the late 1800's what we think of in modern terms was proposed by \\citet{McCulloch1943}. They propose a computational structure that acts in a fashion like a human neuron. That is it takes input from multiple sources,weights that input and produces an activation if the signal is strong enough. These lose definitions will be made more mathematically clear but for the moment we stick with the simple intuition. Ordinarily a neuron is said to be located in a layer where all the neurons connect to the same input. This layer then produces an output for each neuron in that layer, controlling the output-space of the transformation. A simple illustration of two neurons is provided in figure \\ref{fig:ann_illustration}\n\n\n\\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        \n\n\n\\begin{figure}[h]\n\\centering\n\\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]\n%uncomment if require: \\path (0,300); %set diagram left start at 0, and has height of 300\n\n%Flowchart: Connector [id:dp526297050187353] \n\\draw   (285,88.5) .. controls (285,68.89) and (300.67,53) .. (320,53) .. controls (339.33,53) and (355,68.89) .. (355,88.5) .. controls (355,108.11) and (339.33,124) .. (320,124) .. controls (300.67,124) and (285,108.11) .. (285,88.5) -- cycle ;\n%Flowchart: Connector [id:dp5646385359122916] \n\\draw   (285,187) .. controls (285,167.67) and (300.67,152) .. (320,152) .. controls (339.33,152) and (355,167.67) .. (355,187) .. controls (355,206.33) and (339.33,222) .. (320,222) .. controls (300.67,222) and (285,206.33) .. (285,187) -- cycle ;\n%Flowchart: Connector [id:dp3104075761318521] \n\\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (179,88.5) .. controls (179,82.29) and (184.04,77.25) .. (190.25,77.25) .. controls (196.46,77.25) and (201.5,82.29) .. (201.5,88.5) .. controls (201.5,94.71) and (196.46,99.75) .. (190.25,99.75) .. controls (184.04,99.75) and (179,94.71) .. (179,88.5) -- cycle ;\n%Flowchart: Connector [id:dp15106578289314898] \n\\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (179,187) .. controls (179,180.79) and (184.04,175.75) .. (190.25,175.75) .. controls (196.46,175.75) and (201.5,180.79) .. (201.5,187) .. controls (201.5,193.21) and (196.46,198.25) .. (190.25,198.25) .. controls (184.04,198.25) and (179,193.21) .. (179,187) -- cycle ;\n%Flowchart: Connector [id:dp06829960407828417] \n\\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (179,138) .. controls (179,131.79) and (184.04,126.75) .. (190.25,126.75) .. controls (196.46,126.75) and (201.5,131.79) .. (201.5,138) .. controls (201.5,144.21) and (196.46,149.25) .. (190.25,149.25) .. controls (184.04,149.25) and (179,144.21) .. (179,138) -- cycle ;\n%Straight Lines [id:da16938395812882923] \n\\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ]   (201.5,88.5) -- (283,88.5) ;\n\\draw [shift={(285,88.5)}, rotate = 180] [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;\n\n%Straight Lines [id:da6971592528694486] \n\\draw [color={rgb, 255:red, 87; green, 150; blue, 16 }  ,draw opacity=1 ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ]   (201.5,187) -- (283,187) ;\n\\draw [shift={(285,187)}, rotate = 180] [color={rgb, 255:red, 87; green, 150; blue, 16 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;\n\n%Straight Lines [id:da7906184612815319] \n\\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ]   (201.5,88.5) -- (283.71,185.47) ;\n\\draw [shift={(285,187)}, rotate = 229.71] [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;\n\n%Straight Lines [id:da1362874028964085] \n\\draw [color={rgb, 255:red, 131; green, 15; blue, 29 }  ,draw opacity=1 ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ]   (201.5,138) -- (282.72,96.9) ;\n\\draw [shift={(284.5,96)}, rotate = 513.1600000000001] [color={rgb, 255:red, 131; green, 15; blue, 29 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;\n\n%Straight Lines [id:da569846296368284] \n\\draw [color={rgb, 255:red, 131; green, 15; blue, 29 }  ,draw opacity=1 ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ]   (201.5,138) -- (286.67,176.18) ;\n\\draw [shift={(288.5,177)}, rotate = 204.15] [color={rgb, 255:red, 131; green, 15; blue, 29 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;\n\n%Straight Lines [id:da6518887295694358] \n\\draw [color={rgb, 255:red, 87; green, 150; blue, 16 }  ,draw opacity=1 ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ]   (201.5,187) -- (286.05,106.38) ;\n\\draw [shift={(287.5,105)}, rotate = 496.36] [color={rgb, 255:red, 87; green, 150; blue, 16 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;\n\n%Flowchart: Connector [id:dp5234386771770392] \n\\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (412,99.75) .. controls (412,93.54) and (417.04,88.5) .. (423.25,88.5) .. controls (429.46,88.5) and (434.5,93.54) .. (434.5,99.75) .. controls (434.5,105.96) and (429.46,111) .. (423.25,111) .. controls (417.04,111) and (412,105.96) .. (412,99.75) -- cycle ;\n%Flowchart: Connector [id:dp4431827599012259] \n\\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (412,175.75) .. controls (412,169.54) and (417.04,164.5) .. (423.25,164.5) .. controls (429.46,164.5) and (434.5,169.54) .. (434.5,175.75) .. controls (434.5,181.96) and (429.46,187) .. (423.25,187) .. controls (417.04,187) and (412,181.96) .. (412,175.75) -- cycle ;\n%Straight Lines [id:da8359806786193378] \n\\draw    (355,88.5) -- (410.04,99.36) ;\n\\draw [shift={(412,99.75)}, rotate = 191.16] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;\n\n%Straight Lines [id:da2250239797689928] \n\\draw    (355,187) -- (410.04,176.14) ;\n\\draw [shift={(412,175.75)}, rotate = 528.8399999999999] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;\n\n\n% Text Node\n\\draw (320,88.5) node   {$fx$};\n% Text Node\n\\draw (320,187) node   {$fx$};\n\\end{tikzpicture}\n\\caption{An illustration of the graph constructed by two artificial neurons with three input nodes. Colored lines illustrate that  each of the input nodes are connected to each of the neurons in a manner we denote as fully-connected.}\\label{fig:ann_illustration}\n\\end{figure}\n\n\n\\noindent To formalize this idea let the input be $x \\in \\R^N$, let then the matrix $W \\in \\R^{N \\times D}$ be the representation of the weight matrix forming the connenctions between the input and the artificial neurons. Lastly we define the activation function $f(x)$ as a univariate, monotonic function on $\\R^1$. We will explore this function in some detail later. A layer in a network implements what we will call a forward pass as defined in function \\ref{eq:fwd}.\n\n\\begin{equation}\\label{eq:fwd}\n\\hat{y} = f(\\inner{x}{W}_D)\n\\end{equation}\n\nIn equation \\ref{eq:fwd} the subscript denotes that the function is applied element-wise and we denote the inner product in bra-ket notation with $\\inner{\\cdot}{\\cdot}$. Each node is aditionally associated with a bias node ensuring that even zeroed-cells can encode information. Let the bias for the layer be given as $b \\in \\R^D$ in keeping with the notation above. Equation \\ref{eq:fwd} then becomes as presented in equation \\ref{eq:fwd_b}\n\n\\begin{equation}\\label{eq:fwd_b}\n\\hat{y} = f(\\inner{x}{W}_D) + b\n\\end{equation}\n\nAs a tie to more traditional methods we note that in the face of the identity transform $f(x) = x$ the equation \\ref{eq:fwd_b} becomes the formulation for a linear regression model. In our model the variables that need to be fit are the elements of $W$ that we denote $\\wij$. What remains then is  to formulate a loss function w.r.t the intended output $y$ that we will denote as $\\mathcal{L}(y, \\hat{y}, W)$. Based on whether the output is described by real values, or a set of probabilities this function, $\\loss$, takes on the familiar form of the Mean Squared Error or in the event that we want to estimate the likelihood of the output under the data; the binary crossentropy. We will also explore these functions in some detail later. To find the optimal values for $\\wij$ we then formulate a gradient optimization like in equation \\ref{eq:gd}\n\n\\begin{equation}\\label{eq:gd}\n\\wij \\leftarrow -\\eta \\frac{\\partial \\loss}{\\partial \\wij} + \\wij \n\\end{equation}",
+			"file": "theory/neural_network/neural_network.tex",
+			"file_size": 9372,
+			"file_write_time": 131956629491684199,
+			"settings":
+			{
+				"buffer_size": 9372,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "thesis.sublime-project",
+			"settings":
+			{
+				"buffer_size": 296,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/LaTeXTools/LaTeX.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					""
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Traditional"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"PdfLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"XeLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"LuaLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - PdfLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - XeLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - LuaLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Script Builder"
+				]
+			],
+			[
+				"Packages/LaTeXTools/LaTeX.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"brows",
+				"Preferences: Browse Packages"
+			],
+			[
+				"add",
+				"Package Control: Add Repository"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"get package",
+				"Package Control: Install Package"
+			],
+			[
+				"bul",
+				"Build With: LaTeX"
+			],
+			[
+				"lbuid",
+				"Build With: LaTeX - Basic Builder - PdfLaTeX"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 136.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/solli/Documents/github/thesis"
+	],
+	"file_history":
+	[
+		"/Users/solli/Documents/github/thesis/thesis.sublime-project"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main.tex",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1071,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								37,
+								37
+							]
+						],
+						"settings":
+						{
+							"SL.30.region_keys":
+							[
+							],
+							"syntax": "Packages/LaTeX/LaTeX.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "theory/neural_network/neural_network.tex",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9372,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								857,
+								857
+							]
+						],
+						"settings":
+						{
+							"SL.36.region_keys":
+							[
+							],
+							"syntax": "Packages/LaTeX/LaTeX.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "thesis.sublime-project",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 296,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								287,
+								287
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.latextools":
+	{
+		"height": 108.0
+	},
+	"pinned_build_system": "",
+	"project": "thesis.sublime-project",
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+
+    "settings": {
+        "TEXroot": "main.tex",
+        "tex_file_exts": [".tex"],
+        "builder": "thesisBuilder",
+        "builder_path": "User/LaTeXTools-Builders",
+        "builder_settings": {
+            "options": "--shell-escape"}
+    }
+}
