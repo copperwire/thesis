@@ -3,47 +3,46 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
 The style file: apalike.bst
 Database file #1: link.bib
-Warning--I didn't find a database entry for "Polk2002"
 Warning--empty journal in Kingma2013
-You've used 6 entries,
+You've used 8 entries,
             1935 wiz_defined-function locations,
-            515 strings with 4614 characters,
-and the built_in function-call counts, 1991 in all, are:
-= -- 193
-> -- 82
-< -- 4
-+ -- 26
-- -- 26
-* -- 163
-:= -- 366
-add.period$ -- 15
-call.type$ -- 6
-change.case$ -- 42
-chr.to.int$ -- 6
-cite$ -- 7
-duplicate$ -- 75
-empty$ -- 132
-format.name$ -- 38
-if$ -- 374
+            528 strings with 4933 characters,
+and the built_in function-call counts, 2725 in all, are:
+= -- 265
+> -- 112
+< -- 5
++ -- 36
+- -- 36
+* -- 226
+:= -- 499
+add.period$ -- 21
+call.type$ -- 8
+change.case$ -- 57
+chr.to.int$ -- 8
+cite$ -- 9
+duplicate$ -- 102
+empty$ -- 182
+format.name$ -- 50
+if$ -- 513
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 5
-newline$ -- 30
-num.names$ -- 18
-pop$ -- 38
+missing$ -- 7
+newline$ -- 40
+num.names$ -- 24
+pop$ -- 48
 preamble$ -- 1
-purify$ -- 43
+purify$ -- 58
 quote$ -- 0
-skip$ -- 60
+skip$ -- 82
 stack$ -- 0
-substring$ -- 116
-swap$ -- 3
+substring$ -- 165
+swap$ -- 5
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 34
+type$ -- 46
 warning$ -- 1
-while$ -- 16
+while$ -- 22
 width$ -- 0
-write$ -- 70
-(There were 2 warnings)
+write$ -- 96
+(There was 1 warning)

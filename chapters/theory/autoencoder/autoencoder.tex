@@ -1,6 +1,8 @@
 % !TEX spellckeck=en_GB
 
-\section{Autoencoders}
+\section{Autoencoders}\label{sec:autoencoder}
+
+
 \subsection{Introduction to autoencoders}\label{sec:intro_autoenc}
 An Autoencoder is an attempt at learning a distribution over some data by reconstruction. The interesting part of the algorithm is in many applications that it is in the family of latent variable models. Which is to say the model encodes the data into a lower dimensional latent space before reconstruction. The goal, of course, is to learn the distribution $P(\mathcal{X})$ over the data with some parametrized model $Q(\mathcal{X}|\theta)$
 The model consists of two discrete parts ; an encoder and a decoder.
@@ -32,11 +34,11 @@ new samples form the sample distribution, dubbed "Variational Autoencoders" they
 
 \subsection{Variational Autoencoder}
 
-Originally presented by \citet{Kingma2013} the Variational Autoencoder (VAE) is a twist upon the traditional autoencoder. Where the applications of an ordinary autoencoder largely extended to de-noising with some authors using it for dimensionality reduction before training an ANN on the output the VAE seeks to control the latent space of the model. The goal is to be able to generate samples from the unknown distribution over the data. Imagine trying to draw a sample from the distribution of houses, we'd be hard pressed to produce anything remotely useful but this is the goal of the VAE. In this thesis the generative properties of the algorithm is only interesting as a way of describing the latent space. Our efforts largely concentrate on the latent space itself and importantly discerning whether class membership, be it a physical property or something more abstract, \footnote{examples include discerning whether a particle is  a proton or electron, or capturing the "five-ness" of a number in the MNIST dataset}, is encoded.
+Originally presented by \citet{Kingma2013} the Variational Autoencoder (VAE) is a twist upon the traditional autoencoder. Where the applications of an ordinary autoencoder largely extended to de-noising with some authors using it for dimensionality reduction before training an ANN on the output the VAE seeks to control the latent space of the model. The goal is to be able to generate samples from the unknown distribution over the data. Imagine trying to draw a sample from the distribution of houses, we'd be hard pressed to produce anything remotely useful but this is the goal of the VAE. In this thesis the generative properties of the algorithm is only interesting as a way of describing the latent space. Our efforts largely concentrate on the latent space itself and importantly discerning whether class membership, be it a physical property or something more abstract \footnote{examples include discerning whether a particle is  a proton or electron, or capturing the "five-ness" of a number in the MNIST dataset}xw is encoded.
 
 \subsubsection*{The variational autoencoder cost}
 
-In section \ref{sec:intro_autoenc} we presented the structure of the autoencoder rather loosely. For the VAE which is a more integral part of the technology used in the thesis a more rigorous approach is warranted. We will here derive the loss function for the VAE in such a way that makes clear how we aim to impose known structure of the latent space. We begin by considering the family of problems encountered in variational inference, where the VAE takes its theoretical inspiration from. We define the joint probability distribution of some hidden variables $z$ and our data $x$ conditional on some $\beta$. In a traditional modeling context we would coin $z$ as including model parameters and $\beta$ would then denote the hyperparameters. The variational problem is phrased in terms of finding the posterior over z, given $\beta$ 
+In section \ref{sec:intro_autoenc} we presented the structure of the autoencoder rather loosely. For the VAE which is a more integral part of the technology used in the thesis a more rigorous approach is warranted. We will here derive the loss function for the VAE in such a way that makes clear how we aim to impose known structure of the latent space. We begin by considering the family of problems encountered in variational inference, where the VAE takes its theoretical inspiration from. We define the joint probability distribution of some hidden variables $z$ and our data $x$ conditional on some $\beta$. In a traditional modeling context we would coin $z$ as including model parameters and $\beta$ would then denote the hyperparameters. The variational problem is phrased in terms of finding the posterior over $z$, given $\beta$ 
 
 \begin{equation}\label{eq:vbayes}
 p(z | x, \beta) = \frac{p(z, x|\beta)}{\int_z p (z, x|\beta)}
@@ -71,13 +73,13 @@ D_{KL}(\Psi || Q ) &= \langle \log \left(\frac{\psi(z|x)}{q(z|x)}\right) \rangle
 \noindent We are still bound by the intractable integral defining the evidence $p(x) = \int_z p(x, z)$ which is the same integral as in the denominator in equation \ref{eq:vbayes}. The solution appears by approximating the KL-divergence up to an additive constant by estimating the evidence lower bound (ELBO). This function is defined as 
 
 \begin{equation}\label{eq:elbo}
-ELBO(q) = \langle \log(p(z, x)) \rangle - \langle \log(q(z)) \rangle
+ELBO(q) = \langle \log(p(z, x)) \rangle - \langle \log(q(z|x)) \rangle
 \end{equation}
 
 \noindent To fit the VAE cost we rewrite the ELBO in terms of the conditional distribution of $x$ given $z$
 
 \begin{align}
-ELBO = \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \log(q(z|x)) \rangle
+ELBO(q) = \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \log(q(z|x)) \rangle
 \end{align}
 
 \noindent Finally the ELBO can be related to the VAE loss by applying Jensen's inequality (J) to the log evidence 
@@ -90,4 +92,4 @@ ELBO = \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \log
 & \geq \langle \log(p(x|z))\rangle + \langle \log(p(z))\rangle  - \langle \log(q(z|x))\rangle 
 \end{align}
 
-\noindent Now we have a fully computationally tractable system. We note that in the above notation we would parametrize the distribution $p(x|z)$ as a neural network, in machine learning parlance it is called the generator network. \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly implemented with a neural network when trained with variations of gradient descent. 
+\noindent Now we have a fully computationally tractable system. We note that in the above notation we would parametrize the distribution $p(x|z)$ as a neural network, in machine learning parlance it is called the generator network. \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly implemented with a neural network when trained with gradient descent methods. 
