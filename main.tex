@@ -4,6 +4,7 @@
 \usepackage{tikz}
 \usepackage{amsmath}
 \usepackage{float}
+\usepackage{mathtools}
 \usepackage[colorinlistoftodos]{todonotes}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -37,7 +38,12 @@
 \subimport*{chapters/introduction/}{introduction.tex}
 
 \subimport*{chapters/theory/}{theory.tex}
+
+\subimport*{chapters/theory/ground_methods/}{linear_regression.tex}
+\subimport*{chapters/theory/ground_methods/}{logistic_regression.tex}
+
 \subimport*{chapters/theory/neural_network/}{neural_network.tex}
+\subimport*{chapters/theory/neural_network/}{rnn.tex}
 \subimport*{chapters/theory/autoencoder/}{autoencoder.tex}
 \subimport*{chapters/notes/}{notes.tex}
 

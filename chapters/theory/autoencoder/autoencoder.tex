@@ -1,0 +1,93 @@
+% !TEX spellckeck=en_GB
+
+\section{Autoencoders}
+\subsection{Introduction to autoencoders}\label{sec:intro_autoenc}
+An Autoencoder is an attempt at learning a distribution over some data by reconstruction. The interesting part of the algorithm is in many applications that it is in the family of latent variable models. Which is to say the model encodes the data into a lower dimensional latent space before reconstruction. The goal, of course, is to learn the distribution $P(\mathcal{X})$ over the data with some parametrized model $Q(\mathcal{X}|\theta)$
+The model consists of two discrete parts ; an encoder and a decoder.
+Where the encoder is in general a non linear map $\psi$. 
+
+\begin{align*}
+  \psi: \mathcal{X} \rightarrow \mathcal{Z}
+\end{align*}
+
+\noindent Where $\mathcal{X} $ and $\mathcal{Z}$ are arbitrary vector spaces with $\text{dim}(\mathcal{X}) > \text{dim}(\mathcal{Z})$.
+The second part of the model is the decoder that maps back to the original space.
+
+
+\begin{align*}
+  \phi: \mathcal{Z} \rightarrow \mathcal{X}
+\end{align*}
+
+\noindent The objective is then to find the configuration of the two maps $\phi$ and $\psi$
+that gives the best possible reconstruction, i.e the objective $\mathcal{O}$ is given as
+
+\begin{align}\label{eq:objective_autoenc}
+  \mathcal{O} = \argmin_{\phi, \psi} || X - \phi \circ \psi||^2
+\end{align}
+
+\noindent  Where the $\circ$ operator denotes function composition in the standard manner. As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. This objective function is optimized by a mean-squared-error cost in the event of real valued data, but more commonly through a binary crossentropy for data normalized to the range $[0, 1]$.
+This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to Principal Component Analysis (PCA) (\cite{Marsland2009}). In practice the non-linear maps, $\psi$ and $\phi$, are most often parametrized and optimized as ANNs. ANNs are described in detail in section \ref{sec:ANN}. The autoencoder was used perhaps most successfully in a de-noising tasks. \todo{Citation needed. Also should I include example of denoising autoencoders ? Maybe a description at least.. Link to notebook maybe? }
+More recently the Machine Learning community discovered that the decoder part of the network could be used for generating
+new samples form the sample distribution, dubbed "Variational Autoencoders" they are among the most useful generative algorithms in modern machine learning.
+
+\subsection{Variational Autoencoder}
+
+Originally presented by \citet{Kingma2013} the Variational Autoencoder (VAE) is a twist upon the traditional autoencoder. Where the applications of an ordinary autoencoder largely extended to de-noising with some authors using it for dimensionality reduction before training an ANN on the output the VAE seeks to control the latent space of the model. The goal is to be able to generate samples from the unknown distribution over the data. Imagine trying to draw a sample from the distribution of houses, we'd be hard pressed to produce anything remotely useful but this is the goal of the VAE. In this thesis the generative properties of the algorithm is only interesting as a way of describing the latent space. Our efforts largely concentrate on the latent space itself and importantly discerning whether class membership, be it a physical property or something more abstract, \footnote{examples include discerning whether a particle is  a proton or electron, or capturing the "five-ness" of a number in the MNIST dataset}, is encoded.
+
+\subsubsection*{The variational autoencoder cost}
+
+In section \ref{sec:intro_autoenc} we presented the structure of the autoencoder rather loosely. For the VAE which is a more integral part of the technology used in the thesis a more rigorous approach is warranted. We will here derive the loss function for the VAE in such a way that makes clear how we aim to impose known structure of the latent space. We begin by considering the family of problems encountered in variational inference, where the VAE takes its theoretical inspiration from. We define the joint probability distribution of some hidden variables $z$ and our data $x$ conditional on some $\beta$. In a traditional modeling context we would coin $z$ as including model parameters and $\beta$ would then denote the hyperparameters. The variational problem is phrased in terms of finding the posterior over z, given $\beta$ 
+
+\begin{equation}\label{eq:vbayes}
+p(z | x, \beta) = \frac{p(z, x|\beta)}{\int_z p (z, x|\beta)}
+\end{equation}
+
+\noindent The integral in the denominator is intractable for most interesting problems \todo{citation?}. This is also the same problem that Markov Chain Monte Carlo (MCMC) methods aim at solving. In physics this family of algorithms has been applied to solve many-body problems in quantum mechanics primarily by gradient descent on variational parameters \todo{citation? Comph-phys 2 compendium?}.
+
+\noindent Next we introduce the Kullback-Leibler divergence (KL-divergence) (\cite{Kullback1951}) which is a measure of how much two distributions are alike, it is important to not that it is however not a metric. We define the KL-divergence in equation \ref{eq:kl} from a probability measure P, to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$. 
+
+\begin{align}\label{eq:kl}
+D_{KL} (P || Q) &= - \int^{\infty}_{-\infty} p(x) \log \left(\frac{p(x)}{q(x)}\right) dx \\
+&= \langle \log \left(\frac{p(x)}{q(x)} \right)\rangle_{p}
+\end{align}
+
+\noindent In the context of the VAE the KL-divergence is a measure of dissimilarity of P approximating Q (\cite{Burnham2002}). The derivation then sensibly starts with a KL-divergence. \\
+
+\noindent We begin by defining $q(z|x)$ to be the true posterior distribution over the latent variable $z \in \mathcal{Z}$, conditional on our data $x \in \mathcal{X}$ with a true posterior distribution $p(x)$ and $q(z)$, with an associated probability measure $Q$ as per our notation above. Let then the distribution over the latent space parametrized by the autoencoder be given as $\psi(z|x)$, where the autoencoder parametrizes a distribution $\eta(x)$, and an associated probability measure $\Psi$. And recalling Bayes rule for conditional probability distributions $p(z | x ) = (p(x | z) p(z) / p(x) $
+
+\begin{align}
+D_{KL}(\Psi || Q ) &= \langle \log \left(\frac{\psi(z|x)}{q(z|x)}\right) \rangle_\psi \\
+&=  \langle \log \left( \psi(z|x)\right) \rangle_\psi - \langle \log \left( p( x | z) q(z) \right) \rangle_\psi + \log \left(p(x) \right) \\
+&=  \langle \log \left(\frac{\psi(z|x)}{q(z)} \right) \rangle_\psi - \langle \log \left( p( x | z)\right) \rangle_\psi + \log \left(p(x) \right)
+\end{align}
+
+\noindent Rearranging the terms we arrive at the variational autoencoder cost
+
+\begin{equation}\label{eq:vae_cost}
+\log(p(x)) - D_{KL}(\Psi || Q )=  \langle \log \left( p( x | z)\right) \rangle_\psi - \langle \log \left(\frac{\psi(z|x)}{q(z)}\right)\rangle_\psi
+\end{equation}
+ 
+
+\noindent We are still bound by the intractable integral defining the evidence $p(x) = \int_z p(x, z)$ which is the same integral as in the denominator in equation \ref{eq:vbayes}. The solution appears by approximating the KL-divergence up to an additive constant by estimating the evidence lower bound (ELBO). This function is defined as 
+
+\begin{equation}\label{eq:elbo}
+ELBO(q) = \langle \log(p(z, x)) \rangle - \langle \log(q(z)) \rangle
+\end{equation}
+
+\noindent To fit the VAE cost we rewrite the ELBO in terms of the conditional distribution of $x$ given $z$
+
+\begin{align}
+ELBO = \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \log(q(z|x)) \rangle
+\end{align}
+
+\noindent Finally the ELBO can be related to the VAE loss by applying Jensen's inequality (J) to the log evidence 
+
+\begin{align}
+\log (p(x)) &= \log \int_z p(x|z) p(z) \\
+&= log \int _z p(x|z) p(z) \frac{q(z|x)}{q(z|x)} \\
+& = log \langle p(x|z) p(z)/ q(z|x) \rangle \\
+&  \stackrel{\mathclap{\text{(J)}}}{\geq} \langle \log (p(x|z) p(z)/ q(z|x))\rangle \\
+& \geq \langle \log(p(x|z))\rangle + \langle \log(p(z))\rangle  - \langle \log(q(z|x))\rangle 
+\end{align}
+
+\noindent Now we have a fully computationally tractable system. We note that in the above notation we would parametrize the distribution $p(x|z)$ as a neural network, in machine learning parlance it is called the generator network. \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly implemented with a neural network when trained with variations of gradient descent. 

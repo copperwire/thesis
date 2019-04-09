@@ -1,0 +1,14 @@
+\section{Notes}
+
+\begin{enumerate}
+\item L1 regularization on the LSTM cells in the draw network seem to encourage the network to capture "many events". Looks like many spirals in one. While L2 (or sparese) regularization represents the images well. Can we represent the inner workings of the LSTM in some way? 
+\item Benchmark reconstruction loss for DRAW is at 255 - 1200 nodes, 60 filters, 10 timesteps, L2 regularization, Adam optimizer
+\item Nesterov momentum yields suboptimal results. Reconstruction loss of about 1.4 times the loss when using Adam
+\item Adadelta yields pure noise reconstructions (short simulation)
+\item Adagrad yields localized "clouds" in the output
+\item for simulated data it seems we can compress to about 350 $\sim$ 300 nodes in the encoder lstm. And to 3 dimensions in the latent space
+\item In what seems like the minimal compressed state for the simulated data the training seems unstable and will frequently get stuck in local minima or have the gradient explode
+\item DRAW without attention seems unable to learn even the simulated distribution at 128 by 128 pixels
+\item In the DRAW algorithm the glimpse is specified by an affine weight transformation - but to be comparable it should be constant as a hyperparameter.
+\item Implementing the glimpse as a hyperparameter was hugely successful, perhaps surprisingly in decreasing the reconstruction loss. Now remains the task of using the latent representations for classification
+\end{enumerate}
