@@ -55,7 +55,7 @@ D_{KL} (P || Q) &= - \int^{\infty}_{-\infty} p(x) \log \left(\frac{p(x)}{q(x)}\r
 
 \noindent In the context of the VAE the KL-divergence is a measure of dissimilarity of P approximating Q (\cite{Burnham2002}). The derivation then sensibly starts with a KL-divergence. \\
 
-\noindent We begin by defining $q(z|x)$ to be the true posterior distribution over the latent variable $z \in \mathcal{Z}$, conditional on our data $x \in \mathcal{X}$ with a true posterior distribution $p(x)$ and $q(z)$, with an associated probability measure $Q$ as per our notation above. Let then the distribution over the latent space parametrized by the autoencoder be given as $\psi(z|x)$, where the autoencoder parametrizes a distribution $\eta(x)$, and an associated probability measure $\Psi$. And recalling Bayes rule for conditional probability distributions $p(z | x ) = (p(x | z) p(z) / p(x) $
+\noindent We begin by defining $q(z|x)$ to be the true posterior distribution over the latent variable $z \in \mathcal{Z}$, conditional on our data $x \in \mathcal{X}$ with a true posterior distribution $p(x)$ and $q(z)$, with an associated probability measure $Q$ as per our notation above. Let then the distribution over the latent space parametrized by the autoencoder be given as $\psi(z|x)$, where the autoencoder parametrizes a distribution $\eta(x)$, and an associated probability measure $\Psi$. And recalling Bayes rule for conditional probability distributions $p(z | x ) = (p(x | z) p(z) / p(x) $ we then have 
 
 \begin{align}
 D_{KL}(\Psi || Q ) &= \langle \log \left(\frac{\psi(z|x)}{q(z|x)}\right) \rangle_\psi \\
@@ -63,7 +63,7 @@ D_{KL}(\Psi || Q ) &= \langle \log \left(\frac{\psi(z|x)}{q(z|x)}\right) \rangle
 &=  \langle \log \left(\frac{\psi(z|x)}{q(z)} \right) \rangle_\psi - \langle \log \left( p( x | z)\right) \rangle_\psi + \log \left(p(x) \right)
 \end{align}
 
-\noindent Rearranging the terms we arrive at the variational autoencoder cost
+\noindent Note that the term $-\langle \log \left( p( x | z)\right) \rangle_\psi$ is the log likelihood of our decoder network which is we can optimize with the cross entropy. Rearranging the terms we arrive at the variational autoencoder cost
 
 \begin{equation}\label{eq:vae_cost}
 \log(p(x)) - D_{KL}(\Psi || Q )=  \langle \log \left( p( x | z)\right) \rangle_\psi - \langle \log \left(\frac{\psi(z|x)}{q(z)}\right)\rangle_\psi
@@ -92,4 +92,4 @@ ELBO(q) = \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \
 & \geq \langle \log(p(x|z))\rangle + \langle \log(p(z))\rangle  - \langle \log(q(z|x))\rangle 
 \end{align}
 
-\noindent Now we have a fully computationally tractable system. We note that in the above notation we would parametrize the distribution $p(x|z)$ as a neural network, in machine learning parlance it is called the generator network. \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly implemented with a neural network when trained with gradient descent methods. 
+\noindent Which shows that the function enacted by the ELBO approximates the VAE loss up to a constant i.e. the KL loss on the RHS in equation \ref{eq:vae_cost}. Now we have a fully computationally tractable system. We note that in the above notation we would parametrize the distribution $p(x|z)$ as a neural network, in machine learning parlance it is called the generator network. And is the part of the autoencoder we denotes as $\phi$ in section \ref{sec:autoencoder}. \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly approximated with a neural network when trained with backpropagation and gradient descent methods. 
