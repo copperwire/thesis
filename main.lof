@@ -1,0 +1,4 @@
+\babel@toc {UKenglish}{}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces An illustration of the graph constructed by two artificial neurons with three input nodes. Colored lines illustrate that each of the input nodes are connected to each of the neurons in a manner we denote as fully-connected.\relax }}{4}{figure.caption.3}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces A graphical illustration of the RNN cell. The self-connected edge in the left hand side denotes the temporal nature we unroll on the right side. The cell takes as input a state vector and an input vector at time t, and outputs a prediction and the new state vector used for the next prediction. Internally the simplest form this operation takes is to concatenate the state vector with the input and use an ordinary dense network as described in section \ref {sec:ANN} trained with back-propagation.\relax }}{8}{figure.caption.5}
