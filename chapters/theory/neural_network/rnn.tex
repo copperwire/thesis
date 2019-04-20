@@ -6,10 +6,10 @@
 
 The recurrent neural network (RNN) models a unit that has "memory". The memory is encoded as a state variable which is ordinarily concatenated with the input when the network predicts. The model predictions enact a sequence which has led to applications in the generation of text, time series predictions and other serialized applications. RNNs were first discussed in a theoretical paper by Jordan, MI in 86' but implemented in the modern temporal sense by \citet{Pearlmutter1989}. A simple graphical representation of the RNN cell is presented in figure \ref{fig:rnn}
 
-
 \begin{figure}[h]
 \centering
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 \input{rnn.tikz}
 \caption{A graphical illustration of the RNN cell. The self-connected edge in the left hand side denotes the temporal nature we unroll on the right side. The cell takes as input a state vector and an input vector at time t, and outputs a prediction and the new state vector used for the next prediction. Internally the simplest form this operation takes is to concatenate the state vector with the input and use an ordinary dense network as described in section \ref{sec:ANN} trained with back-propagation.}\label{fig:rnn}
 \end{figure}
+

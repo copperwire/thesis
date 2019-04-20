@@ -11,8 +11,15 @@
         "tex_file_exts": [".tex"],
         "builder": "thesisBuilder",
         "builder_path": "User/LaTeXTools-Builders",
+
         "builder_settings": {
-            "options": "--shell-escape"},
+            "program": "xelatex",
+            "options": ["--shell-escape"],
+            "osx": {
+                "texpath": "$PATH:/usr/local/bin:/Library/TeX/texbin:/opt/local/bin:/usr/texbin"
+            }
+
+        },
 
         "spell_check": true,
         "dictionary": "Packages/Language - English/en_US.dic"

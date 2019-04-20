@@ -1,4 +1,4 @@
-\section{Notes}
+\chapter{Notes}
 
 \begin{enumerate}
 \item L1 regularization on the LSTM cells in the draw network seem to encourage the network to capture "many events". Looks like many spirals in one. While L2 (or sparese) regularization represents the images well. Can we represent the inner workings of the LSTM in some way? 
@@ -11,4 +11,5 @@
 \item DRAW without attention seems unable to learn even the simulated distribution at 128 by 128 pixels
 \item In the DRAW algorithm the glimpse is specified by an affine weight transformation - but to be comparable it should be constant as a hyperparameter.
 \item Implementing the glimpse as a hyperparameter was hugely successful, perhaps surprisingly in decreasing the reconstruction loss. Now remains the task of using the latent representations for classification
+\item Two class-classification on the latent space was also hugely successful for simulated data
 \end{enumerate}

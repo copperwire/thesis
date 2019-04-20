@@ -3,46 +3,48 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
 The style file: apalike.bst
 Database file #1: link.bib
+Warning--empty institution in tensorflow
 Warning--empty journal in Kingma2013
-You've used 9 entries,
+Warning--empty institution in python
+You've used 13 entries,
             1935 wiz_defined-function locations,
-            535 strings with 5078 characters,
-and the built_in function-call counts, 3088 in all, are:
-= -- 303
-> -- 119
-< -- 6
-+ -- 38
-- -- 38
-* -- 257
-:= -- 561
-add.period$ -- 24
-call.type$ -- 9
-change.case$ -- 63
-chr.to.int$ -- 9
-cite$ -- 10
-duplicate$ -- 116
-empty$ -- 212
-format.name$ -- 53
-if$ -- 584
+            555 strings with 6365 characters,
+and the built_in function-call counts, 5655 in all, are:
+= -- 517
+> -- 365
+< -- 8
++ -- 132
+- -- 132
+* -- 529
+:= -- 1043
+add.period$ -- 36
+call.type$ -- 13
+change.case$ -- 132
+chr.to.int$ -- 13
+cite$ -- 16
+duplicate$ -- 166
+empty$ -- 304
+format.name$ -- 153
+if$ -- 1034
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 8
-newline$ -- 45
-num.names$ -- 27
-pop$ -- 51
+missing$ -- 10
+newline$ -- 65
+num.names$ -- 39
+pop$ -- 112
 preamble$ -- 1
-purify$ -- 64
+purify$ -- 131
 quote$ -- 0
-skip$ -- 93
+skip$ -- 131
 stack$ -- 0
-substring$ -- 202
-swap$ -- 6
+substring$ -- 288
+swap$ -- 8
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 52
-warning$ -- 1
-while$ -- 26
+type$ -- 76
+warning$ -- 3
+while$ -- 38
 width$ -- 0
-write$ -- 109
-(There was 1 warning)
+write$ -- 159
+(There were 3 warnings)

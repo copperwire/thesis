@@ -63,7 +63,7 @@ D_{KL}(\Psi || Q ) &= \langle \log \left(\frac{\psi(z|x)}{q(z|x)}\right) \rangle
 &=  \langle \log \left(\frac{\psi(z|x)}{q(z)} \right) \rangle_\psi - \langle \log \left( p( x | z)\right) \rangle_\psi + \log \left(p(x) \right)
 \end{align}
 
-\noindent Note that the term $-\langle \log \left( p( x | z)\right) \rangle_\psi$ is the log likelihood of our decoder network which is we can optimize with the cross entropy. Rearranging the terms we arrive at the variational autoencoder cost
+\noindent Note that the term $-\langle \log \left( p( x | z)\right) \rangle_\psi$ is the log likelihood of our decoder network which we can optimize with the cross entropy as discussed in section \ref{sec:LogReg}. Rearranging the terms we arrive at the variational autoencoder cost
 
 \begin{equation}\label{eq:vae_cost}
 \log(p(x)) - D_{KL}(\Psi || Q )=  \langle \log \left( p( x | z)\right) \rangle_\psi - \langle \log \left(\frac{\psi(z|x)}{q(z)}\right)\rangle_\psi
@@ -92,4 +92,4 @@ ELBO(q) = \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \
 & \geq \langle \log(p(x|z))\rangle + \langle \log(p(z))\rangle  - \langle \log(q(z|x))\rangle 
 \end{align}
 
-\noindent Which shows that the function enacted by the ELBO approximates the VAE loss up to a constant i.e. the KL loss on the RHS in equation \ref{eq:vae_cost}. Now we have a fully computationally tractable system. We note that in the above notation we would parametrize the distribution $p(x|z)$ as a neural network, in machine learning parlance it is called the generator network. And is the part of the autoencoder we denotes as $\phi$ in section \ref{sec:autoencoder}. \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly approximated with a neural network when trained with backpropagation and gradient descent methods. 
+\noindent Which shows that the function enacted by the ELBO approximates the VAE loss up to a constant i.e. the KL loss on the RHS in equation \ref{eq:vae_cost}. \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly approximated with a neural network when trained with backpropagation and gradient descent methods. That is we estimate the derivative of the ELBO with respect to the neural network parameters, as described by the backpropagation algorithm in section \ref{sec:backpropagation}. We note again that in the above notation we would parametrize the distribution $p(x|z)$ as a neural network, in machine learning parlance called the generator network and denoted as $\phi$ in section \ref{sec:autoencoder}. 
