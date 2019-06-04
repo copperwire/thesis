@@ -13,3 +13,15 @@ The recurrent neural network (RNN) models a unit that has "memory". The memory i
 \caption{A graphical illustration of the RNN cell. The self-connected edge in the left hand side denotes the temporal nature we unroll on the right side. The cell takes as input a state vector and an input vector at time t, and outputs a prediction and the new state vector used for the next prediction. Internally the simplest form this operation takes is to concatenate the state vector with the input and use an ordinary dense network as described in section \ref{sec:ANN} trained with back-propagation.}\label{fig:rnn}
 \end{figure}
 
+The memory encoded by the RNN cell is encoded as a state variable. And while figure \ref{fig:rnn} gives a good intuition we will elaborate this by introducing the surprisingly simple forward pass structure for simple RNN cells. Let $X_t$ be the input to the RNN cell at time-step from zero to $n$, $\{0 \leq t \leq n: t \in \mathcal{Z} \}$ and $h_t$ be the state of the RNN cell at time $t$. Let also $y_t$ be the output of the RNN at time $t$. The nature of $X$ and $y$ are problem specific but a common use of these network has been the prediction of words in a sentence, such that $X$ is a representation of the previous word in the sentence and $y$ the prediction over the set of available words for which comes next. Our cell can then be simply formulated as in equation \ref{eq:rnn}.
+
+\begin{align}\label{eq:rnn}
+\inner{[X_t, h_t]}{W} + b = h_{t+1}
+\end{align}
+
+Where the weight matrix $W$ and bias vector $b$ are defined in the usual manner. Looking back at figure \ref{fig:rnn} the output should be a vector in $y$ space and yet we've noted the output as being in the state space of the cell. This is simply a convenience lending flexibility to our implementation, the new state is produced by the cell and transformed to the $y$ space by use of a normal linear fully connected layer. This is a common trick in the machine learning community leaving the inner parts of the algorithm extremely problem agnostic and using end-point layers to fit the problem at hand. To further clarify we show the algorithm for a one-cell 
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\caption{Defining the forward pass of a simple one cell RNN network}
+\end{algorithm}

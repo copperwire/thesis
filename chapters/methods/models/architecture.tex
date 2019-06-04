@@ -1,0 +1,30 @@
+\subsection{Architecture}
+
+All the models in this thesis are implemented in the python programming language using the tensorflow api for deep learning. All the models are open source and can be found in the github repository \url{https://github.com/ATTPC/VAE-event-classification}. In this section we will be detailing the general framework that the models have been built on. The structure is straightforward with a model class implementing shared functions and usage between models. Two subclasses are implemented, one for the sequential DRAW model (discussed in section \ref{sec:draw}) and one for the non-sequential convolutional autoencoder \ref{sec:autoencoder}. A couple of helper classes are also defined to manage mini-batches and the random search of hyperparameters. Throughout the thesis we follow the convention that classes are named in the \lstinline{CamelCase} style, and functions and methods of classes in the \lstinline{snake_case} style.  
+
+The model class implements two main functions \lstinline{compute_gradients} and \lstinline{compile_model} that make calls to the model specific functions constructing the computational graph and subsequently the gradients wrt. the output(s) for that graph. 
+
+The class itself is defined in python without inheritance as shown in listing \ref{code:defmodel}, which includes the initialization operations the class runs. Mostly this is simply \lstinline{self} defining assignments but two calls are worth notice as we explicitly clean the graph before any operations are defined and we run through a configuration dictionary to define class variables pertinent to the current experiment. The configuration explicitly defines the type of latent loss (discussed in section \ref{sec:latent}) to be used for the experiment. As well as whether or not to restore the weights of a previous run from a directory, this directory is supplied to the \lstinline{train} method of \lstinline{LatentModel} class. 
+
+\begin{figure}[H]
+\lstinputlisting[firstline=12, lastline=51, language=iPython]{../../../../VAE-event-classification/src/model.py}
+\caption{The definition of the \lstinline{LatentModel} class. It takes a dataset, latent variable dimension, latent loss weight $\beta$ as well as a configuration dictionary. The configuration explicitly defines the type of latent loss (discussed in section \ref{sec:latent}) to be used for the experiment.}\label{code:defmodel}
+\end{figure}
+
+\noindent After initialization and before training the subclasses of \lstinline{LatentModel} needs to construct the computational graph defining the forward pass, and defines the losses with which we optimize with respect to. This is done via a wrapper function \lstinline{compile_model} defined in \lstinline{LatentModel} that takes two dictionaries for the graph and loss configuration. They are subclass specific and will be elaborated on later in sections \ref{sec:convae_implement} and \ref{sec:draw_implement}. The method also sets the \lstinline{compiled} flag to \lstinline{True} which is a prerequisite for the \lstinline{compute_gradients} method. The method is included in listing \ref{code:compile}
+
+\begin{figure}
+\lstinputlisting[firstline=51, lastline=74, language=iPython]{../../../../VAE-event-classification/src/model.py}
+\caption{Code showing the compile function in the model class. The \lstinline{LatentModel} class does not implement the functions called here, they are model specific and the class will raise a \lstinline{c++} style \lstinline{abstract class} error if one tries to call this method directly without a subclass.}\label{code:compile}
+\end{figure}
+
+\noindent When the model is compiled the gradients can be computed and the fetch-object for the losses prepared. This is implemented in the method \lstinline{compute_gradients}. The fetch object contains the loss components, the backwards pass operation as well as the latent sample(s) and decoder state(s). This list of operations (defining a return value for the graph) is fed to a session object for execution at train time or for inference. In the same vein as the \lstinline{compile_model} method the \lstinline{compute_gradients} method sets the flag \lstinline{grad_op} to \lstinline{True} when it is through. The method is included in listing \ref{code:compute} \todo{finish section on the train method}
+
+\begin{figure}
+\lstinputlisting[firstline=74, lastline=128, language=iPython]{../../../../VAE-event-classification/src/model.py}
+\caption{Code showing the computation required for the backwards pass of the algorithm. We utilize gradient clipping to to prevent exploding gradients, though this has been known to somewhat slow down convergence.}\label{code:compute}
+\end{figure}
+
+
+\subsubsection*{Convolutional Autoencoder}\label{sec:convae_implement}
+\subsubsection*{DRAW}\label{sec:draw_implement}
