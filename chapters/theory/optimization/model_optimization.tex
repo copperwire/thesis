@@ -14,25 +14,25 @@ In information theory one considers the amount of chaos in in a process and how 
 I = -\log(p(x))
 \end{equation} 
 
-\noindent We usually wish to have knowledge of a system, however, and then use the expectation over the information. This expectation is called the entropy of the system and is defined in a familiar way as 
+\noindent We usually wish to have knowledge of a system, however, obtained by the expectation over information. This expectation is called the entropy of the system and is defined in a familiar way as 
 
 \begin{equation}
 H(p(x)) = -\langle I(x) \rangle_{p(x)} = - \sum _x p(x)\log(p(x))
 \end{equation}
 
-\noindent Depending on the choice of base of the logarithm this functional has different names. Perhaps widest used is log base 2 know as the Shannon entropy; describing how many bits of information we need to fully describe the process underlying $p(x)$. In machine learning, or indeed may other applications of modeling, we wish to encode a process with a model. We can then measure the amount of bits (or other units of information) it takes to encode $x ~ p(x)$ with the wrong distribution $q_{\theta}(x)$. In this thesis we will in general use subscript greek letters on distributions to denote models, but for the rest of this section we skip it for clarity. This measure is called the cross-entropy and is defined as
+\noindent Depending on the choice of base of the logarithm this functional has different names. Perhaps widest used is log base 2 know as the Shannon entropy; describing how many bits of information we need to fully describe the process underlying $p(x)$. In machine learning, or indeed may other applications of modeling, we wish to encode a process with a model. We can then measure the amount of bits (or other units of information) it takes to encode $x ~ p(x)$ with the model distribution $q_{\theta}(x)$. In this thesis we will in general use greek subscripted letters on distributions to denote models. This measure is called the cross-entropy and is defined as
 
 \begin{equation}
-H(p, q) = - \sum_x p(x)\log(q(x))
+H(p, q) = - \sum_x p(x)\log(q_\theta(x))
 \end{equation}
 
-\noindent To finally tie this to our model we define the maximum likelihood estimate (MLE) defined as the probability of seeing the data at hand given our model and parameters. Given the data with binary class labels $S = \{(y_i, \mathbf{x}_i)\}$ the likelihood of our model is defined as 
+\noindent Tying the cross entropy to model optimization requires a quantity to optimize. We define the maximum likelihood estimate (MLE) which represents the probability of seeing the data, i.e. the set of tuples $\eta_i = {\mathbb{x}_i, y_i}$, at hand given our model and parameters. Given the feature vectors with binary class labels $S = \{\eta_i\}$ the likelihood of our model is defined as 
 
 \begin{equation}
 p(S | \theta) = \prod_i q_\theta(x_i)^{y_i} - (1-q_\theta(x_i))^{1-y_i}
 \end{equation}
 
-\noindent We want to maximize this functional with respect to the parameters $\theta$. The product sum is problematic in this regard, to circumvent this we take the logarithm of the likelihood defining the log-likelihood. Optimizing the log-likelihood yields the same optimum as for the likelihood as log is monotonic. \footnote{it is trivial to show that for optimization purposes any monotonic function can be used, the logarithm turns out to be practical for handling the product sum and exponents.}
+\noindent We want to maximize this functional with respect to the parameters $\theta$. The product sum is problematic in this regard as it's gradient is likely to vanish as the number of terms increase, to circumvent this we take the logarithm of the likelihood defining the log-likelihood. Optimizing the log-likelihood yields the same optimum as for the likelihood as the logarithmic function is monotonic. \footnote{it is trivial to show that for optimization purposes any monotonic function can be used, the logarithm turns out to be practical for handling the product sum and exponents.}
 \begin{equation}
 \mathcal{L}(\mathbf{x}, y, \theta) = \log(p(S | \theta)) = \sum_i y_i\log(q_\theta(x_i)) + (1-y_i)(q_\theta(x_i))
 \end{equation}
