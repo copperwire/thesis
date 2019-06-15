@@ -32,7 +32,7 @@ H(p, q) = - \sum_x p(x)\log(q(x))
 p(S | \theta) = \prod_i q_\theta(x_i)^{y_i} - (1-q_\theta(x_i))^{1-y_i}
 \end{equation}
 
-\noindent We want to maximize this functional with respect to the parameters $\theta$ we then take the logarithm of the likelihood defining the log-likelihood \footnote{it is trivial to show that for optimization purposes any monotonic function can be used, the logarithm turns out to be practical for handling the product sum and exponents.}
+\noindent We want to maximize this functional with respect to the parameters $\theta$. The product sum is problematic in this regard, to circumvent this we take the logarithm of the likelihood defining the log-likelihood. Optimizing the log-likelihood yields the same optimum as for the likelihood as log is monotonic. \footnote{it is trivial to show that for optimization purposes any monotonic function can be used, the logarithm turns out to be practical for handling the product sum and exponents.}
 \begin{equation}
 \mathcal{L}(\mathbf{x}, y, \theta) = \log(p(S | \theta)) = \sum_i y_i\log(q_\theta(x_i)) + (1-y_i)(q_\theta(x_i))
 \end{equation}

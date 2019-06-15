@@ -1,0 +1,38 @@
+\section{Simulated AT-TPC events}
+The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package developed at the NSCL\todo{citation}. Using the same parameters as for the $Ar^{46}(p, p)$ experiment a set of $N=4000$\todo{doublecheck this number}  events were generated per class. The events are generated in the same format as the semi-raw experimental data. That is they are represented as peak-only 4-tuples of $e_i = (x_i, y_i, t_i, c_i$. Each event is then a set of these four-tuples: $\epsilon_j = \{e_i\}$ creating a track in three dimensional space with charge amplitude for each point. To process these events with the algorithms implemented for this thesis we chose to represent these 3D tracks as 2D images with charge represented as pixel images. For the analysis we chose to view the x-y projection of the data \todo{figure of 3d simulated track and 2d representation}
+
+\subsection{Classification of events} 
+From the simulated data we have two classes of events; proton and carbon. Our hypothesis is that we can separate these with a linear classifier, additionally we will investigate how many labeled samples we need to achieve good classification. The investigation of the performance will be separated in the sequential and non\-sequential models. To estimate the performance of the models a random search is conducted as described in section \ref{sec:hyperparams} using the framework and architecture described and detailed in section \ref{sec:hyperparam_search_arch}. We begin then by considering the non-sequential Autoencoders.
+
+\subsubsection{Autoencoder classification results}
+
+The training procedure for classification using a semi-supervised regime as the one we'll apply necessitates the same strict separation of labeled data as when considering ordinary classification tasks. To emulate the real-data case we set a subset of the simulated data to be labeled and treat the rest as unlabeled data. We chose this partition to be $15\%$ of each class. We denote this subset and its associated labels as $\gamma_L=(\mathbf{X}_L, \mathbf{y}_L)$, the entire dataset as it exists without data we denote as $\mathbf{X}_F$. To clarify please note that $\mathbf{X}_L \subsetneq \mathbf{X}_F$. Furthermore, the tuple $\gamma_L$ has to be split in training and test sets. The test partition is set to be $30\%$ of the samples. To determine the best configuration we performed a random search over the hyperparameters outlined in table \ref{tab:convae_hyperparams}. Performance is measured by accuracy of the linear classifier (logistic regression), the f1-score of the same classifier and the disentanglement of the latent space as described in \citet{Zhao}. The classifier is trained on a subset of the train set and evaluated on the remainder to estimate the OOS error. The best configuration will then be re-trained and we evaluate this model on the test set to estimate our top performers OOS error.
+
+
+\begin{table}
+\centering
+\setlength{\extrarowheight}{15pt}
+\hspace*{-0.5in}
+\begin{tabular}{|l|l|l|}
+\hline
+Hyperparameter & Scale & Description \\
+\hline \hline
+\multicolumn{3}{|l|}{Network parameters: } \\
+\hline
+Number of layers & Linear integer & \makecell[l]{A number describing how many \\ convolutional layers to use }\\
+Kernels & Set of linear integers & \makecell[l]{An array describing the kernel size for \\ each layer} \\
+Strides & Set of linear integers & An array describing the stride for each layer \\
+Dense dimension & Integer & \makecell[l]{Number of nodes in the dense layer \\ connecting to the latent space} \\
+Activation & Multinomial & \makecell[l]{An activation function as detailed in  \\ section \ref{sec:activation}} \\
+Filters & Set of logarithmic integers & \makecell[l]{An array describing the number of filters \\ for each layer} \\ 
+Latent type & Multinomial & \makecell[l]{One of the latent space regularization \\techniques (KLD, MMD etc.)} \\
+$\beta$ & Logarithmic int & Weighting parameter for the latent term \\
+\hline
+\multicolumn{3}{|l|}{Optimizer parameters: } \\
+\hline
+$\eta$ & Logarithmic float & Learning rate, described in \ref{sec:gd} \\
+$\beta_1$ & Linear float & Momentum parameter, described in \ref{sec:momentum_gd} \\
+\hline
+\end{tabular}
+\caption{A table detailing the hyperparameters that need to be determined for the convolutional autoencoder. The depth and number of filters strongly influence the number of parameters in the network. As a they are psuedo-randomly drawn such that the network can be held in the GPU memory with the heuristic that deeper layers can have more filters.}\label{tab:convae_hyperparams}
+\end{table}
