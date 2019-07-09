@@ -7,6 +7,20 @@
 \usepackage{mathtools}
 %\usepackage{minted}
 \usepackage[colorinlistoftodos]{todonotes}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+\usepackage{amssymb}
+\usepackage{subfig}
+\usepackage{makecell}
+\usepackage{array}
+\usepackage{multirow}
+%\usepackage{multicol}
+\usepackage{siunitx}
+\usepackage{graphicx}
+%\usepackage{subcaption}
+
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -151,6 +165,8 @@
 
 \tableofcontents
 \listoffigures
+\listoftables
+\listoftodos
 
 \newpage
 
@@ -158,22 +174,26 @@
 \subimport*{chapters/introduction/}{introduction.tex}
 
 % Theory part and experimental context 
-\part{Machine Learning Theory and Experimental Background}
+\part{Theory and Experimental Background}
 
 
 % Machine learning theory
 \subimport*{chapters/theory/}{theory.tex}
 
-\subimport{chapters/theory/ground_methods/}{model_optimization.tex}
-\subimport*{chapters/theory/ground_methods/}{gradient_descent.tex}
+\subimport{chapters/theory/optimization/}{model_optimization.tex}
+\subimport*{chapters/theory/neural_network/}{hyperparameters.tex}
+\subimport*{chapters/theory/optimization/}{gradient_descent.tex}
 \subimport*{chapters/theory/ground_methods/}{logistic_regression.tex}
 \subimport*{chapters/theory/ground_methods/}{linear_regression.tex}
-\subimport*{chapters/theory/neural_network/}{hyperparameters.tex}
 
 \subimport*{chapters/theory/neural_network/}{neural_network.tex}
 \subimport*{chapters/theory/neural_network/}{rnn.tex}
+\subimport*{chapters/theory/neural_network/}{convolution.tex}
 
 \subimport*{chapters/theory/autoencoder/}{autoencoder.tex}
+\subimport*{chapters/theory/autoencoder/}{regularizing_latent.tex}
+\subimport*{chapters/theory/autoencoder/}{deep_clustering.tex}
+\subimport*{chapters/theory/autoencoder/}{draw.tex}
 
 \subimport*{chapters/theory/}{todo.tex}
 
@@ -181,6 +201,7 @@
 
 \subimport*{chapters/experimental_background/}{experimental_background.tex}
 \subimport*{chapters/experimental_background/at_tpc/}{at_tpc.tex}
+\subimport*{chapters/experimental_background/data/}{data.tex}
 
 % Methods chapter
 
@@ -188,10 +209,15 @@
 
 \subimport*{chapters/methods/}{methods.tex}
 \subimport*{chapters/methods/tensorflow/}{tensorflow.tex}
-\subimport*{chapters/methods/draw/}{draw.tex}
+\subimport*{chapters/methods/models/}{architecture.tex}
+\subimport*{chapters/methods/models/convae/}{convae.tex}
+\subimport*{chapters/methods/models/draw/}{draw.tex}
+\subimport*{chapters/methods/randomsearch/}{randomsearch.tex}
 
 
 \part{Results}
+\subimport*{chapters/results/}{results.tex}
+\subimport*{chapters/results/simulated/}{simulated.tex}
 
 \part{Discussion and Conclusion}
 
