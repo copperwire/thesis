@@ -1,12 +1,12 @@
 \section{Gradient Descent}\label{sec:gd}
 
-The process of finding minima or maxima, known collectively as extrema, of a function is not a new endeavor for physicists. After Newton and Leibniz's formulation of calculus we were given analytical procedures for finding extrema by the derivative of functions. From first year calculus we know that a function has an extrema where the derivative is zero, and for many functions and functionals this has a closed form solution. For functionals of complicated functions like neural networks this becomes impractical or impossible. \citet{Mehta2019} also shows that for a simple logistic regression system with $L_1$ regularization the optimization is a transcendental equation requiring iterative methods. Thus we arrive at the hammer which regards any neural network as a nail. Iterative methods of the $n$-th order for finding extrema involves choosing parameters based on the direction of the set of $n$-th order derivatives. In this thesis we will restrict discussions to gradient descent, which is a iterative method of the first order for finding function minima. All the optimization problems are thus cast as minimization problems to fit in this framework. We begin by considering the simplest form of gradient descent of a function of many variables as shown in equation \ref{eq:gd}. 
+The process of finding minima or maxima, known collectively as extrema, of a function well trodden ground for physicists. With Newton and Leibniz's formulation of calculus we were given analytical procedures for finding extrema by the derivative of functions. The power of these methods are shown by the sheer volume of problems we cast as minimization or maximization objectives. From first year calculus we know that a function has an extrema where the derivative is equal to zero, and for many functions and functionals this has a closed form solution. For functionals of complicated functions, like neural networks, this becomes impractical or impossible. \citet{Mehta2019} shows that even relatively simple simple model like logistic regression with $L_1$ regularization is transcendental in the first derivative of the cost. For both too-complex or analytically unsolvable first derivatives we then turn to iterative methods for the gradient. Iterative methods of the $n$-th order for finding extrema involves updating parameters based on the direction of the set of $n$-th order partial derivatives. In this thesis we will restrict discussions to gradient descent, which is a iterative method of the first order for used for finding function minima. All the optimization problems are thus cast as minimization problems to fit in this framework. We begin by considering the simplest form of gradient descent of a function of many variables as shown in equation \ref{eq:gd}. 
 
 \begin{equation}\label{eq:gd}
 \mathbf{x}_{n+1} = \mathbf{x}_{n} - \eta \nabla f(\mathbf{x}_{n}) 
 \end{equation} 
 
-\noindent We known that the gradient vector is in the direction of the steepest ascent for the function, moving towards a minimum then simply requires going exactly the opposite way. The parameter controlling the size of this variable step is  $\eta \in \mathcal{R}_+$. This parameter is dubbed the learning rate in machine learning which is the term we will be using also. The choice of eta is extremely important for the optimization as too low values slow down convergence to a crawl, and can even stall completely with the introduction of value decay to the learning rate. While too large a learning rate jostles the parameter values around in such a way that we might miss the minimum entirely. Figure \ref{fig:badgd} shows the effects of choosing the values for the learning rate poorly, while figure \ref{fig:goodgd} shows the effect of a well chosen eta which finds the minimum in just a few steps. 
+\noindent Equation \ref{eq:gd} is the hammer which regards any neural network as a nail. Despite its simplicity gradient descent and it's cousins have shown to solve remarkably complex problems despite its obvious flaw: convergence is only guaranteed to a local minimum. We known that the gradient vector is in the direction of the steepest ascent for the function, moving towards a minimum then simply requires going exactly the opposite way. The parameter controlling the size of this variable step is  $\eta \in \mathcal{R}_+$. This parameter is dubbed the learning rate in machine learning which is the term we will be using also. The choice of eta is extremely important for the optimization as too low values slow down convergence to a crawl, and can even stall completely with the introduction of value decay to the learning rate. While too large a learning rate jostles the parameter values around in such a way that we might miss the minimum entirely. Figure \ref{fig:badgd} shows the effects of choosing the values for the learning rate poorly, while figure \ref{fig:goodgd} shows the effect of a well chosen eta which finds the minimum in just a few steps. 
 
 
 \begin{figure}[H]
@@ -37,7 +37,7 @@ The process of finding minima or maxima, known collectively as extrema, of a fun
 
 \begin{enumerate}[start=0, label={(\bfseries C\arabic*):}]
 \item Local minima are usually common in the loss function landscape, traversing these while not getting stuck is problematic for ordinary gradient descent
-\item Converging to a minima  can be slow or miss entirely depending on the configuration of the method 
+\item Converging to a minimum  can be slow or miss entirely depending on the configuration of the method 
 \end{enumerate}
 
 The importance of the methods we discuss in the coming sections are also covered in some detail in a paper by \citet{Sutskever2013}. A longer and more in depth overview of the methods themselves can be found in \citet{Ruder}
@@ -82,7 +82,14 @@ $\eta$  & $10^{-3}$ & Linear & Weight of the momentum update
 
 
 \subsection{Stochastic \& Batched Gradient Descent}
+In the preceding sections we discussed gradient descent as an update we do over the entire data-set. This procedure creates a gradient with minimal noise pointing directly to the nearest minimum. For most complex models that bee-lining behavior is something to avoid. One of the most powerful tools to avoid this behavior is batching which involves taking the gradient with only a limited partition of the data and updating the parameters. This creates noise in the gradient which encourages exploration of the loss-surface rather than strong convergence to the nearest minimum. If we set the batch size $N=1$ we arrive at a special case of batched gradient descent known in statistics and machine learning nomenclature as stochastic gradient descent (SGD). As the naming implies SGD aims to include the noisiness we wish to introduce to the optimization procedure. Both batched gradient descent and SGD show marked improvements on performing full-set gradient updates (\cite{Keskar2016}). This effect is illustrated in figure \ref{fig:batch_size}. 
 
-\subsection{Adaptive Gradient Descent}
-\subsection{adam}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{../figures/batch_size_plots}
+\caption{Showing the effect of batch sizes on a fully connected and shallow convolutional network in figure (a) and (b) respectively. The smaller batch-sizes are consistently able to find minima of a higher quality than the large batch versions of the same network. The networks were trained on common machine learning datasets for illustrative purposes. Figure taken from \citet{Keskar2016} }\label{fig:batch_size}
+\end{figure}
+
+\subsection{adam}\label{sec:adam}
+One of the major breakthroughs in modern machine learning is the improvements on the optimization scheme of gradient descent from the most simple version introduced in equation \ref{eq:gd} to the adam paradigm described by \citet{Kingma2015}. Conceptually adam ties together stochastic optimization in the form of batched data, momentum and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, magnitude of the derivative or both. 
 

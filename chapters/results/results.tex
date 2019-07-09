@@ -1,3 +1,92 @@
 \section{Experimental setup and design}
 
-The experiments were conducted using the AI-Hub computational resource at the university of Oslo.  This resource consists of three machines with four RTX $2080$ Nvidia graphics cards each. These cards have about $10$GB of memory available to allocate model weights. All experiments described in this section were all computed using this hardware.   
+The experiments were conducted using the AI-Hub computational resource at the university of Oslo.  This resource consists of three machines with four RTX $2080$ Nvidia graphics cards each. These cards have about $10$GB of memory available to allocate model weights. All experiments described in this section were all computed using this hardware. In this section we lay out the results obtained on the three segments of data: simulated, clean-real, and full-real datasets. For each dataset we evaluate the performance of the two frameworks of model for both semi supervised classification and clustering tasks. The models are described in terms of their hyperparameters in table \ref{tab:convae_hyperparams} for the convolutional autoencoder and table \ref{tab:draw_hyperparams} for the DRAW-analogues. 
+
+\subsection{Performance}
+
+We measure the performance in the semi-supervised case by accuracy of the linear classifier (logistic regression), and the $f1$ score. The classifier is trained on a subset of the train set and evaluated on the remainder to estimate the OOS error. The best configuration will then be re-trained and we evaluate this model on the test set to estimate our top performers OOS error. The accuracy is computed in terms of  the True Positive (TP) predictions and the True Negatives (TN) divided by the total number of samples. We will use the False Positives (FP) and False Negatives (FN) later and so introduce their abbreviation here. The accuracy is related to the rand index which we will use to measure clustering with the distinction that for accuracy we know the ground truth during training. Mathematically we define the accuracy in equation \ref{eq:accuracy}. Accuracy is bounded in the interval $[0, 1]$
+
+\begin{equation}\label{eq:accuracy}
+\text{accuracy} = \frac{TP + TN}{FN+ TN + TP+FP}
+\end{equation}
+
+\noindent The accuracy as presented in equation \ref{eq:accuracy} does not account for class imbalance, consider for example a problem where one class occurs as $99\%$ of the sample, a trivial classifier predicting only that class will achieve an accuracy of $\text{acc}=0.99$. This is for obvious reasons a problematic aspect of accuracy and so the remedy is often to measure multiple metrics of performance, we chose the $f1$ score per-class in addition to accuracy. The $f1$ score is defined in terms of the precision and recall of the prediction. They are simply true positives weighted by the false positives and negatives. We define recall and precision in equations \ref{eq:recall} and \ref{eq:precision} respectively.
+
+\begin{equation}\label{eq:recall}
+\text{recall}= \frac{TP}{TP + FP}
+\end{equation}
+
+\begin{equation}\label{eq:precision}
+\text{precision} = \frac{TP}{TP + FN}
+\end{equation}
+
+\noindent The $f1$ score is simply the harmonic mean of precision and recall for each class. In mathematical terms we present it in equation \ref{eq:f1}.
+
+\begin{equation}\label{eq:f1}
+f1 = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}
+\end{equation}
+
+\noindent Note that the $f1$ score does not take into account the FN predictions. But in nuclear event detection the now flourishing amount of data weights the problem heavily in favor of optimizing for TP and FP predictions. We also use the $f1$ score as it has been used in previous studies of the AT-TPC experiments performed at Davidson College in collaboration with the NSCL. Most recently \citet{Kuchera2019} published a paper on supervised methods for track identification, the  results from which we will use to evaluate the methods implemented for this thesis.
+
+\begin{table}
+\centering
+\setlength{\extrarowheight}{15pt}
+\hspace*{-0.5in}
+\begin{tabular}{|l|l|l|}
+\hline
+Hyperparameter & Scale & Description \\
+\hline \hline
+\multicolumn{3}{|l|}{Convolutional parameters: } \\
+\hline
+Number of layers & Linear integer & \makecell[l]{A number describing how many \\ convolutional layers to use }\\
+Kernels & Set of linear integers & \makecell[l]{An array describing the kernel size for \\ each layer} \\
+Strides & Set of linear integers & An array describing the stride for each layer \\
+Filters & Set of logarithmic integers & \makecell[l]{An array describing the number of filters \\ for each layer} \\ 
+\hline
+\multicolumn{3}{|l|}{Network parameters: } \\
+\hline
+Activation & Multinomial & \makecell[l]{An activation function as detailed in  \\ section \ref{sec:activation}} \\
+Latent type & Multinomial & \makecell[l]{One of the latent space regularization \\techniques (KLD, MMD, clustering loss)} \\
+Latent dimension & Integer & The dimensionality of the latent space \\
+$\beta$ & Logarithmic int & Weighting parameter for the latent term \\
+Batchnorm & Binary & Whether to use batch-normalization in each layer \\
+\hline
+\multicolumn{3}{|l|}{Optimizer parameters: } \\
+\hline
+$\eta$ & Logarithmic float & Learning rate, described in \ref{sec:gd} \\
+$\beta_1$ & Linear float & Momentum parameter, described in \ref{sec:momentum_gd} \\
+$\beta_2$ & Linear float & \makecell[l]{Second moment momentum parameter. \\ Described in \ref{sec:adam}}\\
+\hline
+\end{tabular}
+\caption{Detailing the hyperparameters that need to be determined for the convolutional autoencoder. The depth and number of filters strongly influence the number of parameters in the network. For all the search-types we follow heuristics common in the field, the network starts with larger kernels and smaller numbers of filters etc.}\label{tab:convae_hyperparams}
+\end{table}
+
+\begin{table}
+\centering
+\setlength{\extrarowheight}{15pt}
+\hspace*{-0.5in}
+\begin{tabular}{|l|l|l|}
+\hline
+Hyperparameter & Scale & Description \\
+\hline \hline
+\multicolumn{3}{|l|}{Recurrent parameters: } \\
+\hline
+Read\/write functions & Binary & \makecell[l]{One of attention or convolutional describing  \\ the way draw looks and adds to the canvas.} \\
+Nodes in recurrent layer & Integer & Describing the number of cells in the LSTM cells \\
+\hline
+\multicolumn{3}{|l|}{Network parameters: } \\
+\hline
+Dense dimension & Integer & \makecell[l]{Number of nodes in the dense layer \\ connecting to the latent space} \\
+Latent type & Multinomial & \makecell[l]{One of the latent space regularization \\techniques (KLD, MMD, clustering loss)} \\
+Latent dimension & Integer & The dimensionality of the latent space \\
+$\beta$ & Logarithmic int & Weighting parameter for the latent term \\
+\hline
+\multicolumn{3}{|l|}{Optimizer parameters: } \\
+\hline
+$\eta$ & Logarithmic float & Learning rate, described in \ref{sec:gd} \\
+$\beta_1$ & Linear float & Momentum parameter, described in \ref{sec:momentum_gd} \\
+$\beta_2$ & Linear float & \makecell[l]{Second moment momentum parameter. \\ Described in \ref{sec:adam}}\\
+\hline
+\end{tabular}
+\caption{Hyperparameters for the draw algorithm as outlined in section \ref{sec:draw}. The implementation of the convolutional read and write functions is a novel contribution to the DRAW algorithm. We investigate which read/write paradigm is most useful for classification and clustering. Additionally as a measure ensuring the comparability of latent sample we fix the $\delta$ parameter determining the glimpse size. The effect of $\delta$ is explored in detail in the paper by \citet{Gregor2015} and in the earlier section \ref{sec:draw}.}\label{tab:draw_hyperparams}
+\end{table}
