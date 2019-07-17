@@ -91,5 +91,11 @@ In the preceding sections we discussed gradient descent as an update we do over 
 \end{figure}
 
 \subsection{adam}\label{sec:adam}
-One of the major breakthroughs in modern machine learning is the improvements on the optimization scheme of gradient descent from the most simple version introduced in equation \ref{eq:gd} to the adam paradigm described by \citet{Kingma2015}. Conceptually adam ties together stochastic optimization in the form of batched data, momentum and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, magnitude of the derivative or both. 
+One of the major breakthroughs in modern machine learning is the improvements on the optimization scheme of gradient descent from the most simple version introduced in equation \ref{eq:gd} to the adam paradigm described by \citet{Kingma2015}. Conceptually adam ties together stochastic optimization in the form of batched data, momentum and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, magnitude of the derivative or both. Adding to the momentum part adam maintains a exponentially decaying average over previous first and second moments of the derivative. Physically this is akin to maintaining a velocity and momentum for an inertial system. Mathematically we describe these decaying moments as 
+
+\begin{align}
+m_t &= \beta_1 m_{t-1} +(1-\beta_1)\nabla \mathcal{L}(\mathbf{x}_{t, i}) \\
+v_t &= \beta_2 v_{t-1} +(1-\beta_2)\nabla \mathcal{L}(\mathbf{x}_{t, i})^2
+\end{align}
+
 
