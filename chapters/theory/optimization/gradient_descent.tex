@@ -64,11 +64,13 @@ The first problem of multiple local minima has a proposed solution that to physi
 \noindent So each $\mathbf{v}_t$ is then an exponentially weighted average over all the previous gradients. The factor $1-\beta$ then controls how much of a view there is backwards in the iteration. The factor is then reasonably restricted to avoid overpowering by recent gradients to $\beta \in [0, 1]$. How many steps in the past sequence that this average "sees" we illustrate in figure \ref{fig:beta}. Adding momentum is then a partial answer to the challenge of how to overcome both local minima and saddle regions in the loss function curvature. To summarize we list the parameters that need tuning for a gradient descent with momentum in table \ref{tab:momentum}
 
 \begin{table}
-\begin{tabular}{c|c|c|l}
+\begin{tabular}{cccl}
+\toprule
 Name &Default value & Scale  & Description\\
-\hline
+\midrule
 $\beta$  & $0.9$ & Gaussian normal & Exponential decay rate of the momentum step\\
-$\eta$  & $10^{-3}$ & Linear & Weight of the momentum update
+$\eta$  & $10^{-3}$ & Linear & Weight of the momentum update \\
+\bottomrule
 \end{tabular}
 \caption{Hyperparameter table for momentum gradient descent. These parameters have to be tuned without gradient information, we discuss ways to achieve this in section \ref{sec:hyperparams}}\label{tab:momentum}
 \end{table}
@@ -76,10 +78,9 @@ $\eta$  & $10^{-3}$ & Linear & Weight of the momentum update
 
 \begin{figure}
 \centering
-\includegraphics{../figures/beta_decay.pdf}
+\includegraphics[height=3in]{../figures/beta_decay.pdf}
 \caption{A figure illustrating the decay rate of different choices of $\beta$. The lines go as $\beta^n$ and shows that one can quite easily infer how many last steps is included for each choice. A good starting value for the parameter has been empirically found to be $\beta=0.9$ for many applications. In this thesis we'll use a gaussian distribution around this value as a basis for a random search.}\label{fig:beta}
 \end{figure}
-
 
 \subsection{Stochastic \& Batched Gradient Descent}
 In the preceding sections we discussed gradient descent as an update we do over the entire data-set. This procedure creates a gradient with minimal noise pointing directly to the nearest minimum. For most complex models that bee-lining behavior is something to avoid. One of the most powerful tools to avoid this behavior is batching which involves taking the gradient with only a limited partition of the data and updating the parameters. This creates noise in the gradient which encourages exploration of the loss-surface rather than strong convergence to the nearest minimum. If we set the batch size $N=1$ we arrive at a special case of batched gradient descent known in statistics and machine learning nomenclature as stochastic gradient descent (SGD). As the naming implies SGD aims to include the noisiness we wish to introduce to the optimization procedure. Both batched gradient descent and SGD show marked improvements on performing full-set gradient updates (\cite{Keskar2016}). This effect is illustrated in figure \ref{fig:batch_size}. 
@@ -91,11 +92,38 @@ In the preceding sections we discussed gradient descent as an update we do over 
 \end{figure}
 
 \subsection{adam}\label{sec:adam}
-One of the major breakthroughs in modern machine learning is the improvements on the optimization scheme of gradient descent from the most simple version introduced in equation \ref{eq:gd} to the adam paradigm described by \citet{Kingma2015}. Conceptually adam ties together stochastic optimization in the form of batched data, momentum and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, magnitude of the derivative or both. Adding to the momentum part adam maintains a exponentially decaying average over previous first and second moments of the derivative. Physically this is akin to maintaining a velocity and momentum for an inertial system. Mathematically we describe these decaying moments as 
+One of the major breakthroughs in modern machine learning is the improvements on the optimization scheme of gradient descent from the most simple version introduced in equation \ref{eq:gd} to the adam paradigm described by \citet{Kingma2015}. Since it's conception adam has become the de facto solver for most ML applications. Conceptually adam ties together stochastic optimization in the form of batched data, momentum and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, of the magnitude of the derivative, or both. Adding to the momentum part adam maintains a exponentially decaying average over previous first and second moments of the derivative. Physically this is akin to maintaining a velocity and momentum for an inertial system. Mathematically we describe these decaying moments as 
 
 \begin{align}
 m_t &= \beta_1 m_{t-1} +(1-\beta_1)\nabla \mathcal{L}(\mathbf{x}_{t, i}) \\
 v_t &= \beta_2 v_{t-1} +(1-\beta_2)\nabla \mathcal{L}(\mathbf{x}_{t, i})^2
 \end{align}
+
+\noindent In the paper \citet{Kingma2015} describe an issue where zero-initialized $m_t$ and $v_t$ are biased towards zero, especially when the decay is small. To solve this problem they introduce bias-corrected versions of the moments 
+
+\begin{align}
+\hat{m}_t &= \frac{m_t}{1 - \beta_1^t} \\
+\hat{v}_t &= \frac{v_t}{1 - \beta_2^t} 
+\end{align}
+
+\noindent Which is then used to update the model parameters in a familiar way, equation \ref{eq:adam} gives the adam update rule. 
+\begin{equation}\label{eq:adam}
+\mathbf{x}_{n+1} = \mathbf{x}_{n} - \frac{\eta}{\hat{v}_n + \epsilon}\hat{m}_n
+\end{equation}
+
+\noindent The authors provide suggested values for $\beta_1 =0.9 $, $\beta_2 =0.999$ and $\epsilon = \num{1e-8}$. They also recommend that one constricts the values for $\beta_2 > \beta_1$. Lastly then we consider the hyperparameters required for the usage of adam, $\beta_1$ and $\beta_2$ are in principle both needed to be tuned but we restrict the tuning to $\beta_1$ in this thesis to limit the number of parameters needed for tuning. We list the parameters and their scale in tble \ref{tab:adam}.
+
+\begin{table}
+\begin{tabular}{cccl}
+\toprule
+Name &Default value & Scale  & Description\\
+\midrule
+$\beta_1$  & $0.9$ & Gaussian normal & \makecell[l]{Exponential decay rate of the fist moment \\ of the gradient}\\
+$\beta_2$  & $0.999$ & Gaussian normal & \makecell[l]{Exponential decay rate of the second moment \\ of the gradient}\\
+$\eta$  & $10^{-3}$ & Linear & Weight of the momentum update \\
+\bottomrule
+\end{tabular}
+\caption{Hyperparameter table for adam. These parameters have to be tuned without gradient information, we discuss ways to achieve this in section \ref{sec:hyperparams}}\label{tab:adam}
+\end{table}
 
 

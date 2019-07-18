@@ -26,9 +26,9 @@ H(p(x)) = -\langle I(x) \rangle_{p(x)} = - \sum _x p(x)\log(p(x))
 H(p, q) = - \sum_x p(x)\log(q_\theta(x))
 \end{equation}
 
-\noindent Tying the cross entropy to model optimization requires a quantity to optimize. We define the maximum likelihood estimate (MLE) which represents the probability of seeing the data, i.e. the set of tuples $\eta_i = {\mathbb{x}_i, y_i}$, at hand given our model and parameters. Given the feature vectors with binary class labels $S = \{\eta_i\}$ the likelihood of our model is defined as 
+\noindent Tying the cross entropy to model optimization requires a quantity to optimize. We define the maximum likelihood estimate (MLE) which represents the probability of seeing the data, i.e. the set of tuples $\eta_i = \{\mathbf{x}_i, y_i\}$, at hand given our model and parameters. Given the feature vectors with binary class labels $S = \{\eta_i\}$ the likelihood of our model is defined as 
 
-\begin{equation}
+\begin{equation}\label{eq:likelihood}
 p(S | \theta) = \prod_i q_\theta(x_i)^{y_i} - (1-q_\theta(x_i))^{1-y_i}
 \end{equation}
 

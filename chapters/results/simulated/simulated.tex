@@ -6,7 +6,7 @@ From the simulated data we have two classes of events; proton and carbon. Our hy
 
 \subsubsection{Convolutional Autoencoder classification results\protect\footnote{The scripts used to produce the results for this section can be found in the repository at: \lstinline{scripts/convae_simulated.py}, \lstinline{notebooks/draw_model.ipynb}, and \lstinline{notebooks/latent_space_simulated.ipynb}}}
 
-The training procedure for classification using a semi-supervised regime as the one we'll apply necessitates the same strict separation of labeled data for the classification step as when considering ordinary classification tasks. To emulate the real-data case we set a subset of the simulated data to be labeled and treat the rest as unlabeled data. We chose this partition to be $15\%$ of each class. We denote this subset and its associated labels as $\gamma_L=(\mathbf{X}_L, \mathbf{y}_L)$, the entire dataset which we will denote as $\mathbf{X}_F$. To clarify please note that $\mathbf{X}_L \subset \mathbf{X}_F$. Furthermore, the tuple $\gamma_L$ has to be split in training and test sets. The test partition is set to be $30\%$ of the samples. The hyperparameters were tuned with the \lstinline{RandomSearch} architecture which searches in a semi structured way over all the parameters given in table \ref{tab:convae_hyperparams} we list the experiments with their corresponding proton $f1$ score in appendix \ref{tab:convae_randomsearch}. We optimize the classification performance using $M=40$ semi-structured random experiments. To illustrate the difference in quality and convergence of the runs we show the plot of the resulting loss curves of the highest $N=10$ runs in figure \ref{fig:sim_clf_loss}.
+The training procedure for classification using a semi-supervised regime as the one we'll apply necessitates the same strict separation of labeled data for the classification step as when considering ordinary classification tasks. To emulate the real-data case we set a subset of the simulated data to be labeled and treat the rest as unlabeled data. We chose this partition to be $15\%$ of each class. We denote this subset and its associated labels as $\gamma_L=(\mathbf{X}_L, \mathbf{y}_L)$, the entire dataset which we will denote as $\mathbf{X}_F$. To clarify please note that $\mathbf{X}_L \subset \mathbf{X}_F$. Furthermore, the tuple $\gamma_L$ has to be split in training and test sets. The test partition is set to be $30\%$ of the samples. The hyperparameters were tuned with the \lstinline{RandomSearch} architecture which searches in a semi structured way over all the parameters given in table \ref{tab:convae_hyperparams} we list the experiments with their corresponding proton $f1$ score in appendix \ref{tab:convae_randomsearch}. We optimize the classification performance using $M=40$ semi-structured random experiments. To illustrate the difference in quality and convergence of the runs we show the plot of the resulting loss curves of the highest $N=10$ runs in figure \ref{fig:sim_clf_loss}. In the figure lighter colors represent higher proton $f1$ scores, and as such the same color across the reconstruction and latent losses represent the same experiment. We also denote different scales and corresponding markers for the reconstruction and latent losses. We observe that in the top 10 performing runs there are no versions of the model that maintains a VAE-style Kullback Leibler loss on the latent space. And that the very highest performing model maintains no regularization at all, while considerably more complex than the runners up as seen from appendix \ref{tab:convae_randomsearch}.
 
 \begin{figure}[H]
 \centering
@@ -15,7 +15,7 @@ The training procedure for classification using a semi-supervised regime as the 
 \end{figure}
 
 
-The classifier was a logistic regression model from the \lstinline{scikit-learn} python library trained on the latent expressions of the train partition of $\mathbf{X}_L$. The hyperparameters of the best performing model, with the least complexity, is listed in table \ref{tab:param_vals_sim_convae}. A simpler model has fewer variables to fit and as such it is less prone to overfitting effects unsupervised models can exhibit. 
+The classifier was a logistic regression model from the \lstinline{scikit-learn} python library trained on the latent expressions of the train partition of $\mathbf{X}_L$. The hyperparameters of the best performing model, with the least complexity, is listed in table \ref{tab:param_vals_sim_convae}. We chose a simpler model as it has fewer variables to fit and as such it is less prone to overfitting effects unsupervised models can exhibit. 
 
 
 \begin{table}
@@ -60,17 +60,24 @@ Furthermore we wish to estimate the variability of the highest performing model.
 \end{figure}
 
 \begin{table}
-\begin{tabular}{l|ccc|ccc}
+\begin{tabular}{lcccccc}
 \toprule
- & \multicolumn{3}{c}{Proton} & \multicolumn{3}{c}{Carbon} \\
- \midrule
- & f1 & recall & precision & f1 & recall & precision\\
- Train & $ \underset{ \num{+- 4.94e-02 } } {\num{ 0.62 } }  $ & $ \underset{ \num{+- 5.51e-02 } } {\num{ 0.62 } }  $ & $ \underset{ \num{+- 4.82e-02 } } {\num{ 0.61 } }  $ & $ \underset{ \num{+- 6.81e-02 } } {\num{ 0.63 } }  $ & $ \underset{ \num{+- 5.78e-02 } } {\num{ 0.63 } }  $ & $ \underset{ \num{+- 4.72e-02 } } {\num{ 0.61 } }  $ \\
-  Test & $ \underset{ \num{+- 3.85e-02 } } {\num{ 0.61 } }  $ & $ \underset{ \num{+- 6.00e-02 } } {\num{ 0.63 } }  $ & $ \underset{ \num{+- 3.70e-02 } } {\num{ 0.60 } }  $ & $ \underset{ \num{+- 7.96e-02 } } {\num{ 0.64 } }  $ & $ \underset{ \num{+- 5.55e-02 } } {\num{ 0.62 } }  $ & $ \underset{ \num{+- 4.77e-02 } } {\num{ 0.62 } }  $\\
- \bottomrule
+{} & \multicolumn{3}{c}{Proton} & \multicolumn{3}{c}{Carbon} \\  
+\midrule
+ & f1 & recall & precision & f1 & recall & precision\\  
+ Train & $ \underset{ \num{+- 7.03e-02 } } {\num{ 0.88 } }  $ & $ \underset{ \num{+- 5.93e-02 } } {\num{ 0.88 } }  $ & $ \underset{ \num{+- 8.56e-02 } } {\num{ 0.86 } }  $ & $ \underset{ \num{+- 4.39e-02 } } {\num{ 0.90 } }  $ & $ \underset{ \num{+- 5.32e-02 } } {\num{ 0.89 } }  $ & $ \underset{ \num{+- 7.37e-02 } } {\num{ 0.87 } }  $ \\ 
+  Test & $ \underset{ \num{+- 7.07e-02 } } {\num{ 0.88 } }  $ & $ \underset{ \num{+- 6.40e-02 } } {\num{ 0.89 } }  $ & $ \underset{ \num{+- 7.67e-02 } } {\num{ 0.87 } }  $ & $ \underset{ \num{+- 6.06e-02 } } {\num{ 0.90 } }  $ & $ \underset{ \num{+- 6.80e-02 } } {\num{ 0.89 } }  $ & $ \underset{ \num{+- 7.11e-02 } } {\num{ 0.88 } }  $\\
+\bottomrule
 \end{tabular}
 \caption{Performance as measured by $f1$, precision and recall of the convolutional autoencoder as specified in table \ref{tab:param_vals_sim_convae} on simulated at-tpc data. The standard errors are estimated by running the simulation $N=10$ times with random initialization of weights for each experiment}\label{tab:clf_simulated}
 \end{table}
+
+To verify the performance it helps to consider the reconstruction. We would expect a good performing model to be able to reconstruct similar representations to what it was given as input as this structural information then has to have passed through the information bottleneck. In figure \ref{fig:sim_convae_reconstruction} we show that the reconstruction resembles the original strongly, even discerning the minute breaks in the carbon line caused by some aspect of the simulation. While we also note the blurring typical of the pixel-wise reconstruction. 
+
+\begin{figure}
+\includegraphics[width=\textwidth, height=4in]{plots/convae_reconstruction.png}
+\caption{Reconstructions and inputs produced by the convolutional autoencoder with the configuration listed in table \ref{tab:param_vals_sim_convae}. The left column are the reconstructions of the right column which are model inputs. We note that the model is able to pick up even the breaks in the line-structure from the simulations, and that reconstruction of the proton events exhibit a blurring effect common to pixel wise mse or bce losses.}\label{fig:sim_convae_reconstruction}
+\end{figure}
 
 Lastly we investigate the relationship between the hyperparameters and the proton $f1$ score. Among the reasons for using a random-search procedure for the hyperparameter search is the possibly complex, non-monotonic relationships between parameters and the outcome we wish to measure. As such the ordinary tools of estimating correlation and co-variance must come with caveats. Table \ref{tab:hyperparam_corr} of correlation between the parameters and the proton $f1$ score, but we note that while none of the correlations were significant - this may be a consequence of violated assumptions and non-monotonic relationships.
 
@@ -101,3 +108,8 @@ relu             &      0.26 &  0.21 \\
 \caption{Spearman rank correlation of the proton $f1$ score with the other hyperparameters from appendix \ref{tab:convae_randomsearch}. The strongest monotonic relationships are with the number of parameters and the largest kernel, but no relationship is significant at the $\alpha = 0.001$ level. This is perhaps unsurprising as the assumption is that the hyperparameters co-vary differently and in a highly complex manner. Nevertheless there are still indications that batch normalization and maximum mean discrepancy regularization are positively related to the performance.}\label{tab:hyperparam_corr}
 \end{table}
 
+\subsubsection{DRAW classification results}
+
+\subsection{Clustering of events}
+\subsubsection{Convolutional autoencoder clustering results}
+\subsubsection{DRAW clustering results}
