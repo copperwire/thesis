@@ -71,8 +71,13 @@ p(S|\mathbf{\theta}) &= \prod_i^n p(y_i) \\
 \nabla_\mathbf{w} \log(p(S|\theta)) &=\nabla_\mathbf{w}\left( - \frac{1}{\sigma^2} (\mathbf{y} - \mathbf{X}\mathbf{w})^2 \right) \\
 &= -\frac{1}{\sigma^2} 2 \mathbf{X}^T(\mathbf{y}- \mathbf{X}\mathbf{w}) \\
 0 & = -\frac{2}{\sigma^2}(\mathbf{X}^T\mathbf{y} - \mathbf{X}^T\mathbf{Xw})&& \text{setting derivative to zero} \\
-\mathbf{X}^T\mathbf{Xw} &= \mathbf{X}^T\mathbf{y}  && \text{multiplying away constants} \\
-\mathbf{w}&= (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T\mathbf{y} 
+\mathbf{X}^T\mathbf{Xw} &= \mathbf{X}^T\mathbf{y}  && \text{multiplying away constants} 
 \end{align*}
 
-\noindent Which is the same solution for the parameters as we get with ordinary least squares. This problem is of course solvable with a plethora of other tools, most notably we have the ones that don't perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this derivative might not be well defined. 
+\noindent Which ultimately supplies us with the solution, equal to the least squares derivation, of the optimal parameters. Which we present in equation \ref{eq:ls}
+\begin{equation}\label{eq:ls}
+\mathbf{w}= (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T\mathbf{y} 
+\end{equation}
+
+
+\noindent Which is the same solution for the parameters as we get with ordinary least squares. This problem is of course solvable with a plethora of other tools, most notably we have the ones that don't perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this derivative might not be well defined. It's also important to note that the \todo{ridge, lasso ?  }

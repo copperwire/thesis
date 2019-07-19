@@ -47,7 +47,19 @@ p(S | \theta) = \prod_i q_\theta(x_i)^{y_i} - (1-q_\theta(x_i))^{1-y_i}
 
 \subsection{Over and under-fitting}
 
-When fitting an unknown function in higher dimensions than two it's not clear what complexity is suitable for the model. Additionally compounding this problem is the ever present threat of various noise signals and measurement errors present in the data. To illustrate this we'll consider the case of the one dimensional problem of polynomial regression. We note that this section follows closely that of section 2 in \citet{Mehta2019}, we also refer to this paper for a more in-depth introduction to machine learning for physicists. 
+When fitting an unknown function it is often not clear what complexity is suitable for the model. Additionally compounding this problem is the ever present threat of various noise signals and measurement errors present in the data. Further complicating the issue is the nature of machine learning problems: we're almost always interested in extrapolating to unseen regions of data, in the machine learning vernacular these are sets of data we call \textsc{test}-sets. Data used to fit the model is called  \textsc{train}-sets. To illustrate this we'll consider the case of the one dimensional problem of polynomial regression. We note that this section follows closely that of section 2 in \citet{Mehta2019}, we also refer to this paper for a more in-depth introduction to machine learning for physicists. The concepts of over and under-fitting go hand-in-hand with two other concepts we'll introduce in this chapter, regularization and the bias-variance relationship. Firstly however we'll briefly introduce the concepts in over and under-fitting models. This topic is strongly related to the concepts of complexity, and the Vapnik-Chervonenkis theory of statistical learning, the details of which are outside the scope of this thesis. We start by considering a process we wish to model that is on the form shown in equation \label{eq:target}
+
+\begin{equation}\label{eq:target}
+y_i = P(x_i) + \epsilon_i
+\end{equation}
+
+\noindent In equation \ref{eq:target} the $\epsilon_i$ term expresses a noise term at that point, and the function $P(\cdot)$ is the true process which we are interested in modeling but whose shape is hidden from us. It is important to note that for data with no noise, most of the problems and cautions we describe in this chapter do not apply, however measuring any physical phenomenon inherently carries with it some noise. We wish to model this principally unknown process expressed by $y_i$ by using a polynomial of degree $n$, let $P^n$ be the set of polynomials which we can construct a polynomial of degree $n$ to fit to the observation. The distinguishing features of overfitting are shown in figure \ref{fig:overfit} where we fit polynomials of varying degrees to data drawn from a true distribution following a first and third order polynomial respectively. In the figure we observe the higher order models fitting to spurious trends in the data we can attribute to the noise. The higher expressibility of the model then leads to it capturing features of the noise that increase accuracy in the training domain but we observe that this rapidly deteriorates outside the training region. 
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{../figures/y_distr.png}
+\caption{Polynomial regression of varying degrees on data drawn from a linear distribution on the left and a cubic distribution on the right. Models of varying complexity indicated by their basis $P^n$ are fit to the train data and evaluated on the test region. We observe that the higher order solutions follow what we observe to be  spurious-noise generating features in the data. This is what we call overfitting.}\label{fig:overfit}
+\end{figure}
 
 \subsubsection*{Regularization}
 
