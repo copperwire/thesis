@@ -15,13 +15,10 @@ The process of finding minima or maxima, known collectively as extrema, of a fun
 \subfloat[]{\includegraphics[width=0.6\textwidth]{../figures/gd_low.pdf}}
 \subfloat[]{\includegraphics[width=0.6\textwidth]{../figures/gd_large.pdf}}
 \caption{Gradient descent on a simple quadratic function showing the effect of too small, \textbf{(a)}, and too large, \textbf{(b)}, value for the learning rate $\eta$}\label{fig:badgd}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-	\includegraphics[width=0.75\textwidth]{../figures/gd_good.pdf}
+\includegraphics[width=0.75\textwidth]{../figures/gd_good.pdf}
 \caption{Complement to figure \ref{fig:badgd} where we show the effect of a good learning rate on a gradient descent procedure. The gradient descent procedure is performed on a quadratic function.}\label{fig:goodgd}
 \end{figure}
+
 
 \noindent While in the case of the convex function we can directly inspect the progress this is not feasible for the high-dimensional updates required for a neural network. In the Stanford course authored by \citet{Karpathy} they point out that one can indirectly observe the impact of the choice of learning rate from the shape of the loss as a function of epoch. This impact is shown in figure \ref{fig:lrloss} which we'll use as a reference when training the models used in this thesis. 
 
