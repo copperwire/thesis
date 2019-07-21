@@ -2,7 +2,7 @@
 
 \section{Linear Regression}\label{sec:LinReg}
 
-Modern machine learning has its foundations in the familiar framework of linear regression. Many fairly interesting problems can be cast as systems of linear problems, and as such there are multitudes of ways to solve the problem. In this section we'll detail the derivation of linear regression in the formalism of a maximum likelihood estimate. As it is in this formalism the thesis writ large is cast. Linear regression can be expressed on a general form as the linear relationship expressed in equation \ref{eq:linreg} where we don't specify the basis of $\mathbf{w}$, but we are free to model using polynomial, sinusoidal or ordinary Cartesian basis-sets.
+Modern machine learning has its foundations in the familiar framework of linear regression. Many fairly interesting problems can be cast as systems of linear problems, and as such there are multitudes of ways to solve the problem. In this section we'll detail the derivation of linear regression in the formalism of a maximum likelihood estimate, as it is in this formalism the thesis writ large is framed. Linear regression can be expressed on a general form as the linear relationship expressed in equation \ref{eq:linreg} where we don't specify the basis of $\mathbf{w}$, but we are free to model using polynomial, sinusoidal or ordinary Cartesian basis-sets.
 
 \begin{equation}\label{eq:linreg}
 \hat{y}_i = \mathbf{x}_i^T\mathbf{w} + b
@@ -14,7 +14,7 @@ Modern machine learning has its foundations in the familiar framework of linear 
 \mathcal{O} = \argmin _{\mathbf{w}, b} || \mathbf{y} - \mathbf{Xw} ||^2
 \end{equation}
 
-\noindent  The central assumption of linear regression, that provides the opportunity for a closed form solution, is the independent identically distributed (IID) nature of $\epsilon_i$. We assume that the error is normally distributed with zero-mean and identical variance across all samples, e.g. 
+\noindent In physics there are many relationships which have successfully been modeled with linear regression. From the very simple single regression problem of Ohm's law to more complex problems like identifying the coupling constant in a thermodynamic system like the Ising model. The latter of the two is elegantly demonstrated in \citet{Mehta2019}. The central assumption of linear regression, that provides the opportunity for a closed form solution, is the independent identically distributed (IID) nature of $\epsilon_i$. We assume that the error is normally distributed with zero-mean and identical variance across all samples, e.g. 
 
 \begin{align}
 \epsilon_i \sim \mathcal{N}(0, \sigma^2)
@@ -80,4 +80,4 @@ p(S|\mathbf{\theta}) &= \prod_i^n p(y_i) \\
 \end{equation}
 
 
-\noindent Which is the same solution for the parameters as we get with ordinary least squares. This problem is of course solvable with a plethora of other tools, most notably we have the ones that don't perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this derivative might not be well defined. It's also important to note that the \todo{ridge, lasso ?  }
+\noindent Which is the same solution for the parameters as we get with ordinary least squares. This problem is of course solvable with a plethora of other tools, most notably we have the ones that don't perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this derivative might not be well defined. It's also important to note that the \todo{add some plots of linear data with noise, regression line and show the errors?}

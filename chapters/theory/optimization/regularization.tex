@@ -1,0 +1,17 @@
+\subsection{Regularization}
+
+With the advent of modern computing resources researchers gained the ability to operate very complex models. Giving rise to the problem of overfitting to noise in the data, as described in section \ref{sec:fitting}. Finding measures to reduce overfitting has been a goal for near on $50$ years. The first modern breakthrough was adding a coefficient restriction on their cumulative magnitude by the $L_2$-norm. This form of restriction proved hugely beneficial for the simple reason that it restricted the models ability to express all of its complexity. Introduced in 1970 by \citet{Hoerl1970} this modification on linear regression was dubbed \textit{ridge} regression. Experiments with different norms were carried out in the years following the elegant discovery by \cite{Hoerl1970}. Perhaps most influential of them is the use of the $L_1$-norm first successfully implemented by \citet{Tibshirani1996}. The inclusion of a penalty by the $L_1$-norm proved challenging as it was not solvable analytically and required iterative methods like gradient descent, described in detail in section \ref{sec:gd}. 
+
+In this section we will introduce the different regularizations as additional contributions to the cost function. As well as geometrically exploring the reasoning for why these terms reduce the expressibility of the model. The $L_p$ norm is defined as. 
+
+\begin{equation}
+L_p(\mathbf{x}) = \left(\sum |x_i|^p\right)^{\frac{1}{p}}
+\end{equation}
+
+\noindent Where the familiar euclidian distance is just the $L_2$ norm between two vectors. The squared $L_2$ norm was added to form ridge regression (\cite{Hoerl1970}). For Lasso (\cite{Tibshirani1996}) the authors used the $L_1$ norm which is used to compute the Manhattan or taxicab-distance. The Manhattan distance is aptly named as one can think of it as the length of the city blocks a cab-driver drives from one house to another. Modifying the cost function then is as simple as adding the normed coefficients. To demonstrate we add the ridge regularization term to the squared error cost, shown in equation \ref{eq:mse_ridge}
+
+\begin{equation}\label{eq:mse_ridge}
+C(y_i, f(\mathbf{x}_i; \theta)) = (y_i - f(\mathbf{x}_i; \theta))^2 + \sum|\theta_i|^2
+\end{equation}
+
+\noindent Conceptually the regularization term added to the cost function modifies what parameters satisfy the $\argmin$ in equation \ref{eq:cost} by adding a penalty to parameters having high values. This is especially useful in cases where features are co-variate or the data is noisy. 
