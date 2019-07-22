@@ -8,10 +8,24 @@ In this section we will introduce the different regularizations as additional co
 L_p(\mathbf{x}) = \left(\sum |x_i|^p\right)^{\frac{1}{p}}
 \end{equation}
 
-\noindent Where the familiar euclidian distance is just the $L_2$ norm between two vectors. The squared $L_2$ norm was added to form ridge regression (\cite{Hoerl1970}). For Lasso (\cite{Tibshirani1996}) the authors used the $L_1$ norm which is used to compute the Manhattan or taxicab-distance. The Manhattan distance is aptly named as one can think of it as the length of the city blocks a cab-driver drives from one house to another. Modifying the cost function then is as simple as adding the normed coefficients. To demonstrate we add the ridge regularization term to the squared error cost, shown in equation \ref{eq:mse_ridge}
+\noindent A common notation for the $L_p(\cdot)$ norm that we will also use in this thesis is $L_p(\cdot) = ||\cdot||_p$. We note that the familiar euclidian distance is just the $L_2$ norm of a vector difference. The squared $L_2$ norm was added to form ridge regression (\cite{Hoerl1970}). For Lasso (\cite{Tibshirani1996}) the authors used an $L_1$ term, commonly called the Manhattan or taxicab-distance. The Manhattan distance is aptly named as one can think of it as the length of the city blocks a cab-driver drives from one house to another.
+
+Modifying the cost function then is as simple as adding the normed coefficients. To demonstrate we add the ridge regularization term to the squared error cost, shown in equation \ref{eq:mse_ridge}
 
 \begin{equation}\label{eq:mse_ridge}
 C(y_i, f(\mathbf{x}_i; \theta)) = (y_i - f(\mathbf{x}_i; \theta))^2 + \sum|\theta_i|^2
 \end{equation}
 
-\noindent Conceptually the regularization term added to the cost function modifies what parameters satisfy the $\argmin$ in equation \ref{eq:cost} by adding a penalty to parameters having high values. This is especially useful in cases where features are co-variate or the data is noisy. 
+\noindent Conceptually the regularization term added to the cost function modifies what parameters satisfy the $\argmin$ in equation \ref{eq:cost} by adding a penalty to parameters having high values. This is especially useful in cases where features are co-variate or the data is noisy. Adding a regularization term is equivalent to solving a constrained optimization problem e.g. 
+
+\begin{align}
+\theta^* = \argmin_{||\theta||_2^2<t} ||y_i - f(\mathbf{x}_i; \theta)||_2^2
+\end{align}
+
+\noindent The representation as a constrained optimization is useful to understand the impact of this form of regularization. Graphically this is demonstrated in figure \ref{fig:regularization}, copied from \cite{Mehta2019}, where the lasso penalty is shown to result in a constrained region for the parameter inside a region with vertices pointing along the feature axes. Intuitively this indicates that for a $L_1$ penalty the optimal solution is a sparse one where as many parameters as possible are zero while still minimizing the squared error, or cross entropy. For $L_2$ ridge regression these vertices are not present and the region has an even boundary along the feature axes resulting in solutions where most parameter values are small. \todo{add subsection on dropout and batchnorm} 
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{../figures/regularization}
+\caption{Demonstrating the effect of a regularization constraint on a 2-variable optimization. The blue ovals represent the squared error, as it is quadratic in the parameters $w_i$. And the shaded brown region represents the restriction on the values of $w_i$, s.t. the only eligible values for the parameters are inside this region. Since the $L_1$ norm has these vertices on the feature axis we expect that the contour of the cost will touch a vertex consequently generating a sparse feature representation. The $L_2$ norm does not have these protrusions and will then generally intersect with the cost-contour somewhere that generates a linear combination of features that all have small coefficients. Figure copied from \citet{Mehta2019}, which in turn adapted a figure from Friedman et al. (2001)}\label{fig:regularization}
+\end{figure}

@@ -19,9 +19,23 @@ The memory encoded by the RNN cell is encoded as a state variable. And while fig
 \inner{[X_t, h_t]}{W} + b = h_{t+1}
 \end{align}
 
-Where the weight matrix $W$ and bias vector $b$ are defined in the usual manner. Looking back at figure \ref{fig:rnn} the output should be a vector in $y$ space and yet we've noted the output as being in the state space of the cell. This is simply a convenience lending flexibility to our implementation, the new state is produced by the cell and transformed to the $y$ space by use of a normal linear fully connected layer. This is a common trick in the machine learning community leaving the inner parts of the algorithm extremely problem agnostic and using end-point layers to fit the problem at hand. To further clarify we show the algorithm for a one-cell 
+\noindent Where the weight matrix $W$ and bias vector $b$ are defined in the usual manner. Looking back at figure \ref{fig:rnn} the output should be a vector in $y$ space and yet we've noted the output as being in the state space of the cell. This is simply a convenience lending flexibility to our implementation, the new state is produced by the cell and transformed to the $y$ space by use of a normal linear fully connected layer. This is a common trick in the machine learning community leaving the inner parts of the algorithm extremely problem agnostic and using end-point layers to fit the problem at hand. To further clarify we show the forward pass for a simple one-cell RNN in algorithm \ref{algo:rnn}. The forward pass is remarkably simple and flexible all the same. To model complex systems one can use the output from one RNN cell, $h_{t+1}$, as the input to another RNN cell that maintains its own state. 
 
 \begin{algorithm}[H]
 \SetAlgoLined
-\caption{Defining the forward pass of a simple one cell RNN network}
+\caption{Defining the forward pass of a simple one cell RNN network. The cell accepts the previous state and corresponding data-point as input. These are batched vectors both, and so one usually concatenates the vectors along the feature axis to save time when doing the matrix multiplication. The cell maintains a weight matrix, $\mathbf{W}$, and bias, $b$, which will be updated by back-propagation of errors in the standard way.}\label{algo:rnn}
+\KwResult{$\mathbf{h}_{t+1}$}
+\KwIn{$\mathbf{h}_t$, $\mathbf{X}_t$}
+\KwData{$\mathbf{W}$, b}
+$\mathbf{F} \gets$ \KwSty{concatenate}(($h_t$, $\mathbf{X}_t$), axis$=1$)\;
+$\mathbf{h}_{t+1}$ $\gets$ \KwSty{matmul}($\mathbf{F}$, $\mathbf{W}$) + b\;
+\KwRet{$\mathbf{h}_{t+1}$}
 \end{algorithm}
+
+\noindent Recurrent architectures present the researcher with a set of tools to not only model sequences but using a sequential structure to avoid common problems with e.g. variational autoencoders. This is the solution proposed by \citet{Gregor2015} with their DRAW algorithm that sequentially draws on a canvas to create realistic looking output images where a non-sequential autoencoder encounters the challenge that a given pixels activation is not conditioned on it's neighbors activation. In part this problem is what gives rise to the blurriness observed in the output from variational autoencoders. When designing a neural network the researcher principally has five basic choices regarding the sequentiality of the model. We represent these five in figure \ref{fig:ann_architectures}, which is copied from \citet{Karpathy2015}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{../figures/ann_types}
+\caption{The advent of recurrent networks enabled machine learning researchers to both model complex sequential behaviors like understanding patterns in text as well as using sequences to predict a single multivariate outcome and more. The leftmost figure \textbf{1)} represents an ordinary neural network, where the rectangles are matrix objects, red for input, blue for output and green for intermediary representations and the arrows are matrix operations like concatenation multiplication etc. \textbf{2)} shows a recurrent architecture for sequence output e.g. image captioning. Where the information about the previous word gets passed along forward by the state of the previous cell. \textbf{3)} transforming a sequence of observations to a single multivariate outcome. The classical example of which is sentiment prediction from text. \textbf{4), 5)} Sequenced input and output can either be aligned as in the latter or misaligned as in the former. An example of synced sequence to sequence can be phase prediction from a time series of a thermodynamic system. Un-synced applications include machine translation where sentences are processed then output in another language. Figure copied from \cite{Karpathy2015}}\label{fig:ann_architectures}
+\end{figure}

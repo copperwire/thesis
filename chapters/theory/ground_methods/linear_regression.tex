@@ -14,7 +14,7 @@ Modern machine learning has its foundations in the familiar framework of linear 
 \mathcal{O} = \argmin _{\mathbf{w}, b} || \mathbf{y} - \mathbf{Xw} ||^2
 \end{equation}
 
-\noindent In physics there are many relationships which have successfully been modeled with linear regression. From the very simple single regression problem of Ohm's law to more complex problems like identifying the coupling constant in a thermodynamic system like the Ising model. The latter of the two is elegantly demonstrated in \citet{Mehta2019}. The central assumption of linear regression, that provides the opportunity for a closed form solution, is the independent identically distributed (IID) nature of $\epsilon_i$. We assume that the error is normally distributed with zero-mean and identical variance across all samples, e.g. 
+\noindent In physics there are many relationships which have successfully been modeled with linear regression. From the very simple single regression problem of Ohm's law to more complex problems like identifying the Hamiltonian in a thermodynamic system like the Ising model. The latter of the two is elegantly demonstrated in \citet{Mehta2019}. The central assumption of linear regression, that provides the opportunity for a closed form solution, is the independent identically distributed (IID) nature of $\epsilon_i$. We assume that the error is normally distributed with zero-mean and identical variance across all samples, e.g. 
 
 \begin{align}
 \epsilon_i \sim \mathcal{N}(0, \sigma^2)
@@ -37,7 +37,7 @@ p(x | \mu, \sigma) = \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x - \mu)^2}{\sigma
 \begin{align}
 \langle y \rangle &= \langle \hat{y} + \epsilon \rangle  \\
 \langle y \rangle &= \langle \hat{y} \rangle + \langle \epsilon \rangle \\
-\langle y \rangle &= \mathbf{x}^T\mathbf{w}
+\langle y \rangle &= \mathbf{x}_i^T\mathbf{w}
 \end{align}
 
 \noindent And by the exact same properties we have that the variance of the prediction is the variance of the error term 
@@ -46,12 +46,14 @@ p(x | \mu, \sigma) = \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x - \mu)^2}{\sigma
 \langle y\rangle^2 + \langle y^2\rangle = \sigma^2
 \end{align}
 
-\noindent In concise terms we simply consider our outcome as a set of IID normal variables on the form $y_i \sim \mathcal{N}(\mathbf{x}^T\mathbf{w}, \sigma^2)$. The likelihood of the linear regression can then be written using the same tuple notation as for equation \ref{eq:likelihood}
+\noindent In concise terms we simply consider our outcome as a set of IID normal variables on the form $y_i \sim \mathcal{N}(\mathbf{x}_i^T\mathbf{w}, \sigma^2)$. The likelihood of the linear regression can then be written using the same tuple notation as for equation \ref{eq:likelihood}
 
 \begin{align}
 p(S|\mathbf{\theta}) &= \prod_i^n p(y_i) \\
 &= \prod_i^n \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(y_i - \mathbf{x}^T\mathbf{w})^2}{\sigma^2}} \\
-&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n \prod_i^n e^{-\frac{(y_i - \mathbf{x}^T\mathbf{w})^2}{\sigma^2}}
+&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n \prod_i^n e^{-\frac{(y_i - \mathbf{x}^T\mathbf{w})^2}{\sigma^2}} \\
+&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n  e^{-\sum_i\frac{(y_i - \mathbf{x}^T_i\mathbf{w})^2}{\sigma^2}} \\
+&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n  e^{-\frac{(\mathbf{y} - \mathbf{X}\mathbf{w})^T(\mathbf{y} - \mathbf{X}\mathbf{w})}{\sigma^2}} 
 \end{align}
 
 \noindent We recall from section \ref{sec:models} that the best parameters of a model can be estimated with 
@@ -62,13 +64,14 @@ p(S|\mathbf{\theta}) &= \prod_i^n p(y_i) \\
 
 \noindent To find the optimal values we then want to take the derivative w.r.t the parameters and find a saddle point, but as we saw before this is impractical, if not impossible, with the product sum in the likelihood. To solve this problem we repeat the log-trick from section \ref{sec:models} re-familiarizing ourselves with the log-likelihood
 \begin{align}
-\log(p(S|\theta)) = n \log(\frac{1}{\sqrt{2\pi \sigma^2}}) - \frac{(\mathbf{y} - \mathbf{X}\mathbf{w})^2}{\sigma^2}
+\log(p(S|\theta)) = n \log(\frac{1}{\sqrt{2\pi \sigma^2}}) - \frac{(\mathbf{y} - \mathbf{X}\mathbf{w})^T(\mathbf{y} - \mathbf{X}\mathbf{w})}{\sigma^2}
 \end{align}
 
 \noindent Taking the derivative with respect to the model parameters and setting to zero we get
 
 \begin{align*}
-\nabla_\mathbf{w} \log(p(S|\theta)) &=\nabla_\mathbf{w}\left( - \frac{1}{\sigma^2} (\mathbf{y} - \mathbf{X}\mathbf{w})^2 \right) \\
+\nabla_\mathbf{w} \log(p(S|\theta)) &=\nabla_\mathbf{w}\left( - \frac{1}{\sigma^2} (\mathbf{y} - \mathbf{X}\mathbf{w})^T(\mathbf{y} - \mathbf{X}\mathbf{w}) \right) \\
+&=  - \frac{1}{\sigma^2}(-2\mathbf{X}^Ty + 2\mathbf{X}^T\mathbf{X}\mathbf{w}) \\
 &= -\frac{1}{\sigma^2} 2 \mathbf{X}^T(\mathbf{y}- \mathbf{X}\mathbf{w}) \\
 0 & = -\frac{2}{\sigma^2}(\mathbf{X}^T\mathbf{y} - \mathbf{X}^T\mathbf{Xw})&& \text{setting derivative to zero} \\
 \mathbf{X}^T\mathbf{Xw} &= \mathbf{X}^T\mathbf{y}  && \text{multiplying away constants} 
