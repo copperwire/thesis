@@ -11,7 +11,7 @@ The training procedure for classification using a semi-supervised regime as the 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{/plots/randomsearch_loss.pdf}
-\caption{Distribution of the $N=10$ best loss curves from $M=40$ experiments with a convolutional autoencoder. Lighter colors indicate higher proton $f1$ scores, and as such there is an implied 1-1 correspondence between the plots. The lightest colored line represents a proton score of $f1_p = 0.98$, implying near perfect classification. While the worst performing model included in the plot has a score of $f1_p = 0.92$. The line-markers denote the loss-type for the associated run, with the axis the run is plotted on containing the corresponding legend. We observe that the maximum-mean-discrepancy loss on the latent distribution consistently outperforms the Kullback Leibler loss as none are included in the top 10. The full table is listed in appendix \ref{tab:convae_randomsearch}}\label{fig:sim_clf_loss}
+\caption[Randomsearch loss curves for CONV-AE on simulated AT-TPC data]{Distribution of the $N=10$ best loss curves from $M=40$ experiments with a convolutional autoencoder. Lighter colors indicate higher proton $f1$ scores, and as such there is an implied 1-1 correspondence between the plots. The lightest colored line represents a proton score of $f1_p = 0.98$, implying near perfect classification. While the worst performing model included in the plot has a score of $f1_p = 0.92$. The line-markers denote the loss-type for the associated run, with the axis the run is plotted on containing the corresponding legend. We observe that the maximum-mean-discrepancy loss on the latent distribution consistently outperforms the Kullback Leibler loss as none are included in the top 10. The full table is listed in appendix \ref{tab:convae_randomsearch}}\label{fig:sim_clf_loss}
 \end{figure}
 
 
@@ -56,7 +56,7 @@ Furthermore we wish to estimate the variability of the highest performing model.
 \centering
 \includegraphics[width=\textwidth, height=4in]{plots/reconst_best_model_simulated.png}
 \includegraphics[width=\textwidth, height=4in]{plots/latent_best_model_simulated.png}
-\caption{Reconstruction and latent loss curves for the $N=10$ runs of the best performing convolutional autoencoder using the configuration listed in table \ref{tab:param_vals_sim_convae}. The lightness of color indicates the proton $f1$ score achieved by the given model. The lightest color in the plot corresponds to a score of about $f1_p = 0.98$.}\label{fig:best_model_sim_clf}
+\caption[$L_x$ and $L_z$ for the CONV-AE on simulated AT-TPC data]{Reconstruction and latent loss curves for the $N=10$ runs of the best performing convolutional autoencoder using the configuration listed in table \ref{tab:param_vals_sim_convae}. The lightness of color indicates the proton $f1$ score achieved by the given model. The lightest color in the plot corresponds to a score of about $f1_p = 0.98$.}\label{fig:best_model_sim_clf}
 \end{figure}
 
 \begin{table}
@@ -76,7 +76,7 @@ To verify the performance it helps to consider the reconstruction. We would expe
 
 \begin{figure}
 \includegraphics[width=\textwidth, height=4in]{plots/convae_reconstruction.png}
-\caption{Reconstructions and inputs produced by the convolutional autoencoder with the configuration listed in table \ref{tab:param_vals_sim_convae}. The left column are the reconstructions of the right column which are model inputs. We note that the model is able to pick up even the breaks in the line-structure from the simulations, and that reconstruction of the proton events exhibit a blurring effect common to pixel wise mse or bce losses.}\label{fig:sim_convae_reconstruction}
+\caption[CONV-AE reconstructions of simulated AT-TPC events]{Reconstructions and inputs produced by the convolutional autoencoder with the configuration listed in table \ref{tab:param_vals_sim_convae}. The left column are the reconstructions of the right column which are model inputs. We note that the model is able to pick up even the breaks in the line-structure from the simulations, and that reconstruction of the proton events exhibit a blurring effect common to pixel wise mse or bce losses.}\label{fig:sim_convae_reconstruction}
 \end{figure}
 
 Lastly we investigate the relationship between the hyperparameters and the proton $f1$ score. Among the reasons for using a random-search procedure for the hyperparameter search is the possibly complex, non-monotonic relationships between parameters and the outcome we wish to measure. As such the ordinary tools of estimating correlation and co-variance must come with caveats. Table \ref{tab:hyperparam_corr} of correlation between the parameters and the proton $f1$ score, but we note that while none of the correlations were significant - this may be a consequence of violated assumptions and non-monotonic relationships.

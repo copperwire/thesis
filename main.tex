@@ -1,5 +1,5 @@
 
-\documentclass{uiofysmaster}
+\documentclass[12pt]{uiofysmaster}
 \usepackage[english]{babel}
 \usepackage{tikz}
 \usepackage{amsmath}
@@ -19,17 +19,26 @@
 %\usepackage{multicol}
 \usepackage{siunitx}
 \usepackage{graphicx}
+\usepackage{longtable}
+\usepackage[toc,page]{appendix}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage[section]{placeins}
+
 %\usepackage{subcaption}
 
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
-
+\newcommand\MyHead[2]{\multicolumn{1}{l}{\parbox{#1}{\centering #2}}}
 % set python environment 
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+
+
 
 \usepackage{xcolor}
 \definecolor{maroon}{cmyk}{0, 0.87, 0.68, 0.32}
@@ -165,7 +174,6 @@
 
 \tableofcontents
 \listoffigures
-\listoftables
 \listoftodos
 
 \newpage
@@ -176,26 +184,26 @@
 % Theory part and experimental context 
 \part{Theory and Experimental Background}
 
-
 % Machine learning theory
 \subimport*{chapters/theory/}{theory.tex}
 
-\subimport{chapters/theory/optimization/}{model_optimization.tex}
-\subimport*{chapters/theory/neural_network/}{hyperparameters.tex}
-\subimport*{chapters/theory/optimization/}{gradient_descent.tex}
+\subimport*{chapters/theory/optimization/}{model_optimization.tex}
 \subimport*{chapters/theory/ground_methods/}{logistic_regression.tex}
 \subimport*{chapters/theory/ground_methods/}{linear_regression.tex}
+\subimport*{chapters/theory/optimization/}{regularization}
+\subimport*{chapters/theory/optimization/}{bias_variance.tex}
+\subimport*{chapters/theory/neural_network/}{hyperparameters.tex}
+\subimport*{chapters/theory/optimization/}{gradient_descent.tex}
 
 \subimport*{chapters/theory/neural_network/}{neural_network.tex}
-\subimport*{chapters/theory/neural_network/}{rnn.tex}
 \subimport*{chapters/theory/neural_network/}{convolution.tex}
+\subimport*{chapters/theory/neural_network/}{rnn.tex}
 
 \subimport*{chapters/theory/autoencoder/}{autoencoder.tex}
 \subimport*{chapters/theory/autoencoder/}{regularizing_latent.tex}
-\subimport*{chapters/theory/autoencoder/}{deep_clustering.tex}
 \subimport*{chapters/theory/autoencoder/}{draw.tex}
-
-\subimport*{chapters/theory/}{todo.tex}
+\subimport*{chapters/theory/autoencoder/}{deep_clustering.tex}
+% \subimport*{chapters/theory/}{todo.tex}
 
 % Experimental context and background
 
@@ -214,12 +222,20 @@
 \subimport*{chapters/methods/models/draw/}{draw.tex}
 \subimport*{chapters/methods/randomsearch/}{randomsearch.tex}
 
-
 \part{Results}
 \subimport*{chapters/results/}{results.tex}
 \subimport*{chapters/results/simulated/}{simulated.tex}
+\subimport*{chapters/results/real/}{real.tex}
+\subimport*{chapters/results/clean/}{clean.tex}
 
 \part{Discussion and Conclusion}
+\subimport*{chapters/discussion/}{discussion.tex}
+\subimport*{chapters/discussion/classification/}{classification.tex}
+\subimport*{chapters/discussion/clustering/}{clustering.tex}
+
+\begin{appendices}
+\subimport{chapters/appendix/clf_tables/}{convae_simulated}
+\end{appendices}
 
 \subimport*{chapters/notes/}{notes.tex}
 

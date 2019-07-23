@@ -14,9 +14,9 @@ The process of finding minima or maxima, known collectively as extrema, of a fun
 \hspace*{-0.9in}
 \subfloat[]{\includegraphics[width=0.6\textwidth]{../figures/gd_low.pdf}}
 \subfloat[]{\includegraphics[width=0.6\textwidth]{../figures/gd_large.pdf}}
-\caption{Gradient descent on a simple quadratic function showing the effect of too small, \textbf{(a)}, and too large, \textbf{(b)}, value for the learning rate $\eta$}\label{fig:badgd}
+\caption[Sub-optimal gradient descent]{Gradient descent on a simple quadratic function showing the effect of too small, \textbf{(a)}, and too large, \textbf{(b)}, value for the learning rate $\eta$}\label{fig:badgd}
 \includegraphics[width=0.75\textwidth]{../figures/gd_good.pdf}
-\caption{Complement to figure \ref{fig:badgd} where we show the effect of a good learning rate on a gradient descent procedure. The gradient descent procedure is performed on a quadratic function.}\label{fig:goodgd}
+\caption[Optimal gradient descent]{Complement to figure \ref{fig:badgd} where we show the effect of a good learning rate on a gradient descent procedure. The gradient descent procedure is performed on a quadratic function.}\label{fig:goodgd}
 \end{figure}
 
 
@@ -25,7 +25,7 @@ The process of finding minima or maxima, known collectively as extrema, of a fun
 \begin{figure}[H]
 \centering
 \includegraphics{../figures/lr_loss.png}
-\caption{A hand-drawn figure showing the impact of the choice of the learning rate parameter on the shape of the loss function. The optimal choice has a nice slowly decaying shape that we will use as a benchmark when tuning the learning rate in our applications. Copied from the cs231 course material from Stanford authored by \citet{Karpathy}}\label{fig:lrloss}
+\caption[The impact of $\eta$ on performance]{A hand-drawn figure showing the impact of the choice of the learning rate parameter on the shape of the loss function. The optimal choice has a nice slowly decaying shape that we will use as a benchmark when tuning the learning rate in our applications. Copied from the cs231 course material from Stanford authored by \citet{Karpathy}}\label{fig:lrloss}
 
 \end{figure} 
 
@@ -76,7 +76,7 @@ $\eta$  & $10^{-3}$ & Linear & Weight of the momentum update \\
 \begin{figure}
 \centering
 \includegraphics[height=3in]{../figures/beta_decay.pdf}
-\caption{A figure illustrating the decay rate of different choices of $\beta$. The lines go as $\beta^n$ and shows that one can quite easily infer how many last steps is included for each choice. A good starting value for the parameter has been empirically found to be $\beta=0.9$ for many applications. In this thesis we'll use a gaussian distribution around this value as a basis for a random search.}\label{fig:beta}
+\caption[Exponential decay in momentum gradient descent]{A figure illustrating the decay rate of different choices of $\beta$. The lines go as $\beta^n$ and shows that one can quite easily infer how many last steps is included for each choice. A good starting value for the parameter has been empirically found to be $\beta=0.9$ for many applications. In this thesis we'll use a gaussian distribution around this value as a basis for a random search.}\label{fig:beta}
 \end{figure}
 
 \subsection{Stochastic \& Batched Gradient Descent}
@@ -85,7 +85,7 @@ In the preceding sections we discussed gradient descent as an update we do over 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{../figures/batch_size_plots}
-\caption{Showing the effect of batch sizes on a fully connected and shallow convolutional network in figure (a) and (b) respectively. The smaller batch-sizes are consistently able to find minima of a higher quality than the large batch versions of the same network. The networks were trained on common machine learning datasets for illustrative purposes. Figure taken from \citet{Keskar2016} }\label{fig:batch_size}
+\caption[Effect of the batch size on performance]{Showing the effect of batch sizes on a fully connected and shallow convolutional network in figure (a) and (b) respectively. The smaller batch-sizes are consistently able to find minima of a higher quality than the large batch versions of the same network. The networks were trained on common machine learning datasets for illustrative purposes. Figure taken from \citet{Keskar2016} }\label{fig:batch_size}
 \end{figure}
 
 \subsection{adam}\label{sec:adam}

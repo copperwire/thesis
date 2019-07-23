@@ -26,8 +26,3 @@ The \lstinline{LatentModel} class contains the framework and functions used for 
 % \end{figure}
 
 The training procedure is implemented in the \lstinline{train} method which handles both checkpointing of the model to a file, logging of loss values and the training procedure itself. As discussed in section \ref{sec:gd} we use the adam mini-batch gradient descent procedure. The \lstinline{train} method also contains the code to run the pre-training required for the clustering algorithm described in section \ref{sec:dc}. Which uses an off-the-shelf version of the K-means algorithm (\todo{SKLEARN CITATION}) to find the initial cluster locations. The main loop of the method iterates over the entire dataset and performs the optimization steps. For the clustering autoencoder an additional step is also included to update the target distribution as described in section \ref{sec:dc}
-
-\subsubsection*{Convolutional Autoencoder}\label{sec:convae_implement}
-
-
-\subsubsection*{DRAW}\label{sec:draw_implement}
