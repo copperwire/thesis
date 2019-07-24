@@ -1,8 +1,36 @@
-\subsection{DRAW}\label{sec:draw}
+\subsection{Deep Recurrent Attentive Writer}\label{sec:draw}
+
+One of the central challenges of the ELBO as presented in equation \ref{eq:elbo} is that the probability of a pixel in the output being activated is not conditional on whether the pixels surrounding it has is activated. This means that the entire canvas is conditioned on a single sample. The Deep Recurrent Attentive Writer (DRAW) aims to solve this problem by creating an iterative algorithm updates parts of, or the whole canvass, multiple times (\cite{Gregor2015}). In this thesis we make three central modifications to the algorithm. 
 
 \begin{itemize}
-\item Extension of autoencoders to a sequential model. 
-\item Proposed as a generative algorithm
-\item We use it for creating separable boundaries between classes
-\item Include diagram of model from Gregor, and the basic read-write scheme equations 
+\item Originally DRAW views parts of the input conditioning the latent sample $\mathbf{z_t}$ on differently sized patches of the input image. We modify the model such that the model gets glimpses of the same size at each time step. This is done to make samples comparable between time steps in line with the work of \citet{Harris2019}
+\item The attentive part of DRAW as described by \citet{Gregor2015} is a set of Gaussian filters that pick out a part of the input allowing the image to focus on discrete regions. We modify the algorithm to allow the use of a convolutional feature extractor.
+\item Latent samples from DRAW are originally described in the framework of the VAE where the latent sample is drawn from a normal distribution i.e. $\mathbf{z}_t \sim \mathcal{N}(Z_t|\mu_t, \sigma_t)$. Since then proposals have been made for autoencoders that do not require this stochasticity in the forward-pass and as such the latent samples can be generated from fully connected layers, e.g. the InfoVae architecture proposed by \citet{Zhao}
 \end{itemize}
+
+\noindent At the core of the DRAW algorithm sits a pair of encoder of decoder networks, making it part of the autoencoder sub-family of neural networks. This familiar core is then wrapped in a recurrent framework with LSTM cells that acts as the encoder/decoder pair. We use the same notation as \citet{Gregor2015} and denote the encoder with with RNN${}^{enc}$ whose output at time $t$ is $\mathbf{h}_t^{enc}$, and the decoder with RNN${}^{dec}$. The form of the encoder/decoder pair is determined by the read/write functions that will be discussed in the next section. Next the encoder hidden state, $\mathbf{h}_t^{enc}$, is used to draw a latent sample, $\mathbf{z}_t$, using a function $\text{latent}(\cdot)$ which is determined by the form of the latent loss. At each time-step the algorithm produces a sketched version of the input $c_t$, which is used to compute an error image, $\hat{\mathbf{x}}_t$, that feeds back forward into the network. The following equations from \citet{Gregor2015} summarizes the DRAW forward pass.
+
+\begin{align}
+\hat{\mathbf{x}} &= \mathbf{x} - \sigma(\mathbf{c_{t-1}}) \\
+\mathbf{r}_t &= \text{read}(\mathbf{x}_t, \hat{\mathbf{x}}_t, ) \\
+\mathbf{h}^{enc}_t &= \text{RNN}^{enc}( \mathbf{h}^{enc}_{t-1}, [\mathbf{r}_t, \mathbf{h}^{dec}_{t-1}])\\
+\mathbf{z}_t &= \text{latent}(\mathbf{h}^{enc}_t)\\
+\mathbf{h}^{dec}_t &= \text{RNN}^{dec}( \mathbf{h}^{dec}_{t-1}, \mathbf{z}_t)\\
+\mathbf{c}_t &= \mathbf{c}_{t-1} + \text{write}(\mathbf{h}_t^{dec}) \label{eq:draw}
+\end{align} 
+
+ \noindent Where $\sigma(\cdot)$ denotes the logistic sigmoid function. The iteration then consists of an updating canvass $\mathbf{c}_t$ which informs the next time-step. We outline the architecture in figure \ref{fig:draw}.
+ 
+ \subsubsection{Read and Write functions}
+
+ The read/write functions are paired processing functions that create a sub-sampled representation of the input. The trivial versions 
+
+
+ \subsubsection{Latent samples and loss}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{../figures/draw}
+\caption{\textbf{Left:} an ordinary one\-shot encoder\-decoder network. \textbf{Right:} DRAW network that iteratively constructs the canvas using RNN cells as the encoder/decoder pair. The final output is then iteratively constructed using a series of updates on a canvass, $c_t$. DRAW function read that process the input and feeds this to the encoder which outputs a latent sample $\mathbf{z}_t$. The latent sample in turn acts as input to the decoder part of the network which modifies the canvass using a write function that mirrors the read operation.}\label{fig:draw}
+\end{figure}
+\todo{write out read/write and latent sample/loss subsects}

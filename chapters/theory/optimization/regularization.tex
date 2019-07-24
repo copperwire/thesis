@@ -1,4 +1,4 @@
-\subsection{Regularization}
+\subsection{Regularization}\label{sec:regularization}
 
 With the advent of modern computing resources researchers gained the ability to operate very complex models. Giving rise to the problem of overfitting to noise in the data, as described in section \ref{sec:fitting}. Finding measures to reduce overfitting has been a goal for near on $50$ years. The first modern breakthrough was adding a coefficient restriction on their cumulative magnitude by the $L_2$-norm. This form of restriction proved hugely beneficial for the simple reason that it restricted the models ability to express all of its complexity. Introduced in 1970 by \citet{Hoerl1970} this modification on linear regression was dubbed \textit{ridge} regression. Experiments with different norms were carried out in the years following the elegant discovery by \cite{Hoerl1970}. Perhaps most influential of them is the use of the $L_1$-norm first successfully implemented by \citet{Tibshirani1996}. The inclusion of a penalty by the $L_1$-norm proved challenging as it was not solvable analytically and required iterative methods like gradient descent, described in detail in section \ref{sec:gd}. 
 
@@ -29,3 +29,6 @@ C(y_i, f(\mathbf{x}_i; \theta)) = (y_i - f(\mathbf{x}_i; \theta))^2 + \sum|\thet
 \includegraphics[width=\textwidth]{../figures/regularization}
 \caption[Geometric interpretation of the $L_1$ and $L_2$ regularization and the squared error cost]{Demonstrating the effect of a regularization constraint on a 2-variable optimization. The blue ovals represent the squared error, as it is quadratic in the parameters $w_i$. And the shaded brown region represents the restriction on the values of $w_i$, s.t. the only eligible values for the parameters are inside this region. Since the $L_1$ norm has these vertices on the feature axis we expect that the contour of the cost will touch a vertex consequently generating a sparse feature representation. The $L_2$ norm does not have these protrusions and will then generally intersect with the cost-contour somewhere that generates a linear combination of features that all have small coefficients. Figure copied from \citet{Mehta2019}, which in turn adapted a figure from Friedman et al. (2001)}\label{fig:regularization}
 \end{figure}
+
+\subsection{Batch Normalization}\label{sec:batchnorm}
+\todo{maybe dropout?}
