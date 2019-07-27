@@ -1,3 +1,18 @@
 \section{Data}
 
-In this thesis we will work with data from the $Ar(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. Both data produced with simulation tools and data recorded from the active target time projection chamber (AT-TPC) 
+In this thesis we will work with data from the ${}^46Ar(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. Both data produced with simulation tools and data recorded from the active target time projection chamber (AT-TPC)
+
+\subsection{Simulated ${}^46Ar$ events} 
+
+The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package developed at the NSCL\todo{citation}. Using the same parameters as for the $Ar^{46}(p, p)$ experiment a set of $N=4000$ events were generated per class. The events are generated in the same format as the semi-raw experimental data. That is they are represented as peak-only 4-tuples of $e_i = (x_i, y_i, t_i, c_i)$. Each event is then a set of these four-tuples: $\epsilon_j = \{e_i\}$ creating a track in three dimensional space with charge amplitude for each point. To process these events with the algorithms implemented for this thesis we chose to represent these 3D tracks as 2D images with charge represented as pixel images. For the analysis we chose to view the x-y projection of the data \todo{figure of 3D simulated track and 2D representation}
+
+\subsection{Full ${}^46Ar$ events}
+
+The events analyzed in this section were retrieved from the on-going AT-TPC experiment at Michigan State University. In the experiment a beam of a particular isotope is accelerated and directed into a chamber with a gas that acts as the reaction medium and target. As reactions occur between the gas and beam ejected electrons from these drift towards the anode and the Micromegas measuring the impact over time from the reactions. The measuring apparatus is very sensitive, and though filtering is performed such that only the peaks of deposited charge the events are noisy in the ${}^46Ar$ experiment subject to analysis in this thesis. There is both structural noise that can be attributed to electronics cross-talk and possible interactions with cosmic background radiation and other sources of charged particles. Indeed one of the confounding factors is that there is currently not an understanding of the physics of the major contributing factors to this noise. 
+
+
+\subsection{Filtered ${}^46Ar$ events}
+
+\todo{write filtered section}
+\todo{add plots of events in 2d and 3d}
+\todo{add table with data descriptions. N samples, N labelled }
