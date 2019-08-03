@@ -22,7 +22,9 @@ C(y_i, f(\mathbf{x}_i; \theta)) = (y_i - f(\mathbf{x}_i; \theta))^2 + \sum|\thet
 \theta^* = \argmin_{||\theta||_2^2<t} ||y_i - f(\mathbf{x}_i; \theta)||_2^2
 \end{align}
 
-\noindent The representation as a constrained optimization is useful to understand the impact of this form of regularization. Graphically this is demonstrated in figure \ref{fig:regularization}, copied from \cite{Mehta2019}, where the lasso penalty is shown to result in a constrained region for the parameter inside a region with vertices pointing along the feature axes. Intuitively this indicates that for a $L_1$ penalty the optimal solution is a sparse one where as many parameters as possible are zero while still minimizing the squared error, or cross entropy. For $L_2$ ridge regression these vertices are not present and the region has an even boundary along the feature axes resulting in solutions where most parameter values are small. \todo{add subsection on dropout and batchnorm} 
+\noindent The representation as a constrained optimization is useful to understand the impact of this form of regularization. Graphically this is demonstrated in figure \ref{fig:regularization}, copied from \cite{Mehta2019}, where the lasso penalty is shown to result in a constrained region for the parameter inside a region with vertices pointing along the feature axes. Intuitively this indicates that for a $L_1$ penalty the optimal solution is a sparse one where as many parameters as possible are zero while still minimizing the squared error, or cross entropy. For $L_2$ ridge regression these vertices are not present and the region has an even boundary along the feature axes resulting in solutions where most parameter values are small. 
+
+Regularization then reduces the probability of overfitting by limiting the expressed complexity of a model. In the example of polynomial regression lasso regularization forces many of the coefficients to be zero-valued in such a way that it still performs maximally. \todo{add subsection on dropout and batchnorm} 
 
 \begin{figure}
 \centering

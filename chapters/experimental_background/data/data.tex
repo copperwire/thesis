@@ -1,17 +1,40 @@
-\section{Data}
+\section{Data}\label{sec:data}
 
-In this thesis we will work with data from the ${}^46Ar(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. Both data produced with simulation tools and data recorded from the active target time projection chamber (AT-TPC)
+In this thesis we will work with data from the ${}^{46}Ar(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. Both data produced with simulation tools and data recorded from the active target time projection chamber (AT-TPC). For the experimental data we use data collected from a single run of the experiment.	
 
-\subsection{Simulated ${}^46Ar$ events} 
+\subsection{Simulated \texorpdfstring{${}^{46}Ar$}{46Ar}  events}\label{sec:data_sim}
 
-The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package developed at the NSCL\todo{citation}. Using the same parameters as for the $Ar^{46}(p, p)$ experiment a set of $N=4000$ events were generated per class. The events are generated in the same format as the semi-raw experimental data. That is they are represented as peak-only 4-tuples of $e_i = (x_i, y_i, t_i, c_i)$. Each event is then a set of these four-tuples: $\epsilon_j = \{e_i\}$ creating a track in three dimensional space with charge amplitude for each point. To process these events with the algorithms implemented for this thesis we chose to represent these 3D tracks as 2D images with charge represented as pixel images. For the analysis we chose to view the x-y projection of the data \todo{figure of 3D simulated track and 2D representation}
+The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package developed at the NSCL (\cite{Bradt2017a}). Using the same parameters as for the $Ar^{46}(p, p)$ experiment a set of $N=4000$ events were generated per class. The events are generated in the same format as the semi-raw experimental data. That is they are represented as peak-only 4-tuples of $e_i = (x_i, y_i, t_i, c_i)$. Each event is then a set of these four-tuples: $\epsilon_j = \{e_i\}$ creating a track in three dimensional space with charge amplitude for each point. To process these events with the algorithms implemented for this thesis we chose to represent these 3D tracks as 2D images with charge represented as pixel images. For the analysis we chose to view the x-y projection of the data.
 
-\subsection{Full ${}^46Ar$ events}
+ To emulate the real-data case we set a subset of the simulated data to be labeled and treat the rest as unlabeled data. We chose this partition to be $15\%$ of each class. We denote this subset and its associated labels as $\gamma_L=(\mathbf{X}_L, \mathbf{y}_L)$, the entire dataset which we will denote as $\mathbf{X}_F$. To clarify please note that $\mathbf{X}_L \subset \mathbf{X}_F$.
+ \todo{Added part from previous results, needs molding}
+\todo{figure of 3D simulated track and 2D representation}
 
-The events analyzed in this section were retrieved from the on-going AT-TPC experiment at Michigan State University. In the experiment a beam of a particular isotope is accelerated and directed into a chamber with a gas that acts as the reaction medium and target. As reactions occur between the gas and beam ejected electrons from these drift towards the anode and the Micromegas measuring the impact over time from the reactions. The measuring apparatus is very sensitive, and though filtering is performed such that only the peaks of deposited charge the events are noisy in the ${}^46Ar$ experiment subject to analysis in this thesis. There is both structural noise that can be attributed to electronics cross-talk and possible interactions with cosmic background radiation and other sources of charged particles. Indeed one of the confounding factors is that there is currently not an understanding of the physics of the major contributing factors to this noise. 
+\subsection{Full \texorpdfstring{${}^{46}Ar$}{46Ar}  events}\label{sec:data_real}
+
+The events analyzed in this section were retrieved from the on-going AT-TPC experiment at Michigan State University. In the experiment a beam of a particular isotope is accelerated and directed into a chamber with a gas that acts as the reaction medium and target. As reactions occur between the gas and beam ejected electrons from these drift towards the anode and the Micromegas measuring the impact over time from the reactions. The measuring apparatus is very sensitive, and though filtering is performed such that only the peaks of deposited charge the events are noisy in the ${}^{46}Ar$ experiment subject to analysis in this thesis. There is probable structural noise that can be attributed to electronics cross-talk and possible interactions with cosmic background radiation and other sources of charged particles. Indeed one of the confounding factors is that there is currently not an understanding of the physics of the major contributing factors to this noise. 
+
+\todo{describe the physics in a bit more detail boy}
 
 
-\subsection{Filtered ${}^46Ar$ events}
+\subsection{Filtered \texorpdfstring{${}^46Ar$}{46Ar} events}
+
+As we saw in the previous section the events pick up 
+
+
+\begin{table}
+\centering
+\begin{tabular}{lccc}
+\toprule
+{} & Simulated & Real & Filtered \\
+\midrule
+Total &  $8000$ & $51891$ & $49169$ \\
+Labeled & $2400$ & $1774$ &  $1582$ \\ 
+\bottomrule
+\end{tabular}
+\caption{Description of the data used for analysis. In principle we can simulated infinite data, but it is both quite simple and not very interesting outside a case for a proof-of-concept}
+
+\end{table}
 
 \todo{write filtered section}
 \todo{add plots of events in 2d and 3d}

@@ -1,0 +1,44 @@
+\section{Neural architectures}\label{sec:architectures}
+
+The research question explored in this thesis necessitates two separate architectures. In the case where we have access to some labeled data the goal is to learn as much as possible from the event distribution and create an informative representation which is used to train a classifier on the labeled data. Learning the data distribution is done with an autoencoder network, then the informative representation ins the compressed latent space of the model This regime is semi-supervised as most of the training time is spent trying to learn an informative compression over the data-distribution. Additionally this approach seeks to lessen the probability of overfitting by using a very simple model as the classifier on the compressed representation. This is the \textit{classification} scheme.
+
+Labeled data is, however, both require a high time investment and possibly high amounts of computing power to separate. Having access to a fully unsupervised method of separating classes of events can then be hugely beneficial to researchers. In the event where we don't have access to labeled data we have to discover emergent clusterings in the data without knowledge about the class  distribution. In this case we still use an autoencoder model, but different demands have to be made of the latent space. This is the \textit{clustering} scheme. 
+
+\subsection{Classification}
+We will leverage  the autoencoder to gain information about the event distribution from the volume of unsupervised data. The modeling pipeline for the classification task is then concisely summarized with: 
+
+\begin{enumerate}
+\item Train Autoencoder end-to-end on full data with a select regularization on the latent space until converged or it starts to overfit. 
+\item Use the encoder to produce latent representations of the labeled data 
+\item Train a logistic regression model using the latent representations of the labeled data 
+\end{enumerate}
+
+We will determine the best autoencoder architecture for each dataset listed in section \ref{sec:data}. The best autoencoder is measured by performance in identifying separate classes by the logistic regression model on a test-set of data. 
+
+\subsection{Clustering}
+
+To attempt clustering of event data we will follow the pipeline as outlined in \citet{Guo2017}. The modeling has two distinct steps, pre-training of the convolutional autoencoder and training with regularization towards the pseudo-labels. 
+
+\begin{enumerate}
+\item Train autoencoder end-to-end on the full dataset without regularizing the latent space. 
+\item Compute latent representations of the full dataset
+\item Determine initial centroids from a K-means fit of the latent representations of the full dataset
+\item Train the autoencoder end-to-end on the full dataset with an added regularization of the soft cluster assignments to the target distribution of pseudo labels.
+\end{enumerate}
+
+In the same manner as for the clasification task we will search over autoencoder architectures and will select the highest performing model by it's performance on the subset of labeled data.
+
+\subsection{Pre-trained networks}
+
+Following the precedent of  \cite{Kuchera2019} we will consider representations of our events through the lens of a pre-trained network. In the Machine Learning community it is not uncommon to publish packaged models with fitted parameters from image recognition contests. These models are trained on millions of images and classify between hundreds of distinct classes. In their work \cite{Kuchera2019} use the VGG16 architecture trained on imagenet to classify AT-TPC events, in this thesis we will build on the understanding of using this pre trained networks in event classification by using VGG16 as an element in the end-to-end training of autoencoders. The VGG16 network is  one of six analogous networks proposed by \citet{Simonyan2014}, they were runners up in the ISLVRC(ImageNet large scale visual recognition competition) of 2014 (\cite{Russakovsky2015}). The network architectures are fairly simple, for VGG16 there are sixteen layers in the network. The first thirteen of which are convolutional layers with exclusively $3 \times 3$ kernels. The choice of the kernel size  is based on the fact that a stacked $3 \times 3$ is equivalent to larger kernels in terms of the receptive field of the output. Three $3 \times 3$ kernels with stride $1$ have a $7 \times 7$ receptive field, but the larger kernel has $81\%$ more parameters and only one non-linearity (\cite{Simonyan2014}). Stacking the smaller kernels then both contribute computationally, as a regularization factor because of the reduce number of parameters and increased discriminatory power because of the added non-linearities. The full architecture is detailed in appendix \ref{tab:vgg}.
+
+A pre-trained network can be included in the architectures in three distinct configurations. The pre-trained network can either:
+
+\begin{enumerate}
+\item Have their parameters fixed. Thus creating a new representation of the input in terms of this particular model. In this way the autoencoder does not reconstruct from the image $x$ but rather from the representation $VGG16(x)$. The decoder is here not a mirror of the encoder
+\item Have their parameters be trainable. In this configuration we use the pre-trained network as the encoder function itself and encode to a lower dimensional space for the latent representation which is used for the reconstruction. The decoder is here not a mirror  of the encoder
+\item Have their parameters be randomly initialized. In other words we can simply use the architecture of  the network but not the pre-trained weights. This is just a normal autoencoder, with a mirrored encoder-decoder pair. 
+\end{enumerate}
+
+As a baseline for the modeling pipelines we consider the VGG16 model without updating weights. Which is to say that the performance of the methods proposed in this thesis will be measured against the performance of simply passing the events through the pre-trained VGG network and then to a logistic regression classifier for the \textit{classification} scheme. And to a K-means algorithm for the \textit{clustering} scheme.
+\todo{clean up section on model architectures}

@@ -1,0 +1,11 @@
+\section{Convolutional Autoencoder}
+
+To test the hypothesis that classification can be improved by using unsupervised methods to estimate the data distribution is investigated by using a convolutional autoencoder trained end-to-end on the data distribution, and then using the latent representation as input to a logistic regression classifier on the subset of data that has labels. This pipeline is outlined in section \ref{sec:architectures}, and the data are described in section \ref{sec:data}. The convolutional autoencoder has three configurations that will be explored. 
+\begin{enumerate}
+	\item End-to-end training on data using kernel and filter architectures in a naive manner with decreasing kernel sizes, increasing filter sizes and a mirrored encoder-decoder structure
+	\item Using the VGG16 network to compute a representation of the data which is compressed by one or more dense layers and finally reconstructed to the original image by a naively constructed decoder. 
+	\item  Using the VGG16 network as the encoder, adjusting it's weights by the reconstruction loss with a naively constructed decoder. 
+\end{enumerate}
+
+Choosing an architecture for the convolutional autoencoder is the principal challenge to solve. We want to estimate if the reconstruction and optional latent losses relate to the classification accuracy achieved by the logistic regression classifier. \todo{add plot with reconst/loss vs f1 scores}
+
