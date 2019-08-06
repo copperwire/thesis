@@ -1,11 +1,33 @@
 \section{Convolutional Autoencoder}
 
-To test the hypothesis that classification can be improved by using unsupervised methods to estimate the data distribution is investigated by using a convolutional autoencoder trained end-to-end on the data distribution, and then using the latent representation as input to a logistic regression classifier on the subset of data that has labels. This pipeline is outlined in section \ref{sec:architectures}, and the data are described in section \ref{sec:data}. The convolutional autoencoder has three configurations that will be explored. 
-\begin{enumerate}
-	\item End-to-end training on data using kernel and filter architectures in a naive manner with decreasing kernel sizes, increasing filter sizes and a mirrored encoder-decoder structure
-	\item Using the VGG16 network to compute a representation of the data which is compressed by one or more dense layers and finally reconstructed to the original image by a naively constructed decoder. 
-	\item  Using the VGG16 network as the encoder, adjusting it's weights by the reconstruction loss with a naively constructed decoder. 
+To test the hypothesis that classification can be improved by using unsupervised methods to estimate the data distribution is investigated by using a convolutional autoencoder trained end-to-end on the data distribution, and then using the latent representation as input to a logistic regression classifier on the subset of data that has labels. This pipeline is outlined in section \ref{sec:architectures}, and the data are described in section \ref{sec:data}. The convolutional autoencoder has three configurations that we report results from. 
+\begin{enumerate}[start=0, label={(\bfseries Ar\arabic*):}, ref={(Ar\arabic*)}]
+	\item \label{item:clf_no_vgg} End-to-end training on data using kernel and filter architectures in a naive manner with decreasing kernel sizes, increasing filter sizes and a mirrored encoder-decoder structure
+	\item \label{item:clf_freeze_vgg} Using the VGG16 network to compute a representation of the data which is compressed by one or more dense layers and finally reconstructed to the original image by a naively constructed decoder. 
+	\item  \label{item:clf_tuning_vgg} Using the VGG16 network as the encoder, adjusting it's weights by the reconstruction loss with a naively constructed decoder. 
 \end{enumerate}
 
-Choosing an architecture for the convolutional autoencoder is the principal challenge to solve. We want to estimate if the reconstruction and optional latent losses relate to the classification accuracy achieved by the logistic regression classifier. \todo{add plot with reconst/loss vs f1 scores}
+\noindent Choosing an architecture for the convolutional autoencoder is the principal challenge to solve. We want to estimate if the reconstruction and optional latent losses relate to the classification accuracy achieved by the logistic regression classifier. \todo{add plot with reconst/loss vs f1 scores}
 
+To aid in the understanding of the choice of architecture we compare the similarities between the optimal architectures for each of the data-sets. In the event that one dataset finds a configuration of lesser complexity that was not present in the others a verification run was computed with that configuration to ensure the validity of the performance measurement. \todo{add architecture tables, note on latent divergence?}
+
+For the best models found by random search we re-compute the performance with $K=5$ fold cross validation on the logistic regression classifier. We begin with the model using no information from the VGG16 benchmark, i.e. configuration \ref{item:clf_no_vgg}. It shows strong performance on the classification task for all datasets. The results are listed in table \ref{tab:clf_no_vgg}
+
+\begin{table}
+\centering
+\subimport{plots/}{convae_clf_table}
+\caption{Logistic regression classification results using the \ref{item:clf_no_vgg} architecture. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:clf_no_vgg}
+\end{table}
+
+We repeat this process with using the VGG16 representation as initial input to the algorithm. This is configuration \ref{item:clf_freeze_vgg}. In the same manner as for the naive implementation we search over hyper-parameters, with the difference in the dense layer(s) included that transforms the VGG16 representation to the autoencoder latent space. \todo{add table of architectures}. 
+
+Each of the configurations found by the random search was then evaluated with $K=5$ fold cross validation to produce estimates of the $f1$ score, listed in table \ref{tab:clf_freeze_vgg}
+
+
+\begin{table}
+\centering
+\subimport{plots/}{convae_vgg_clf_table}
+\caption{Logistic regression classification results using the \ref{item:clf_freeze_vgg} architecture. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:clf_freeze_vgg}
+\end{table}
+
+\todo{add n-labeled plots}
