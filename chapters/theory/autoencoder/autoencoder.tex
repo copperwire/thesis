@@ -95,24 +95,32 @@ ELBO(q) = \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \
 
 \subsection{Optimizing the variational autoencoder}
 
-From section \ref{sec:autoencoder} we observe that the optimization is split in two. A reconstructive term that approximates the log evidence which we can train with a squared error or cross entropy cost. Secondly we have a divergence term over the parametrized and theoretical latent distribution. We would like to simplify the second to conserve computational resources. Thankfully this is simple given some assumptions on the target latent distribution. Let the target distribution $p(z | x) $ be a multivariate normal distribution with zero means and a diagonal unit variance matrix, i.e. $p(z | x) \sim  \mathcal{N}(\mathbf{0}, \mathbf{I})$. The neural network approximation then follows $p(z | x) \sim \mathcal{N}(\mu, \sigma^2)$. The normalized probability density function for the normal Gaussian is defined as: 
+From section \ref{sec:autoencoder} we observe that the optimization is split in two. A reconstructive term that approximates the log evidence which we can train with a squared error or cross entropy cost. Secondly we have a divergence term over the parametrized and theoretical latent distribution. We would like to simplify the second to conserve computational resources. Thankfully this is simple given some assumptions on the target latent distribution. Let the target distribution $p(z | x) $ be a multivariate normal distribution with zero means and a diagonal unit variance matrix, i.e. $p(z | x) \sim  \mathcal{N}(\mathbf{0}, \mathbf{I})$. The neural network approximation then follows $q(z | x) \sim \mathcal{N}(\mu, \Sigma)$. The normalized probability density function for the normal Gaussian is defined as 
 
-\begin{align}
-p(x) = \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}
-\end{align}
+\begin{equation}
+p(x) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(x- \mu)^T\Sigma^{-1}(x-\mu)),
+\end{equation}
 
-\noindent We can now simplify the Kullback-Leibler divergence. The divergence is defined in equation \ref{eq:kl} and for our two normal distributions we write it out as 
+\noindent and the Kullback-Leibler divergence for two multivariate gaussians is given by 
 
-\begin{align}
-D_{KL}(p || q) &= - \int_{-\infty}^\infty p(x) \log \frac{p(x)}{q(x)} \\
-D_{KL}(p || q) &= - \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi }}e^{-\frac{x^2}{2}} \log\left(\sigma^2  e^{-(\frac{x^2}{2} + \frac{(x-\mu)^2}{2\sigma^2})}\right)
-\end{align}
 
-\noindent Where we simply inserted for the target and approximated distributions. Following up we apply some convenient properties of the probability density being normalized to unity and the simple use of log as the inverse to the exponential 
+\begin{equation}
+\hspace*{-0.1in}
+D_{KL}(p_1|| p_2 ) = \frac{1}{2} \left( \log \frac{|\Sigma_2|}{|\Sigma_1|} -n + tr(\Sigma^{-1}_2 \Sigma_1) + (\mu_2 - \mu_1)^T\Sigma_2^{-1}(\mu_2 - \mu_1) \right).
+\end{equation}
 
-\begin{align}
-D_{KL}(p || q) &= - \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi }}e^{-\frac{x^2}{2}} \left(\log \left(\sigma^2 \right) -\left(\frac{x^2}{2} + \frac{(x-\mu)^2}{2\sigma^2} \right) \right) \\
-D_{KL}(p || q) &= -\log \sigma^2 - \frac{1}{2} + \frac{1 + \mu^2}{2\sigma^2}
-\end{align}
+\noindent Which we derive in appendix \ref{appendix:kl_gauss}. Substituting $p_1$ and $p_2$ for the model and target distributions we get 
 
-\noindent Which satisfies the equality that the divergence is zero when the distributions are the same.
+\begin{align*}
+D_{KL}(q||p) &= \frac{1}{2} \left( - \log {|\Sigma_1|} -n + tr(I \Sigma_1) + \mu_2 ^TI\mu_2 \right) \\
+&= \frac{1}{2} \left( - \log {|\Sigma_1|} -n + tr(\Sigma_1) + \mu_2 ^T\mu_2 \right)
+\end{align*}
+
+\noindent or more conveniently
+
+\begin{equation}\label{eq:kl_opt}
+D_{KL}(q||p) = \frac{1}{2} \sum_i -\log \sigma_i^2 - 1 + \sigma^2_i + \mu_i^2 .
+\end{equation}
+
+
+\noindent We note that equation \ref{eq:kl_opt} satisfies the equality that the divergence is zero when the target and model distributions are equal. An important feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. Which was the topic of the argument presented by \citet{Zhao} when proposing alternate measures for regularizing the latent space. The intuitive alternative to a point-wise measurement is comparing the moments of the distribution and minimize their difference. 
