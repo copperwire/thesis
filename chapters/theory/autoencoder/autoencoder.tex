@@ -92,3 +92,35 @@ ELBO(q) = \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \
 \end{align}
 
 \noindent Which shows that the function enacted by the ELBO approximates the VAE loss up to a constant i.e. the KL loss on the RHS in equation \ref{eq:vae_cost}. \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly approximated with a neural network when trained with backpropagation and gradient descent methods. That is we estimate the derivative of the ELBO with respect to the neural network parameters, as described by the backpropagation algorithm in section \ref{sec:backpropagation}. We note again that in the above notation we would parametrize the distribution $p(x|z)$ as a neural network, in machine learning parlance called the generator network and denoted as $\phi$ in section \ref{sec:autoencoder}. 
+
+\subsection{Optimizing the variational autoencoder}
+
+From section \ref{sec:autoencoder} we observe that the optimization is split in two. A reconstructive term that approximates the log evidence which we can train with a squared error or cross entropy cost. Secondly we have a divergence term over the parametrized and theoretical latent distribution. We would like to simplify the second to conserve computational resources. Thankfully this is simple given some assumptions on the target latent distribution. Let the target distribution $p(z | x) $ be a multivariate normal distribution with zero means and a diagonal unit variance matrix, i.e. $p(z | x) \sim  \mathcal{N}(\mathbf{0}, \mathbf{I})$. The neural network approximation then follows $q(z | x) \sim \mathcal{N}(\mu, \Sigma)$. The normalized probability density function for the normal Gaussian is defined as 
+
+\begin{equation}
+p(x) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(x- \mu)^T\Sigma^{-1}(x-\mu)),
+\end{equation}
+
+\noindent and the Kullback-Leibler divergence for two multivariate gaussians is given by 
+
+
+\begin{equation}
+\hspace*{-0.1in}
+D_{KL}(p_1|| p_2 ) = \frac{1}{2} \left( \log \frac{|\Sigma_2|}{|\Sigma_1|} -n + tr(\Sigma^{-1}_2 \Sigma_1) + (\mu_2 - \mu_1)^T\Sigma_2^{-1}(\mu_2 - \mu_1) \right).
+\end{equation}
+
+\noindent Which we derive in appendix \ref{appendix:kl_gauss}. Substituting $p_1$ and $p_2$ for the model and target distributions we get 
+
+\begin{align*}
+D_{KL}(q||p) &= \frac{1}{2} \left( - \log {|\Sigma_1|} -n + tr(I \Sigma_1) + \mu_2 ^TI\mu_2 \right) \\
+&= \frac{1}{2} \left( - \log {|\Sigma_1|} -n + tr(\Sigma_1) + \mu_2 ^T\mu_2 \right)
+\end{align*}
+
+\noindent or more conveniently
+
+\begin{equation}\label{eq:kl_opt}
+D_{KL}(q||p) = \frac{1}{2} \sum_i -\log \sigma_i^2 - 1 + \sigma^2_i + \mu_i^2 .
+\end{equation}
+
+
+\noindent We note that equation \ref{eq:kl_opt} satisfies the equality that the divergence is zero when the target and model distributions are equal. An important feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. Which was the topic of the argument presented by \citet{Zhao} when proposing alternate measures for regularizing the latent space. The intuitive alternative to a point-wise measurement is comparing the moments of the distribution and minimize their difference. 
