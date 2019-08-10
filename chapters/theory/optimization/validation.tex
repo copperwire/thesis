@@ -1,8 +1,8 @@
-\subsection{Performance validation}\label{sec:performance_val}
+\section{Performance validation}\label{sec:performance_val}
 
 The threat of overfitting hangs as a specter over most machine learning applications. Regularization, as discussed in section \ref{sec:regularization}, outlines the tools researchers use to minimize the risk of overfitting. What remains then is the measurement of the performance of the model, and our confidence in that performance. We've already outlined the most simple tool to achieve this in section \ref{sec:fitting}; simply split the data in disjoint sets and train on one, measure on the other. As a tool this works best when there is lots of data from which to sample or the purpose of the algorithm is predictive in nature. In this thesis however the purpose is exploratory and labeled data is scarce. Before delving into how to estimate the out-of-sample error we first have to discuss the performance metrics we will use to measure error. 
 
-\subsubsection{Performance metrics}
+\subsection{Performance metrics}
 
 We measure the performance in the semi-supervised case, outlined in section \ref{sec:architectures}, by accuracy of the linear classifier (logistic regression), and the $f1$ score.  The accuracy is computed in terms of  the True Positive (TP) predictions and the True Negatives (TN) divided by the total number of samples. We will use the False Positives (FP) and False Negatives (FN) later and so introduce their abbreviation here. The accuracy is related to the rand index which we will use to measure clustering with the distinction that for accuracy we know the ground truth during training. Mathematically we define the accuracy in equation \ref{eq:accuracy}. Accuracy is bounded in the interval $[0, 1]$
 
@@ -28,6 +28,14 @@ f1 = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{reca
 
 \noindent Note that the $f1$ score does not take into account the FN predictions. But in nuclear event detection the now flourishing amount of data weights the problem heavily in favor of optimizing for TP and FP predictions. 
 
-\subsubsection{Cross validation}
+\subsection{Labeled samples}
 
-To estimate the out-of-sample error one can use simple statistical tools. The premise is that by iteratively selecting what data the model gets to train on and what it doesn't we can compute a less biased estimate of the out of sample error, compared to simply taking the training performance. This idea of iterative sampling is known collectively as cross validation, and the manner in which the sampling is conducted specifies the type of cross validation performed. 	\todo{write out section on CV}
+One of the principal challenges with the AT-TPC data discussed in this thesis is that labeled data is challenging to acquire. In the best case scenario it's still computationally intensive to label individual events. In the worst case scenario the current monte carlo based fitting methods might not be able to separate event types of interest from background noise and unknown reactions.
+
+It is then interesting to quantify the effect of the amount of accessible labeled data on a semi-supervised approach as listed in section \ref{sec:architectures}. Starting from a random, small, sample of the labeled data we train a classifier on a subset of the labeled data iteratively adding to that subset. 
+
+\todo{add description of n-labled algo?}
+
+\subsection{Cross validation}
+
+To estimate the out-of-sample error one can use simple statistical tools. The premise is that by iteratively selecting what data the model gets to train on and what it doesn't we can compute a less biased estimate of the out of sample error, compared to simply taking the training performance. This idea of iterative sampling is known collectively as cross validation, and the manner in which the sampling is conducted specifies the type of cross validation performed. \todo{write out section on CV}
