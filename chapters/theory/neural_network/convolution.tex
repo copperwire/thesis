@@ -12,7 +12,7 @@ O = W - K +1
 O = \frac{W - K + 2P}{S} + 1
 \end{equation} 
 
-\noindent The modification includes the addition of an additive term from the padding, $P$, and a division by the stride (i.e. how many pixels the kernel jumps each step), $S$. Striding provides a convenient way to down-sample the input which lessens the memory needed to train the model. Traditionally MaxPooling has also been used to achieve the same result. MaxPooling is a naive down-sampling algorithm that simply selects the highest value from the set of disjoint $m\times m$ patches of the input. Where $m$ is the pooling number, and we note that $m=2$ results in a halving of the input in both width and height. \todo{Include mathematical formulation of the convolutional layer}
+\noindent The modification includes the addition of an additive term from the padding, $P$, and a division by the stride (i.e. how many pixels the kernel jumps each step), $S$. Striding provides a convenient way to down-sample the input which lessens the memory needed to train the model. Traditionally MaxPooling has also been used to achieve the same result. MaxPooling is a naive down-sampling algorithm that simply selects the highest value from the set of disjoint $m\times m$ patches of the input. Where $m$ is the pooling number, and we note that $m=2$ results in a halving of the input in both width and height. \todo{Include paragraph on the convolution arithmetic}
 \begin{figure}
 \centering
 \subfloat[{}]{{\includegraphics[width=0.5\textwidth]{../figures/conv_illustration}}}
