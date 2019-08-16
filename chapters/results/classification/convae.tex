@@ -89,9 +89,18 @@ Each of the configurations found by the random search was then evaluated with $K
 
 Lastly for the architecture we project the latent space for comparison with the non-tuned VGG16 representation. 
 
-
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{plots/vgg_ac_tsne.pdf}
 \caption[VGG16-autoencoder latent space visualization]{Visualizing the latent space of an \ref{item:clf_freeze_vgg} trained autoencoder. The mapping is a t-SNE projection of the latent space to two dimensions.}\label{fig:ac_tnse}
 \end{figure}
+
+\noindent 
+
+Lastly we investigate the effect of adding a dueling decoder to the objective. We provided two distinct auxiliary representations to reconstruct, grounded in the physics of the experiment. The chosen representations were the charge distribution heuristically chosen to be at the high end of the distribution and the net charge deposited during the event. The results of those experiments are included in table \ref{tab:dd_clf_no_vgg}. We immediately observe that the addition of the dueling decoder to the objective increases the performance of the linear classifier on the latent space.
+
+\begin{table}
+\centering
+\subimport{plots/}{dd_convae_clf_table}
+\caption{Logistic regression classification $f1$ scores using the \ref{item:clf_no_vgg} architecture, with a dueling decoder addition to the objective. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:dd_clf_no_vgg}
+\end{table}
