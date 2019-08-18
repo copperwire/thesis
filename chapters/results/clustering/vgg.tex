@@ -1,0 +1,7 @@
+\section{VGG16}
+
+As previously discussed in section \ref{sec:architectures} we use the VGG16 pre-trained network as a baseline also for the clustering performance. We begin by considering a classical K-means approach to clustering. However the output from the VGG16 network is very high dimensional at some $\sim 5e3$ floats. Encumbered by the curse of dimensionality where the ratio of distances goes to one with increasing dimensionality (\cite{Aggarwal}) we investigate clustering based of a reduced dimensionality representation of the VGG16 processed event-data. 
+
+\subsection{Simulated events}
+
+We begin by investigating the K-means clustering algorithm using the $10$ primary principal components 

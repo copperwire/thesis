@@ -36,32 +36,7 @@ It is then interesting to quantify the effect of the amount of accessible labele
 
 \todo{add description of n-labled algo?}
 
-\subsection{Unsupervised performance metrics}\label{sec:unsupervised_perf}
 
-When performing clustering and other unsupervised methods the goal is to estimate some class belonging without the model having knowledge of this correspondence between class and data. This disconnect makes measuring performance a little more abstract. In general there is a separation between performance metrics that assumes that one has access to ground-truth labels and those that do not. We will principally use the ARS (adjusted rand score) which formally defines the agreement between two separate clusterings adjusted for random chance. To compute the ARS we first need to define the contingency table, similar to the confusion matrix from classification, which lists the coinciding elements of one clustering with another. A general representation of this is shown in table \ref{tab:contingency}. 
-
-\begin{table}
-\centering
-\begin{tabular}{c|ccc}
-& $c_1$ &$c_2$ & $\cdots$\\
-\midrule
-$d_1$ & $n_{11}$ & $n_{12}$ &  $\cdots$ \\
-$d_2$ & $n_{21}$ & $n_{22}$ &  $\cdots$ \\
-$\vdots$ & $\vdots$ & \vdots & $\ddots$ \\
-\end{tabular}
-\caption{General form of a contingency table. $d_n$ and $c_n$ are classes measured by two different processes on the same data. The $n_{ij}$'s then describe how many samples are in clusters $d_i$ and simultaneously in $c_j$}\label{tab:contingency}
-\end{table}
-
-Introduced by \cite{Hubert1985} the ARS computes the agreement between the two clusterings $d_i$ and $c_j$. As with the supervised metrics we use the \lstinline{scikit-learn} implementation of the ARS (\cite{Pedregosa2011}). The computation is performed as shown in equation \ref{eq:ars}:
-
-\begin{equation}\label{eq:ars}
-\text{ARS} = \frac{\sum  \binom{n_{ij}}{2} - \left[\sum  \binom{x_{i}}{2} \sum  \binom{y_{j}}{2}  \right]/\binom{n}{2}}{\frac{1}{2}\left[\sum  \binom{x_{i}}{2} + \sum  \binom{y_{j}}{2}  \right]- \left[\sum  \binom{x_{i}}{2} \sum  \binom{y_{j}}{2}  \right]/\binom{n}{2}}.
-\end{equation}
-
-\noindent In equation \ref{eq:ars} we introduce the terms $x_i$ and $y_i$ which are just the row-wise and column wise sums of the the contingency table.
-
-If we take one of the clusterings to be a ground-truth measurement the ARS becomes a clear measure of performance. 
-\todo{add paragraph on NMI}
 
 \subsection{Cross validation}
 

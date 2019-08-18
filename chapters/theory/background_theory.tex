@@ -1,0 +1,16 @@
+\chapter{Fundamental Machine Learning Concepts}
+\section{Introduction}
+
+In this thesis we explore the application of advanced machine learning methods to experimental nuclear physics data. To properly understand the framework of optimization, validation and challenges we face we'll introduce them in turn using a couple of simple models; linear and logistic regression. Before those discussions we briefly outline the process of model fitting and mention a couple of disparate 
+
+Fitting models to data is the formal framework by which much of modern science is underpinned. In most sciences the researcher has a need to formulate some model that represents a given theory. In physics we construct models to describe complex natural phenomena which we use to make predictions or infer inherent properties about the natural world. These models vary from the estimating the Hamiltonian of a fairly simple ising model that describes the nearest neighbor interactions in a binary spin system. To the more complex variational markov chain monte-carlo machinery used for many-body quantum mechanics.
+
+We view this process as approximating an unknown function $\hat{f}$ which takes a state $\mathbf{X}$ as input and gives some output $\hat{y}$,  
+ $$\hat{f}(\mathbf{X}) = \hat{y}.$$ 
+To approximate this function we use an instance of a model: $f(\mathbf{X}; \theta) = y$, where we don't necessarily have a good ansatz for the form of $f$ or the parameters $\theta$. Additionally the output of the function can be multi-variate, discrete or continuous and informs the choice of model to choose for a particular problem. In this first part of the chapter we consider a single real valued outcome. In this thesis we will use a notation on the form $f(y | x; \theta )$ which reads as the function $f$ with output $y$ given $x$ and the parameters $\theta$, and equivalent to the notation $y = f(x; \theta)$.
+
+ The objective of the model is to minimize the discrepancy, $g(|\hat{y} - y|)$, between our approximation and the true target values. An  example of the function $g$ is the mean squared error function used in many modeling applications, notably in linear regression which we explore in section \ref{sec:LinReg}.
+
+In this paradigm we have access to the outcomes of our process, $\hat{y}$, and the system states, $\mathbf{X}$. However this thesis deals largely with the problem of modeling when one only has access to the system states.  However the concepts, terminology and challenges inherent to the former are also ones we have to be mindful of in the latter.
+
+Approximating functions with access to process outcomes starts with the separation of our data into two sets with zero intersection. This is done such that we are able to estimate the performance of our model in the real world. To elaborate the need for this separation we explore the concepts of overfitting and underfitting to the data later in this chapter.

@@ -9,7 +9,7 @@ The process of finding minima or maxima, known collectively as extrema, of a fun
 \noindent Equation \ref{eq:gd} is the hammer which regards any neural network as a nail. Despite its simplicity gradient descent and it's cousins have shown to solve remarkably complex problems despite its obvious flaw: convergence is only guaranteed to a local minimum. We known that the gradient vector is in the direction of the steepest ascent for the function, moving towards a minimum then simply requires going exactly the opposite way. The parameter controlling the size of this variable step is  $\eta \in \mathcal{R}_+$. This parameter is dubbed the learning rate in machine learning which is the term we will be using also. The choice of eta is extremely important for the optimization as too low values slow down convergence to a crawl, and can even stall completely with the introduction of value decay to the learning rate. While too large a learning rate jostles the parameter values around in such a way that we might miss the minimum entirely. Figure \ref{fig:badgd} shows the effects of choosing the values for the learning rate poorly, while figure \ref{fig:goodgd} shows the effect of a well chosen eta which finds the minimum in just a few steps. 
 
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
 \hspace*{-0.9in}
 \subfloat[]{\includegraphics[width=0.6\textwidth]{../figures/gd_low.pdf}}
@@ -22,7 +22,7 @@ The process of finding minima or maxima, known collectively as extrema, of a fun
 
 \noindent While in the case of the convex function we can directly inspect the progress this is not feasible for the high-dimensional updates required for a neural network. In the Stanford course authored by \citet{Karpathy} they point out that one can indirectly observe the impact of the choice of learning rate from the shape of the loss as a function of epoch. This impact is shown in figure \ref{fig:lrloss} which we'll use as a reference when training the models used in this thesis. 
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
 \includegraphics{../figures/lr_loss.png}
 \caption[The impact of $\eta$ on performance]{A hand-drawn figure showing the impact of the choice of the learning rate parameter on the shape of the loss function. The optimal choice has a nice slowly decaying shape that we will use as a benchmark when tuning the learning rate in our applications. Copied from the cs231 course material from Stanford authored by \citet{Karpathy}}\label{fig:lrloss}

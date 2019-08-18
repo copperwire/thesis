@@ -1,9 +1,9 @@
 
-\subsection{Convolutional Autoencoder}\label{sec:convae_implement}
+\section{Convolutional Autoencoder}\label{sec:convae_implement}
 
 The convolutional autoencoder class \lstinline{ConVae} is implemented as a subclass of \lstinline{LatentModel}. It implements the construction of the computational graph and the compute operations needed for the available losses. The graph is manipulated with respect to a supplied configuration dictionary. Which includes options for additional regularization terms like batch-normalization and instructs the class on what losses to compile the model with. 
 
-\subsubsection{Computational graph}
+\subsection{Computational graph}
 
 The private\footnote{The term private is used loosely in the context of python as the language does not actually maintain private methods unaccessible to the outside. By convention methods that are prefixed with an underscore are to be treated as private and are not exposed with public apis and in documentation.} function which enacts the computational graph is \lstinline{_ModelGraph}. It accepts arguments for the strength and type of regularization on the kernel and bias parameters as well as the activation function to be used for the internal representations and the projection to output space. 
 
@@ -19,12 +19,210 @@ After a sample \lstinline{z} is drawn the reconstruction is computed with either
 
 Finally, after the decoding from the latent sample, the output is passed through a sigmoid function if the reconstruction loss is specified as a binary cross-entropy to ensure that the log-term doesn't blow up. Otherwise no transformation is applied on the output. 
 
-\subsubsection{Computing losses}
+\subsection{Computing losses}
 
 In the configuration dictionary the loss for both the reconstruction and latent spaces is specified. For the reconstruction the model accepts either a mean squared error or binary cross-entropy loss, the cross-entropy is the default. 
 
 Each of these losses acts pixel-wise on the output and target images. The reconstruction loss is then stored as a class attribute \lstinline{ConVae.Lx} which is monitored by the \lstinline{TensorFlow} module \lstinline{TensorBoard} for easy monitoring during training. Depending on the configuration the model then compiles a loss over the latent space. For a variational autoencoder the loss is a Kullback-Leibler divergence over the latent distribution and a multivariate normal distribution with zero mean and unit variance. This has a closed form solution given a tensor representing the mean and standard deviation which we derived in equation \ref{eq:kl_opt}. This equation is relatively straightforward to implement as it just implies a sum over the mean and standard deviation tensor. The form of equation \ref{eq:kl_opt} also makes clear why we parametrize the standard deviation and not the variance directly as the exponentiation ensures positivity of the variance. 
 
 Alternatively to a Kullback-Leibler divergence the latent space may be regularized in the style proposed by \citet{Zhao}. Which measures the  We use the radial basis function kernel to compute the maximum mean discrepancy divergence term introduced in equation \ref{eq:mmd} \todo{write implement of KLD and MMD?}
+
+\subsection{Applying the framework}
+
+To illustrate the use and functionality of the model we'll demonstrate the pipeline for constructing a semi-supervised and clustering version of the architecture using the code written for this thesis. Beginning with the semi-supervised use-case. These tutorials are also available in the github repository for the thesis. They are provided as \lstinline{jupyter-notebooks} and can be viewed in browser, or hosted locally. Each of the examples takes the reader through the entirety of the analysis pipeline as presented in section \ref{sec:architectures} and shows how the model was fit to data as well as post-analysis steps. 
+
+\subsubsection{Semi-supervised classification}
+
+The goal of this example is to introduce the reader to the analysis framework used in this thesis. We will go through defining a model with convolutional parameters and fit this model to simulated AT-TPC events. With a 2D latent space this allows us to explore the latent configuration directly, but yields a little worse reconstructions. The \href{https://github.com/ATTPC/VAE-event-classification/blob/master/notebooks/simulated_tutorial.ipynb}{notebook-tutorial} walks through the example and is entirely analogous to this section.
+
+We begin by loading the data files. The repository comes equipped with a small data-set of simulated data that can be analyzed on a home computer\footnote{If the run-time is too slow the data can be replaced with the MNIST data, which is much smaller in terms of size per data-point}\todo{add sim-data to repo}. We assume that the script as we walk through it is located in the \lstinline{notebooks/} directory of the repository. We begin by making the necessary imports for the analysis. The packages \lstinline{TensorFlow} and \lstinline{matplotlib} have to be installed on the system for the tools to work, along with \lstinline{Numpy} and \lstinline{pandas}. The \lstinline{data_loader} module contains functions to load files to \lstinline{numpy} arrays, while the module \lstinline{convolutional_VAE} contains the model class itself.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+import sys
+sys.path.append("../src/")
+import matplotlib.pyplot as plt
+import tensorflow as tf
+import data_loader as dl
+from convolutional_VAE import ConVae
+\end{lstlisting}
+\end{minipage}
+
+\noindent Next the simulated data has to be loaded into memory, and we display four events to illustrate what the representation of the data  looks like.  
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+x_full, x_labeled, y = dl.load_simulated("128")
+
+fig, axs = plt.subplots(ncols=4, figsize=(14, 5))
+[axs[i].imshow(x_full[i].reshape((128, 128)), cmap="Greys") for i in range(4)]
+[axs[i].axis("off") for i in range(4)]
+plt.show()
+\end{lstlisting}
+\end{minipage}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{sim_events.pdf}
+\caption[simulated events]{Selection of four simulated events in their XY-projection used as targets to reconstruct with the convolutional autoencoder.}\label{fig:sim_data}
+\end{figure}
+
+\noindent We are now ready to define our model. To instantiate the model a convolutional architecture needs to be specified, in our implementation these are supplied as lists of integers, and a single integer specifying the number of layers. We'll use four convolutional layers and the simplest mode-configuration that uses no regularization on the latent space.  
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+n_layers = 4
+kernel_architecture = [5, 5, 3, 3]
+filter_architecture = [8, 16, 32, 64]
+strides_architecture = [2, 2, 2, 2]
+pooling_architecture = [0, 0, 0, 0]
+
+mode_config = {
+    "simulated_mode":False, #deprecated, to be removed
+    "restore_mode":False, #indicates whether to load weights 
+    "include_KL":False, #whether to compute the KL loss over the latent space
+    "include_MMD":False, #same as above, but for the MMD loss
+    "include_KM":False, #same as above, but K-means. See thesis for a more in-depth treatment of these
+    "batchnorm":True, #whether to include batch-normalization between layers
+    "use_vgg":False, #whether the input data is from a pre-trained model 
+    "use_dd":False, #whether to use the dueling-decoder objective 
+}
+
+model = ConVae(
+    n_layers,
+    filter_architecture,
+    kernel_architecture,
+    strides_architecture,
+    pooling_architecture,
+    2, #latent dimension,
+    x_full,
+    mode_config=mode_config
+)
+\end{lstlisting}
+\end{minipage}
+
+
+\noindent When the model is defined two steps have to be completed before we train it. Firstly model has to be compiled, which constructs the forward pass and computes the select losses over the outputs from the forward pass. Secondly the gradient-graph has to be computed, as it defines the iterative step for the optimization. For the former the model accepts two dictionaries that specify details of the forward pass; a dictionary \lstinline{graph_kwds} which specifies the activation function and a dictionary \lstinline{loss_kwds} regularization and the type of loss on the reconstruction, be it cross entropy or mean squared error. When the model is compiled it will print to the console a table of its configuration allowing the researcher to confirm that the model is specified correctly. This print is omitted for brevity but can be found in the notebook.
+
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+graph_kwds = {
+    "activation": "relu",
+    "output_activation": "sigmoid", # applied to the output, necessary for BCE
+    "kernel_reg_strength": 1e-5
+}
+loss_kwds = {
+    "reconst_loss": None # None is the default and gives the BCE loss 
+}
+model.compile_model(graph_kwds, loss_kwds)
+\end{lstlisting}
+\end{minipage}
+
+
+\noindent For the latter the model accepts an object of a \lstinline{TensorFlow} optimizer, which should be uninstantiated, and arguments that should be passed to that optimizer object. In this example we choose an adam optimization scheme with $\beta_1 = 0.8$ and $\beta_2=0.99$ and a learning rate of $\eta=\num{1e-3}$. The parameters are explained in detail in section \ref{sec:gd}, but determine the weighting of the first and second moment of the gradient and the size of the change allowed on the parameters respectively. 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+optimizer = tf.train.AdamOptimizer
+opt_args = [1e-3, ] #learning rate
+opt_kwargs = {"beta1": 0.8, "beta2":0.99}
+model.compute_gradients(optimizer, opt_args, opt_kwargs)
+\end{lstlisting}
+\end{minipage}
+
+\noindent When the model is compiled and the gradients are computed it is ready to be trained, or alternatively a pre-trained model can be loaded into memory. Model training is performed by specifying a number of epochs to run for and the batch size to use for the optimization. Additionally the model takes a \lstinline{TensorFlow} session object which it uses to run parts of the graph including the optimization operations. We also specify that the model should stop before the specified number of epochs with the \lstinline{earlystopping} flag if the model converges or starts to overfit.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+epochs = 200
+batch_size = 150
+earlystop = True
+sess = tf.InteractiveSession()
+
+lx, lz = model.train(
+    sess,
+    epochs,
+    batch_size,
+    earlystopping=earlystop
+)
+\end{lstlisting}
+\end{minipage}
+
+\noindent The training prints the value for the reconstruction, $L_x$, and latent $L_z$ losses as well as the evaluation of the early-stopping criteria. This record is omitted for brevity, but can be seen in the notebook. After the model is trained we wish to inspect the reconstructions. Computing the reconstructions is done with the \lstinline{session} object which feeds an input, in this case four events, to the model and retrieves a specific point on the graph. For this example we retrieve the reconstructions defined as the model output; \lstinline{model.output}.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+sample = x_full[:4].reshape((4, -1))
+feed_dict = {model.x:sample}
+reconstructions = model.sess.run(model.output, feed_dict)
+reconstructions = reconstructions.reshape((4, 128, 128))
+\end{lstlisting}
+\end{minipage}
+
+\noindent We reshape the reconstructions to the image dimension and plot them using the same block of code as we did for showing the original events, only adding another row. 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+fig, axs = plt.subplots(nrows=2, ncols=4, figsize=(14, 5))
+[axs[0][i].imshow(x_full[i].reshape((128, 128)), cmap="Greys") for i in range(4)]
+[axs[1][i].imshow(reconstructions[i], cmap="Greys") for i in range(4)]
+[(axs[0][i].axis("off"), axs[1][i].axis("off")) for i in range(4)]
+plt.show()
+\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{reconst_sim_events.pdf}
+\caption[Simulated events and reconstructions]{Showing four events and their corresponding reconstructions. The reconstructions faithfully reconstruct the artifacts from the simulation procedure but has a fuzzy quality common to the ELBO approximation.}\label{fig:reconst_sim}
+\end{figure}
+\end{minipage}
+
+From figure \ref{fig:reconst_sim} we that while the reconstructions are fuzzy they capture the important parts of the input, notably  the curvature of the proton. What remains now is the exploration and fitting of the latent space. We begin by computing the latent representation of the labeled subset of the data. This is done with the \lstinline{run_large} method which does a computation a few elements at a time as the memory requirements of the computations scale very poorly. The method accept an argument for the session with which to run the required output, what output we wish to retrieve and the input needed to compute that output. In this case we wish to compute the latent representation and so our output is \lstinline{mpdel.z_seq[0]}. To preserve homogeneity with the DRAW implementation the latent sample is stored as an iterable. 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+
+all_labeled = x_labeled.reshape((x_labeled.shape[0], -1))
+latent_labeled = model.run_large(sess, model.z_seq[0], all_labeled)
+fig, ax = plt.subplots(figsize=(14, 8))
+classes = ["Proton", "Carbon"]
+cm = matplotlib.cm.get_cmap("magma")
+colors = [cm(0.3), cm(0.6), cm(0.85)]
+
+
+for i in range(len(np.unique(y.argmax(1)))):
+    class_samples = latent_labeled[y.argmax(1) == i]
+    mag = np.sqrt((class_samples**2).sum(1))
+    marker = "^" if i == 0 else "."
+    c = "r" if i == 0 else "b"
+    ax.scatter(
+        class_samples[:,0],
+        class_samples[:,1],
+        label=classes[i],
+        alpha=0.5,
+        marker=marker,
+        color=colors[i],
+        #cmap=cmap
+    )
+ax.set_title("Latent space of simulated AT-TPC data", size=25)
+ax.tick_params(axis='both', which='major', labelsize=20)
+ax.legend(loc="best", fontsize=20) 
+\end{lstlisting}
+\end{minipage}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{latent_sim.pdf}
+\caption[2D latent space for simulated data]{2D latent space representation of the simulated AT-TPC data.}\label{fig:latent_sim}
+\end{figure}
+
+\noindent Now that we have prepared a latent space we can do some analysis. The semi-supervised pipeline is aimed at investigating the quality of the  latent space and so we begin by 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+
+\end{lstlisting}
+
+\end{minipage}
 
 
