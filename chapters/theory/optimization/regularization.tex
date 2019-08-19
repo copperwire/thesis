@@ -46,8 +46,4 @@ C(\mathbf{\hat{y}}, \mathbf{Xw}) &= ( \mathbf{\hat{y}} - \mathbf{Xw})^T( \mathbf
 \noindent The solution is very close to that of the ordinary least squares problem with an added term in the matrix inversion. This addition turns out to be very convenient as it ensures the resulting matrix has full rank, which avoids some of the potential problems when trying to estimate the inverse. 
 
 Conceptually the regularization term added to the cost function modifies what parameters satisfy the $\argmin$ in equation \ref{eq:cost} by adding a penalty to parameters having high values. This is especially useful in cases where features are co-variate or the data is noisy. 
-Regularization then reduces the probability of overfitting by limiting the expressed complexity of a model. In the example of polynomial regression lasso regularization forces many of the coefficients to be zero-valued in such a way that it still performs maximally. \todo{add subsection on dropout and batchnorm} 
-
-
-\subsection{Batch Normalization}\label{sec:batchnorm}
-\todo{maybe dropout?}
+Regularization then reduces the probability of overfitting by limiting the expressed complexity of a model. In the example of polynomial regression lasso regularization forces many of the coefficients to be zero-valued in such a way that it still performs maximally. 

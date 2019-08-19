@@ -1,0 +1,62 @@
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+from joblib import Parallel, delayed
+from estimator import estimator
+
+
+class parallel_wrapper:
+    def __init__(self, degrees):
+        self.degrees = degrees
+        self.biases = np.zeros(len(self.degrees))
+        self.variances = np.zeros(len(self.degrees))
+        self.e_outs = np.zeros(len(self.degrees))
+
+    def __call__(self, est_inst, i, trials, trial_points):
+        degree = self.degrees[i]
+        bias, var, e_out = compute_bias_variance(
+            est_inst, degree, trials, trial_points)
+        self.biases[i] = bias
+        self.variances[i] = var
+        self.e_outs[i] = e_out
+
+
+def compute_bias_variance(est_inst, degree, trials, trial_points):
+    # polynomials = est_inst.make_polynomials(degree, trials, trial_points)
+    polynomials = est_inst.make_neural_nets(degree, trials, trial_points)
+    test_eval = np.array([p(est_inst.test_set[0].reshape((-1, 1)))
+                          for p in polynomials])
+    expect_eval = test_eval.mean(0)
+    bias_sq = np.square(est_inst.f_test - expect_eval).sum()
+    variance = ((np.square(test_eval - expect_eval)).mean(0)).sum()
+    e_out = bias_sq + variance + est_inst.noise_params[1]**2
+    return np.sqrt(bias_sq), variance, e_out
+
+
+true_poly = np.poly1d([3.2e-2, 0.02, 0.8, 1.2, 2])
+trial_order = np.arange(1, 10)
+est_inst = estimator(true_poly)
+pw = parallel_wrapper(trial_order)
+Parallel(n_jobs=5, require="sharedmem")(delayed(pw)(est_inst, i, 50, 2000)
+                                        for i in range(len(trial_order)))
+
+fig, ax = plt.subplots(figsize=(6, 5))
+#ax2 = ax.twinx()
+#ax3 = ax.twinx()
+axs = [ax, ax, ax]
+labels = ["Bias", "Variance", r"$E_{out}$"]
+cm = matplotlib.cm.get_cmap("magma")
+colors = [cm(0.3), cm(0.6), cm(0.85)]
+outcomes = [pw.biases, pw.variances, pw.e_outs]
+lines = []
+for i, l in enumerate(labels):
+    ln = axs[i].plot(trial_order, outcomes[i], label=labels[i], c=colors[i])
+    lines += ln
+    axs[i].get_yaxis().set_ticks([])
+    # axs[i].axes.get_yaxis().set_visible(False)
+
+labels = [l.get_label() for l in lines]
+axs[0].legend(lines, labels, loc="best")
+axs[0].set_xlabel("Model complexity")
+axs[0].set_ylabel("Error")
+plt.savefig("../figures/bias_var_degree.png")

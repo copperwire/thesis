@@ -1,5 +1,15 @@
 \section{The bias-variance relationship}\label{sec:bv}
 
-In statistical learning theory we 
+Understanding over and under-fitting is very important to understanding the challenges faced when doing machine learning. As it turns out those concepts are fundamentally tied to the out-of-sample error, $E_{out}$, for which the least squares cost function can be decomposed in three contributions\footnote{This is shown by \citet{Mehta2019} and we refer to that work for details on the derivation}, namely
 
-\todo{write out section on bias-variance }
+\begin{align}\label{eq:bv_decomp}
+E_{out} = \langle C(\mathbf{\hat{y}}^t, f_S(\mathbf{x}^t; \theta*))\rangle_{S,\, \epsilon} = \text{Bias}^2 + \text{Variance} + \text{Noise}.
+\end{align}
+
+\noindent This expectation is rather compact and so before we move on to explaining the bias and variance start by elaborating on $S$ and $\epsilon$. Recall from equation \ref{eq:target} that we decompose the target values as a contribution from a true process and an error term $\epsilon$. The expectation over the cost then has a contribution from the noise, represented by the last term of the decomposition. Furthermore the expectation in equation \ref{eq:bv_decomp} is taken over a model with optimized parameters $\theta^*$, but that optimization can be thought to be a function of the selected data used in the optimization. We can then view $f_S(\mathbf{x}; \theta^*)$ as a stochastic functional which varies over the selected data $S = \{\mathbf{\hat{y}}, \mathbf{x}\}$ used for training (\cite{Mehta2019}). We also use the superscript $t$ on the outcome and state variables to indicate that they are from the testing set, variables without that subscript are implied to be from the training set.
+ Using the derived quantities from \citet{Mehta2019} we can then define the bias as
+
+\begin{equation}
+\text{Bias}^2 = \sum_i (P(\mathbf{x}_i^t) - \langle f_S(\mathbf{x}_i^t; \theta^*)\rangle_S)^2.
+\end{equation}
+
