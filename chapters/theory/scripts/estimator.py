@@ -11,6 +11,11 @@ class mlpwrapper(MLPRegressor):
 
 
 class estimator:
+    """
+    Estimator class that maintains the true values 
+    generated from a groun-truth process and fits models to data 
+    fro bias variance estimation for know processes. 
+    """
     def __init__(
             self,
             true_poly,
@@ -19,6 +24,10 @@ class estimator:
             test_n=150,
             noise_params=(0, 2)
     ):
+        """
+        Initializes the class with a test set decomposed in 
+        noise and true-process parts for bias-variance computation
+        """
         self.true_poly = true_poly
         self.noise_params = noise_params
         self.test_x = np.linspace(

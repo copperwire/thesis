@@ -24,10 +24,16 @@ class parallel_wrapper:
 def compute_bias_variance(est_inst, degree, trials, trial_points):
     # polynomials = est_inst.make_polynomials(degree, trials, trial_points)
     polynomials = est_inst.make_neural_nets(degree, trials, trial_points)
+    # evaluates the estimator trained on different training sets on 
+    # the one test set making a (estimators, n_test) matrix
     test_eval = np.array([p(est_inst.test_set[0].reshape((-1, 1)))
                           for p in polynomials])
+    # Compute the expectation over the estimators generated from different
+    # training sets
     expect_eval = test_eval.mean(0)
+    # Evaluates the bias squared as eq. 7 in Mehta et. al 2019
     bias_sq = np.square(est_inst.f_test - expect_eval).sum()
+    # Evaluates the variance as eq. 8 in Mehta et. al 2019
     variance = ((np.square(test_eval - expect_eval)).mean(0)).sum()
     e_out = bias_sq + variance + est_inst.noise_params[1]**2
     return np.sqrt(bias_sq), variance, e_out
