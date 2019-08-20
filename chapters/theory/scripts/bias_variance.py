@@ -41,16 +41,16 @@ def compute_bias_variance(est_inst, degree, trials, trial_points):
 
 #true_poly = np.poly1d([3.2e-2, 0.02, 0.8, 1.2, 2])
 true_poly = lambda x: np.exp(-(x-3)**2) + np.exp(-(x +1)**2) * 2* np.sin(x)
-trial_order = np.arange(1, 20)
+trial_order = np.arange(0, 20)
 est_inst = estimator(true_poly)
 pw = parallel_wrapper(trial_order)
-Parallel(n_jobs=5, require="sharedmem")(delayed(pw)(est_inst, i, 10000, 500)
+Parallel(n_jobs=10, require="sharedmem")(delayed(pw)(est_inst, i, 20000, 500)
                                         for i in range(len(trial_order)))
 
 fig, ax = plt.subplots(figsize=(6, 5))
-ax2 = ax.twinx()
+#ax2 = ax.twinx()
 #ax3 = ax.twinx()
-axs = [ax, ax, ax2]
+axs = [ax, ax, ax]
 labels = ["Bias", "Variance", r"$E_{out}$"]
 cm = matplotlib.cm.get_cmap("magma")
 colors = [cm(0.3), cm(0.6), cm(0.85)]
@@ -62,6 +62,7 @@ for i, l in enumerate(labels):
     axs[i].get_yaxis().set_ticks([])
     # axs[i].axes.get_yaxis().set_visible(False)
 
+ax.set_ylim((0, max(pw.biases)))
 labels = [l.get_label() for l in lines]
 axs[0].legend(lines, labels, loc="best")
 axs[0].set_xlabel("Model complexity")
