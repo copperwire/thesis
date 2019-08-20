@@ -22,11 +22,11 @@ class parallel_wrapper:
 
 
 def compute_bias_variance(est_inst, degree, trials, trial_points):
-    # polynomials = est_inst.make_polynomials(degree, trials, trial_points)
-    polynomials = est_inst.make_neural_nets(degree, trials, trial_points)
+    polynomials = est_inst.make_polynomials(degree, trials, trial_points)
+    #polynomials = est_inst.make_neural_nets(degree, trials, trial_points)
     # evaluates the estimator trained on different training sets on 
     # the one test set making a (estimators, n_test) matrix
-    test_eval = np.array([p(est_inst.test_set[0].reshape((-1, 1)))
+    test_eval = np.array([p(est_inst.test_set[0])
                           for p in polynomials])
     # Compute the expectation over the estimators generated from different
     # training sets
@@ -35,21 +35,22 @@ def compute_bias_variance(est_inst, degree, trials, trial_points):
     bias_sq = np.square(est_inst.f_test - expect_eval).sum()
     # Evaluates the variance as eq. 8 in Mehta et. al 2019
     variance = ((np.square(test_eval - expect_eval)).mean(0)).sum()
-    e_out = bias_sq + variance + est_inst.noise_params[1]**2
+    e_out = bias_sq + variance + len(est_inst.test_x)*est_inst.noise_params[1]**2
     return np.sqrt(bias_sq), variance, e_out
 
 
-true_poly = np.poly1d([3.2e-2, 0.02, 0.8, 1.2, 2])
-trial_order = np.arange(1, 10)
+#true_poly = np.poly1d([3.2e-2, 0.02, 0.8, 1.2, 2])
+true_poly = lambda x: np.exp(-(x-3)**2) + np.exp(-(x +1)**2) * 2* np.sin(x)
+trial_order = np.arange(1, 20)
 est_inst = estimator(true_poly)
 pw = parallel_wrapper(trial_order)
-Parallel(n_jobs=5, require="sharedmem")(delayed(pw)(est_inst, i, 50, 2000)
+Parallel(n_jobs=5, require="sharedmem")(delayed(pw)(est_inst, i, 10000, 500)
                                         for i in range(len(trial_order)))
 
 fig, ax = plt.subplots(figsize=(6, 5))
-#ax2 = ax.twinx()
+ax2 = ax.twinx()
 #ax3 = ax.twinx()
-axs = [ax, ax, ax]
+axs = [ax, ax, ax2]
 labels = ["Bias", "Variance", r"$E_{out}$"]
 cm = matplotlib.cm.get_cmap("magma")
 colors = [cm(0.3), cm(0.6), cm(0.85)]
