@@ -32,39 +32,41 @@ def compute_bias_variance(est_inst, degree, trials, trial_points):
     # training sets
     expect_eval = test_eval.mean(0)
     # Evaluates the bias squared as eq. 7 in Mehta et. al 2019
-    bias_sq = np.square(est_inst.f_test - expect_eval).sum()
+    bias_sq = np.square(est_inst.test_set[1]- expect_eval).sum()
     # Evaluates the variance as eq. 8 in Mehta et. al 2019
     variance = ((np.square(test_eval - expect_eval)).mean(0)).sum()
     e_out = bias_sq + variance + len(est_inst.test_x)*est_inst.noise_params[1]**2
-    return np.sqrt(bias_sq), variance, e_out
+    return bias_sq, variance, e_out
 
 
 #true_poly = np.poly1d([3.2e-2, 0.02, 0.8, 1.2, 2])
-true_poly = lambda x: np.exp(-(x-3)**2) + np.exp(-(x +1)**2) * 2* np.sin(x)
-trial_order = np.arange(0, 20)
+#true_poly = lambda x: np.exp(-(x-3)**2) + np.exp(-(x +1)**2) * 2* np.sin(x)
+true_poly = lambda x: np.exp(-x**2) + 1.5 * np.exp(-(x-2)**2) 
+trial_order = np.arange(0, 14)
 est_inst = estimator(true_poly)
 pw = parallel_wrapper(trial_order)
-Parallel(n_jobs=10, require="sharedmem")(delayed(pw)(est_inst, i, 20000, 500)
+Parallel(n_jobs=10, require="sharedmem")(delayed(pw)(est_inst, i, 1000, 125)
                                         for i in range(len(trial_order)))
 
 fig, ax = plt.subplots(figsize=(6, 5))
 #ax2 = ax.twinx()
 #ax3 = ax.twinx()
 axs = [ax, ax, ax]
-labels = ["Bias", "Variance", r"$E_{out}$"]
+labels = [r"Bias$^2$", "Variance", r"$E_{out}$"]
 cm = matplotlib.cm.get_cmap("magma")
 colors = [cm(0.3), cm(0.6), cm(0.85)]
 outcomes = [pw.biases, pw.variances, pw.e_outs]
 lines = []
 for i, l in enumerate(labels):
-    ln = axs[i].plot(trial_order, outcomes[i], label=labels[i], c=colors[i])
+    ln = axs[i].plot(trial_order, outcomes[i], label=labels[i], c=colors[i], lw=2)
     lines += ln
     axs[i].get_yaxis().set_ticks([])
     # axs[i].axes.get_yaxis().set_visible(False)
 
-ax.set_ylim((0, max(pw.biases)))
+ax.set_ylim((0, max(pw.biases+pw.variances)+2))
 labels = [l.get_label() for l in lines]
 axs[0].legend(lines, labels, loc="best")
 axs[0].set_xlabel("Model complexity")
 axs[0].set_ylabel("Error")
 plt.savefig("../figures/bias_var_degree.png")
+plt.savefig("../figures/bias_var_degree.pdf")

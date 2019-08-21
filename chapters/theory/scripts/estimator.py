@@ -29,7 +29,7 @@ class estimator:
             test_range=(2, 4),
             train_width=20,
             test_n=150,
-            noise_params=(0, 0.5)
+            noise_params=(0, 0.1)
     ):
         """
         Initializes the class with a test set decomposed in 
