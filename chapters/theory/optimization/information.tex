@@ -6,37 +6,39 @@ Up until now we have been dealing with predicting a real valued outcome, but thi
 In information theory one considers the amount of chaos in in a process and how much one needs to know to characterize such a process. As we'll see this ties into concepts well known to physicists from statistical and thermal physics. As a quick refresher we mention that processes that are more random possess more information in this formalism, i.e. a rolling die has more information than a spinning coin. We define the information of an event in the normal way as 
 
 \begin{equation}
-I = -\log(p(\mathbf{x})),
+I := -\log(p(\mathbf{x})),
 \end{equation} 
 
 \noindent where $p(\mathbf{x})$ is the probability of a given event $\mathbf{x}$ occurring. One of the quantities that turn out to have very wide applications is the expectation over information, known as the entropy of a system. We define the entropy in the discrete case as just that, the expectation over the information;
 
 \begin{equation}
-H(p(\mathbf{x})) = -\langle I(\mathbf{x}) \rangle_{p(\mathbf{x})} = - \sum _\mathbf{x} p(\mathbf{x})\log(p(\mathbf{x})).
+H(p(\mathbf{x})) = -\langle I(\mathbf{x}) \rangle_{p(\mathbf{x})}.
 \end{equation}
 
-\noindent Depending on the choice of base of the logarithm this functional has different names, but the interpretation is largely the same as it measures the degree of randomness in the system. One of the widest used bases is log base 2 know as the Shannon entropy which describes how many bits of information we need to fully describe the process underlying $p(\mathbf{x})$. In machine learning, or indeed may other applications of modeling, we wish to encode a process with a model. We can then measure the amount of bits (or other units of information) it takes to encode the underlying process, $\mathbf{x} \sim p(\mathbf{x})$, with a model distribution $q_{\theta}(\mathbf{\mathbf{x}})$. We re-iterate that in this thesis we will in general use Greek subscripted letters on distributions to denote models. The measure of information lost by encoding the original process with a model is called the cross-entropy and is defined as
+\noindent Depending on the choice of base of the logarithm this functional has different names, but the interpretation is largely the same as it measures the degree of randomness in the system. One of the widest used bases is log base 2 know as the Shannon entropy which describes how many bits of information we need to fully describe the process underlying $p(\mathbf{x})$. 
+
+In machine learning, or indeed may other applications of modeling, we wish to encode a process with a model. We can then measure the amount of bits (or other units of information) it takes to encode the underlying process, $p(\hat{y} | \mathbf{x})$, with a model distribution $q(y| \mathbf{x}; \theta)$. We re-iterate that in this thesis we will in general use the semi-colon notation to denote model parameters. The measure of information lost by encoding the original process with a model is called the cross-entropy and is defined as
 
 \begin{equation}
-H(p, q) = - \sum_\mathbf{x} p(\mathbf{x})\log(q_\theta(\mathbf{x})).
+H(p, q) := - \sum_\mathbf{x} p(\mathbf{x})\log(q(\mathbf{x}; \theta)).
 \end{equation}
 
-\noindent With the cross entropy we have arrived at a way to measure information lost by using the model $q_\theta$, which means we can use the cross entropy as a tool to optimize the model parameters. We begin by simply considering a binary outcome $y_i$ as a function of a state $\mathbf{x}_i$ and define the maximum likelihood estimate (MLE) which is the probability of seeing the data, i.e. the set of tuples, $\eta_i = \{\mathbf{x}_i, y_i\}$, given our model and parameters. Let the set of those tuples be $S = \{\eta_i\}$ then the likelihood of our model is defined as 
+\noindent With the cross entropy we have arrived at a way to measure information lost by using the model $q$, which means we can use the cross entropy as a tool to optimize the model parameters. We begin by simply considering a binary outcome $y_i$ as a function of a state $\mathbf{x}_i$ and define the MLE (Maximum Likelihood Estimate) as the probability of seeing the data given our model and parameters. Let the data be a set consisting of tuples\footnote{a tuple is a data structure consisting of an ordered set of different elements. It differs from a matrix in that the constituent elements need not be of the same dimension.}, $s_i = (\mathbf{x}_i, \hat{y}_i)$, and denote that set as $S = \{s_i\}$ then the likelihood of our model is defined as 
 
 \begin{equation}\label{eq:likelihood}
-p(S | \theta) = \prod_i q_\theta(\mathbf{x}_i)^{y_i} - (1-q_\theta(\mathbf{x}_i))^{1-y_i}.
+p(S | \theta) = \prod_i q(\mathbf{x}_i; \theta)^{\hat{y}_i} - (1-q(\mathbf{x}_i; \theta))^{1-\hat{y}_i}.
 \end{equation}
 
-\noindent We want to maximize this functional with respect to the parameters $\theta$. The product sum is problematic in this regard as it's gradient is likely to vanish as the number of terms increase, to circumvent this we take the logarithm of the likelihood defining the log-likelihood. Optimizing the log-likelihood yields the same optimum as for the likelihood as the logarithmic function is monotonic. \footnote{it is trivial to show that for optimization purposes any monotonic function can be used, the logarithm turns out to be practical for handling the product sum and exponents.}
-\begin{equation}
-\mathcal{L}(\mathbf{x}, y, \theta) = \log(p(S | \theta)) = \sum_i y_i\log(q_\theta(\mathbf{x}_i)) + (1-y_i)(q_\theta(\mathbf{x}_i))
+\noindent We want to maximize this functional with respect to the parameters $\theta$. The product sum is problematic in this regard as it's gradient is likely to vanish as the number of terms increase, to circumvent this we take the logarithm of the likelihood defining the log-likelihood. Since the likelihood is defined as a maximization problem we define the negative log-likelihood as the corresponding minimization problem. Optimizing the log-likelihood yields the same optimum as for the likelihood as the logarithmic function is monotonic \footnote{it is trivial to show that for optimization purposes any monotonic function can be used, the logarithm turns out to be practical for handling the product sum and exponents.}
+\begin{equation}\label{eq:mle}
+\mathcal{C}(\mathbf{x}, y, \theta) = -\log(p(S | \theta)) = -\sum_i y_i\log(q(\mathbf{x}_i; \theta)) + (1-y_i)(q(\mathbf{x}_i; \theta)).
 \end{equation}
 
 \noindent Where we observe this is simply the cross-entropy for the binary case. The optimization problem is then 
 
 \begin{equation}
-\theta^* = \argmax_\theta \mathcal{L}(\mathbf{x}, y, \theta )
+\theta^* = \argmin_\theta \mathcal{C}(\mathbf{x}, y, \theta ).
 \end{equation}
 
-\noindent This formulation of the MLE for binary classification can be extended to the case of simple regression where one shows the mean squared error is the functional to optimize for. Common to most applications in machine learning is the solution of these optimization problems by the use of gradient descent on the cost, usually simply defined as the negative loss. Gradient descent is discussed in some detail in section \ref{sec:gd}.
+\noindent This formulation of the MLE for binary classification can be extended to the case of linear regression where one shows the mean squared error is the functional to optimize for. The MLE solution is most often not analytically solvable and so in machine learning the solution of these optimization problems is often found by of gradient descent on the construct. Gradient descent is discussed in some detail in section \ref{sec:gd}. The first place we find that we need iterative methods is in the section immediately following this where we discuss the second principal machine learning algorithm; logistic regression.
 
