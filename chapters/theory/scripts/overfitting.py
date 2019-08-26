@@ -76,4 +76,5 @@ lgnd = axs[0][0].legend(
 #plt.tight_layout()
 
 plt.savefig("../figures/y_distr.png", bbox_extra_artists=[lgnd, ], bbox_inches="tight")
+plt.savefig("../figures/y_distr.pdf", bbox_extra_artists=[lgnd, ], bbox_inches="tight")
 plt.close(fig)

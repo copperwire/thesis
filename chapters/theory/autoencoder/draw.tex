@@ -1,4 +1,4 @@
-\subsection{Deep Recurrent Attentive Writer}\label{sec:draw}
+\section{Deep Recurrent Attentive Writer}\label{sec:draw}
 
 One of the central challenges of the ELBO as presented in equation \ref{eq:elbo} is that the probability of a pixel in the output being activated is not conditional on whether the pixels surrounding it has is activated. This means that the entire canvas is conditioned on a single sample. The Deep Recurrent Attentive Writer (DRAW) aims to solve this problem by creating an iterative algorithm updates parts of, or the whole canvass, multiple times (\cite{Gregor2015}). In this thesis we make three central modifications to the algorithm. 
 
@@ -27,7 +27,7 @@ One of the central challenges of the ELBO as presented in equation \ref{eq:elbo}
 \caption[DRAW network architecture]{\textbf{Left:} an ordinary one\-shot encoder\-decoder network. \textbf{Right:} DRAW network that iteratively constructs the canvas using RNN cells as the encoder/decoder pair. The final output is then iteratively constructed using a series of updates on a canvass, $c_t$. DRAW function read that process the input and feeds this to the encoder which outputs a latent sample $\mathbf{z}_t$. The latent sample in turn acts as input to the decoder part of the network which modifies the canvass using a write function that mirrors the read operation.}\label{fig:draw}
 \end{figure}
  
- \subsubsection{Read and Write functions}
+ \subsection{Read and Write functions}
 
  The read/write functions are paired processing functions that create a sub-sampled representation of the input. The trivial versions of which is just the concatenation of the error image with the input for the read-function and a weight transformation from the decoder state to the output dimension as the write. This pair of functions have not been considered for this work. 
 
@@ -40,7 +40,7 @@ One of the central challenges of the ELBO as presented in equation \ref{eq:elbo}
 
 \noindent The attention parameters are computed from a fully connected layer connecting the decoder state to a 4-tuple of floating point numbers i.e
 
-\begin{equation}
+\begin{equation}\label{eq:draw_params}
 \tilde{g}_x, \,\tilde{g}_y, \, \log \sigma^2, \, \log \gamma = \text{Dense} (\mathbf{h}_t^{dec})
 \end{equation}
 
@@ -51,11 +51,11 @@ g_x = \frac{W +1 }{2} (\tilde{g}_x +1 ) \\
 g_y = \frac{H +1 }{2} (\tilde{g}_y +1 ) \\
 \end{align}
 
-\noindent The above equations included terms to compute and scale $\delta$, that we have eliminated and added it instead as a constant hyperparameter. Given the scaled centers, input dimensions $H \times W$ we can compute the filter-banks $F_x \in \mathcal{R}^{N \times W}$ and $F_y \in \mathcal{R}^{N \times H}$. 
+\noindent The above equations included terms to compute and scale $\delta$, that we have eliminated and added it instead as a constant hyperparameter. Given the scaled centers, input dimensions $H \times W$ we can compute the filter-banks $F_x \in \mathcal{R}^{N \times W}$ and $F_y \in \mathcal{R}^{N \times H}$.
 
 \begin{align}
-F_x [i, w] = \frac{1}{Z_x}e^{-\frac{(w - \mu_x^i)^2}{2\sigma^2}} \\
-F_y [j, h] = \frac{1}{Z_y}e^{-\frac{(h - \mu_y^j)^2}{2\sigma^2}}
+F_x [i, w] = \frac{1}{Z_x}e^{-\frac{(w - \mu_x^i)^2}{2\sigma^2}}\label{eq:Fx} \\
+F_y [j, h] = \frac{1}{Z_y}e^{-\frac{(h - \mu_y^j)^2}{2\sigma^2}}\label{eq:Fy}
 \end{align}
 
 \noindent Where we denote a point in the input $(h,\, w)$, and a point in the attention patch $(i,\, j)$. The filters-banks are multiplied with a normalization constant s.t. $\sum_w F_x[i, w] = 1$, $Z_y$ is defined in the same way. We are now finally ready to define the read and write functions with attention parameters. The read operation returns a concatenation of the same patch extracted from the input and error images. The write function returns an array that is added to the current canvass $c_t$. From \citet{Gregor2015} read function is defined by equation \ref{eq:read}
@@ -73,7 +73,20 @@ F_y [j, h] = \frac{1}{Z_y}e^{-\frac{(h - \mu_y^j)^2}{2\sigma^2}}
 \noindent Notice the transposition order in equation \ref{eq:write} is reversed with respect to the order in equation \ref{eq:read}. 
 \todo{add punctuation to equations}
 
-\subsubsection{Latent samples and loss}
+\subsection{Latent samples and loss}
 
+Optimizing the DRAW algorithm is almost entirely analogous to the procedure for the variational autoencoder. We operate with a divergence over our latent samples and a latent prior, as well as a reconstruction term parameterizing the log evidence. In not so many words we still have a cross entropy loss over the reconstruction and input as well as a divergence term from our latent samples.  
 
-\todo{write out latent sample/loss subsects}
+As the DRAW model creates a sequence of latent samples the considerations for the latent loss changes somewhat. In the DRAW algorithm our encoder parametrizes a distribution $q(\mathbf{z}_t | \mathbf{h}_t^{enc})$ which we want to model as being drawn from some prior $p(\mathbf{z}_t)$. As with the variational autoencoder we let the prior be a multivariate isotropic Gaussian. The latent loss, $L_z$, is then a sum over individual divergence terms for each time-step
+
+\begin{equation}\label{eq:draw_latent}
+L_z = \sum_t^T D_{KL}(q||p).
+\end{equation}
+
+\noindent Given the same prior as for the variational autoencoder we can apply the same derivation of the closed form divergence. Previously we parametrized the latent sample with a mean and standard deviation vector, repeating this procedure the loss becomes 
+
+\begin{equation}\label{eq:draw_kl}
+L_z = \frac{1}{2}\sum_t^T(\mu^2_t + \sigma^2_t - \log \sigma_t ^2) - \frac{T}{2}.
+\end{equation}
+
+\noindent Similarly the maximum mean discrepancy loss is computed from equation \ref{eq:draw_latent} replacing the Kullback-Leibler divergence with the terms from equation \ref{eq:mmd}.

@@ -9,10 +9,10 @@ In information theory one considers the amount of chaos in in a process and how 
 I := -\log(p(\mathbf{x})),
 \end{equation} 
 
-\noindent where $p(\mathbf{x})$ is the probability of a given event $\mathbf{x}$ occurring. One of the quantities that turn out to have very wide applications is the expectation over information, known as the entropy of a system. We define the entropy in the discrete case as just that, the expectation over the information;
+\noindent where $p(\mathbf{x})$ is the probability of a given event $\mathbf{x}$ occurring. One of the quantities that turn out to have very wide applications is the expectation over information, known as the entropy of a system. We define the entropy as just that, the expectation over the information;
 
 \begin{equation}
-H(p(\mathbf{x})) = -\langle I(\mathbf{x}) \rangle_{p(\mathbf{x})}.
+H(p(\mathbf{x})):= -\langle I(\mathbf{x}) \rangle_{p(\mathbf{x})}.
 \end{equation}
 
 \noindent Depending on the choice of base of the logarithm this functional has different names, but the interpretation is largely the same as it measures the degree of randomness in the system. One of the widest used bases is log base 2 know as the Shannon entropy which describes how many bits of information we need to fully describe the process underlying $p(\mathbf{x})$. 
@@ -26,7 +26,7 @@ H(p, q) := - \sum_\mathbf{x} p(\mathbf{x})\log(q(\mathbf{x}; \theta)).
 \noindent With the cross entropy we have arrived at a way to measure information lost by using the model $q$, which means we can use the cross entropy as a tool to optimize the model parameters. We begin by simply considering a binary outcome $y_i$ as a function of a state $\mathbf{x}_i$ and define the MLE (Maximum Likelihood Estimate) as the probability of seeing the data given our model and parameters. Let the data be a set consisting of tuples\footnote{a tuple is a data structure consisting of an ordered set of different elements. It differs from a matrix in that the constituent elements need not be of the same dimension.}, $s_i = (\mathbf{x}_i, \hat{y}_i)$, and denote that set as $S = \{s_i\}$ then the likelihood of our model is defined as 
 
 \begin{equation}\label{eq:likelihood}
-p(S | \theta) = \prod_i q(\mathbf{x}_i; \theta)^{\hat{y}_i} - (1-q(\mathbf{x}_i; \theta))^{1-\hat{y}_i}.
+p(S | \theta) := \prod_i q(\mathbf{x}_i; \theta)^{\hat{y}_i} - (1-q(\mathbf{x}_i; \theta))^{1-\hat{y}_i}.
 \end{equation}
 
 \noindent We want to maximize this functional with respect to the parameters $\theta$. The product sum is problematic in this regard as it's gradient is likely to vanish as the number of terms increase, to circumvent this we take the logarithm of the likelihood defining the log-likelihood. Since the likelihood is defined as a maximization problem we define the negative log-likelihood as the corresponding minimization problem. Optimizing the log-likelihood yields the same optimum as for the likelihood as the logarithmic function is monotonic \footnote{it is trivial to show that for optimization purposes any monotonic function can be used, the logarithm turns out to be practical for handling the product sum and exponents.}
@@ -37,7 +37,7 @@ p(S | \theta) = \prod_i q(\mathbf{x}_i; \theta)^{\hat{y}_i} - (1-q(\mathbf{x}_i;
 \noindent Where we observe this is simply the cross-entropy for the binary case. The optimization problem is then 
 
 \begin{equation}
-\theta^* = \argmin_\theta \mathcal{C}(\mathbf{x}, y, \theta ).
+\theta^* = \argmin_\theta \mathcal{C}(\mathbf{x}, \hat{y}, \theta ).
 \end{equation}
 
 \noindent This formulation of the MLE for binary classification can be extended to the case of linear regression where one shows the mean squared error is the functional to optimize for. The MLE solution is most often not analytically solvable and so in machine learning the solution of these optimization problems is often found by of gradient descent on the construct. Gradient descent is discussed in some detail in section \ref{sec:gd}. The first place we find that we need iterative methods is in the section immediately following this where we discuss the second principal machine learning algorithm; logistic regression.
