@@ -250,13 +250,41 @@ Two sigmoid functions have been traditionally used in neural networks, while the
 \frac{d \tanh x}{d x}  = 1-\tanh^2 x
 \end{equation}
 
-\noindent 
+\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure we observe that for relatively small values the gradient goes to zero, which makes optimization hard. Additionally we note one of the convenient properties of the sigmoid functions; their values are capped. This prohibits the gradient from exploding which leads us to the next family of activation functions.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{../figures/activationssigmoids.pdf}
+\caption[Sigmoid activation functions]{Sigmoid activation functions and their derivatives, the colorization indicates that the function is multiplied with a second variable. We observe that the derivative deteriorates to zero as the function moves away from zero. The derivative going to zero means that a network using sigmoid activations generally struggle with saturated gradients which slows down training dramatically.}\label{fig:sigmoid}
+\end{figure}
+
+\subsubsection{Rectifiers}
+
+On the other end of the scale rectified activations have gained traction in later years. We introduced the ReLU and it's derivative in the previous section, but we will discuss a popular cousin here. The LReLU (leaky rectified linear unit) takes the ReLU and modifies it slightly by adding a small slope to the negative part of the activation. Mathematically we define the LReLU as 
+
+\begin{equation}\label{eq:lrelu}
+	\text{LReLU} (x) = f(x) = \begin{cases}
+	x, & \text{if } x \geq 0 \\
+	\alpha\cdot x  & \text{otherwise},
+	\end{cases}
+\end{equation}
+
+\noindent where $\alpha$ is a small positive real number. Immediately it becomes clear that for the rectifier functions we have the opposite problem from what we encountered for the sigmoid activations. As the derivative is non-zero for a large range of value we no longer have a concern for vanishing gradients, but the activation is not positively bounded. This leads to a problem where the gradient might explode leading to an unstable optimization that fails to find a minimum of the cost. We illustrate the defining features of the rectifiers in figure \ref{fig:elu}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{../figures/activationselus.pdf}
+\caption[Rectifier activation functions]{Rectifier activation functions and their derivatives, the colorization indicates that the function is multiplied with a second variable. In contrast with the sigmoid activations the derivative is non-zereo in $\mathcal{R}^+$ for the ReLU and non-zero on the entirety of $\mathcal{R}$ for the LReLU.}\label{fig:elu}
+\end{figure}
+
 
 \section{Deep learning regularization}
 
 As neural networks can be made arbitrarily complex reducing the degree of over-fitting is an important concern. Regularization of deep learning use both tried and true algorithms as we discussed in chapter \ref{chap:fundament} and some specialized tools developed for use with neural networks specifically. 
 
-Traditional measures of regularization like using cross validation and weight constraints are both important features of reducing over-fitting in deep learning algorithms. We introduced cross validation in section \ref{sec:cv} to estimate appropriate model complexities. This procedure is model agnostic and can be applied to estimate the number of layers and width of those in a neural network. Weight constraints are similarly convenient additions to the cost function. The only modification required from \ref{eq:mse_ridge} is adding a summation term over the layers. For a $L_2$ regularized neural net the cost function can then be written as 
+Traditional measures of regularization like using cross validation and weight constraints are both important features of reducing over-fitting in deep learning algorithms. We introduced cross validation in section \ref{sec:cv} as a way to estimate appropriate model complexities. Cross validation is model agnostic and can be applied to estimate the number of layers and width of those in a neural network. 
+
+Weight constraints are similarly convenient additions to the cost function. The only modification required from \ref{eq:mse_ridge} is adding a summation term over the layers. For a $L_2$ regularized neural net the cost function can then be written as 
 
 \begin{equation}
 C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum_l\sum_{ij}||w_{ij}^{[l]}||^2.
