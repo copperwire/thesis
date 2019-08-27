@@ -37,7 +37,7 @@ One of the principal challenges with the experimental data discussed in this the
 It is then interesting to quantify the effect of the amount of accessible labeled data on a semi-supervised approach as listed in section \ref{sec:architectures}. Starting from a random, small, sample of the labeled data we train a classifier on a subset of the labeled data iteratively adding to that subset. 
 
 
-\subsection{Cross validation}
+\subsection{Cross validation}\label{sec:cv}
 
 To estimate the out-of-sample error as discussed in section \ref{sec:bv} one can use simple statistical tools. The premise is that by iteratively selecting what data the model gets to train on and what it doesn't we can compute a less biased estimate of the out of sample error, compared to simply taking the training performance. The division in sub-sets mimics the expectation computed in equation \ref{eq:bv_decomp} over the data-selection sensitive model parameters $\theta_S^*$. 
 

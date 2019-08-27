@@ -27,7 +27,7 @@ L_p(\mathbf{x}) = \left(\sum |x_i|^p\right)^{\frac{1}{p}}.
 Modifying the cost function then is as simple as adding the normed coefficients. To demonstrate we add a ridge regularization term to the squared error cost with $\lambda$ determining the strength of the regularization while the rest of the symbols have their usual meaning
 
 \begin{equation}\label{eq:mse_ridge}
-C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum|\theta_i|^2.
+C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum||\theta_i||^2_2.
 \end{equation}
 
 \noindent Assuming now that the model $f$ is a linear regression model we can derive the solution by substituting in the model from section \ref{sec:LinReg} and repeating the procedure of taking the derivative with respect to the parameters. We begin by substituting in and taking the derivative 
