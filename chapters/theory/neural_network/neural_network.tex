@@ -16,8 +16,8 @@ A simple illustration of two neurons in one layer is provided in figure \ref{fig
 \end{figure}
 
 
-\noindent The ANN produces an output by a "forward pass". Let the input to an ANN be $\mathbf{x} \in \R^N$, and the matrix $\mathbf{W}^{[1]} \in \R^{N \times D}$ be a representation of the weight matrix forming the connections between the input and the artificial neurons, each layer has its own weights which we denote with bracketed superscripts. For a network with $n$ layers each layer then has a weight matrix $$\mathbf{W}^{[l]} \; \forall \; l \in \{1,\, 2,\, \dots, l\},$$ 
-\noindent which has r.  Lastly we define the activation function $f(x)$ as a monotonic, once differentiable, function on $\R^1$. The function $f(x)$ determines the complexity of the neural network together with the number of neurons per layer and number of layers. Using a non-linear activation is what allows for the ANN to represent more complex problems than we were able to with logistic and linear regression.
+\noindent The ANN produces an output by a "forward pass". Let the input to an ANN be $\mathbf{x} \in \R^N$, and the matrix $\mathbf{W}^{[1]} \in \R^{N \times D}$ be a representation of the weight matrix forming the connections between the input and the artificial neurons, each layer has its own weights which we denote with bracketed superscripts. For a network with $n$ layers each layer then maintains a weight matrix $$\mathbf{W}^{[l]} \; \forall \; l \in \{1,\, 2,\, \dots, l\},$$ 
+\noindent which are used to transform the input to a space which enables regression or classification.  Lastly we define the activation function $f(x)$ as a monotonic, once differentiable, function on $\R^1$. The function $f(x)$ determines the complexity of the neural network together with the number of neurons per layer and number of layers. Using a non-linear activation is what allows for the ANN to represent more complex problems than we were able to with logistic and linear regression.
 
 A layer in a network implements what we will call a forward pass which transforms the input to an intermediate representation $\mathbf{a}$ by the matrix product with the layers weights and subsequently applying an activation 
 
@@ -57,7 +57,6 @@ o(\mathbf{z})_i = \frac{e^{z_i^{[n]}}}{\sum_i e^{z_i^{[n]}}},
 \begin{equation}\label{eq:z}
 a_j ^{[l]} = f(z_j^{[l]})_D.
 \end{equation}
-
 
 \noindent We seamlessly transition to a network of many layers $n$ which is a simple extension of the two-layer network presented above. A multi-layer network we can then be described in terms of its forward pass as 
 
@@ -108,11 +107,11 @@ The activation function, $f$, has classically been the logistic sigmoid function
 	\end{cases}
 \end{equation}
 
-\noindent The ReLU is obviously monotonic and its derivative can be approximated with the Heaviside step-function. 
+\noindent The ReLU is obviously monotonic and its derivative can be approximated with the Heaviside step-function which we denote with $H(x)$ and is mathematically expressed as 
 
 \begin{equation}\label{eq:heaviside}
 H(x) = f'(x) = 	\begin{cases}1, & \text{if } x \geq 0 \\
-	0,  & \text{otherwise}
+	0,  & \text{otherwise}.
 \end{cases}
 \end{equation}
 
@@ -207,7 +206,7 @@ Initialization\;
 $\delta_j^{n} \gets \frac{\partial E}{\partial \mathbf{y}} \circ o'(\mathbf{z^{[n]}})$\;
 Compute derivatives\;  
 \For{$l \in [n-1,\, \dots ,\, 1] $}{
-	$\frac{\partial E}{\partial w_{jm}^{[l]}} \gets \hat{\delta}_j^{l+1} a^{[l-1]}_m$\;
+	$\frac{\partial E}{\partial w_{jm}^{[l]}} \gets \hat{\delta}_j^{l+1} a^{[l]}_m$\;
 	$\frac{\partial E}{\partial w_{jm}^{[l]}} \gets \hat{\delta}_j^{l+1}$\;
 	$\delta_j^{l+1} \gets \sum_k \delta ^{l+1}_k w^{[l+1]}_{jk} f'(z_j^{[l]})$
 }
@@ -263,13 +262,22 @@ Two sigmoid functions have been traditionally used in neural networks, while the
 On the other end of the scale rectified activations have gained traction in later years. We introduced the ReLU and it's derivative in the previous section, but we will discuss a popular cousin here. The LReLU (leaky rectified linear unit) takes the ReLU and modifies it slightly by adding a small slope to the negative part of the activation. Mathematically we define the LReLU as 
 
 \begin{equation}\label{eq:lrelu}
-	\text{LReLU} (x) = f(x) = \begin{cases}
-	x, & \text{if } x \geq 0 \\
+	\text{LReLU} (x)  = \begin{cases}
+	x & \text{if } x \geq 0 \\
 	\alpha\cdot x  & \text{otherwise},
 	\end{cases}
 \end{equation}
 
-\noindent where $\alpha$ is a small positive real number. Immediately it becomes clear that for the rectifier functions we have the opposite problem from what we encountered for the sigmoid activations. As the derivative is non-zero for a large range of value we no longer have a concern for vanishing gradients, but the activation is not positively bounded. This leads to a problem where the gradient might explode leading to an unstable optimization that fails to find a minimum of the cost. We illustrate the defining features of the rectifiers in figure \ref{fig:elu}
+\noindent where $\alpha$ is a small positive real number. The differentiation of the LReLU is then 
+
+\begin{equation}\label{eq:lrelu}
+	\frac{d}{dx}\text{LReLU} (x) = \begin{cases}
+	1 & \text{if } x \geq 0 \\
+	\alpha & \text{otherwise}.
+	\end{cases}
+\end{equation}
+
+\noindent Immediately it becomes clear that for the rectifier functions we have the opposite problem from what we encountered for the sigmoid activations. As the derivative is non-zero for a large range of value we no longer have a concern for vanishing gradients, but the activation is not positively bounded. This leads to a problem where the gradient might explode leading to an unstable optimization that fails to find a minimum of the cost. We illustrate the defining features of the rectifiers in figure \ref{fig:elu}
 
 \begin{figure}
 \centering
@@ -277,21 +285,53 @@ On the other end of the scale rectified activations have gained traction in late
 \caption[Rectifier activation functions]{Rectifier activation functions and their derivatives, the colorization indicates that the function is multiplied with a second variable. In contrast with the sigmoid activations the derivative is non-zereo in $\mathcal{R}^+$ for the ReLU and non-zero on the entirety of $\mathcal{R}$ for the LReLU.}\label{fig:elu}
 \end{figure}
 
+One heuristic method of handling exploding gradients that has seen wide applications is gradient capping. When computing the gradients one chooses a maximum value for e.g. the norm of a layers gradient and shrink any update that crosses that threshold. The downside of this is that it can slow down training substantially. More elegant solutions are usually employed in conjunction with a capped gradient which we'll discuss in the next section on the regularization of neural networks. 
+
 
 \section{Deep learning regularization}
 
 As neural networks can be made arbitrarily complex reducing the degree of over-fitting is an important concern. Regularization of deep learning use both tried and true algorithms as we discussed in chapter \ref{chap:fundament} and some specialized tools developed for use with neural networks specifically. 
 
-Traditional measures of regularization like using cross validation and weight constraints are both important features of reducing over-fitting in deep learning algorithms. We introduced cross validation in section \ref{sec:cv} as a way to estimate appropriate model complexities. Cross validation is model agnostic and can be applied to estimate the number of layers and width of those in a neural network. 
+Traditional measures of regularization like using cross validation and weight constraints are both important features of reducing over-fitting in deep learning algorithms. We introduced cross validation in section \ref{sec:cv} as a way to estimate appropriate model complexities. Cross validation is model agnostic and can be applied to estimate an appropriate complexity for a network modeling a given process, or the optimal values for the gradient descent hyperparameters etc. 
 
 Weight constraints are similarly convenient additions to the cost function. The only modification required from \ref{eq:mse_ridge} is adding a summation term over the layers. For a $L_2$ regularized neural net the cost function can then be written as 
 
 \begin{equation}
-C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum_l\sum_{ij}||w_{ij}^{[l]}||^2.
+C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum_l\sum_{ij}||w_{ij}^{[l]}||^2_2.
 \end{equation}
 
+\noindent More specific tools for neural networks have been developed in later years, we will discuss two of these that have seen wide use in recent works. 
 
+\subsubsection{Dropout}\label{sec:dropout}
+
+Armed with the knowledge that neural networks usually are more complex than the problem at hand has need \citet{Srivastava2014} proposed a wonderfully simple remedy; dropout. The premise is very simple: after the activation of a layer randomly set $d$ of these activations to zero. The fraction of the activations that $d$ represents is called the dropout-rate and is typically chosen to be some few tenths. Dropout adds a regularizing effect by having the network increase the redundancy of its prediction and thus forcibly reducing the complexity of the network. 
 
 \subsubsection{Batch Normalization}\label{sec:batchnorm}
-\todo{add subsection on dropout and batchnorm} 
-\todo{maybe dropout?}
+
+The second addition we discuss more directly addresses a problem in the optimization, and adds a regularizing effect only as a bi-product of the intended purpose. Batch normalization was introduced by \citet{Ioffe2015} as a means to address internal covariance shift in neural networks. 
+
+Conceptually one can think of the challenge presented by an internal covariance shift as an unintended consequence of the gradient descent procedure. When adjusting the gradients we do not do it with respect to how much the weights in the preceding layer changes. This slows down training substantially and is what \citet{Ioffe2015} describe as the internal covariance shift. To reduce the effects of this problem the authors propose to scale and center the outputs of each layer before feeding it to the next in line. The normalization happens over each batch of training data and consists of two steps. Let the output from a layer be given as $a_k^{[l]}$ in keeping with previous notation. Furthermore let the samples in a batch be indicated by the index $i$ thus the activations can be denotes as a matrix $a_{ik}^{[l]}$. The batch normalization procedure then begins by computing the batch-wise mean, $\mu_k$, per feature $k$ for a batch of size $n$ 
+
+\begin{equation}
+\mu_k = \frac{1}{n} \sum_i^n a_{ik}^{[l]}.
+\end{equation}
+
+\noindent Secondly we compute the variance of the feature as 
+
+\begin{equation}
+\sigma_k^2= \sum_i (a^{[l]}_{ik} - \mu_k)^2.
+\end{equation}
+
+\noindent We can then compute the normalized activations using the mean and variance of the features, mathematically we then compute the normalized activations as 
+
+\begin{equation}
+\hat{a}_{ik}^{[l]} = \frac{\hat{a}_{ik}^{[l]} - \mu_k}{\sqrt{\sigma_k^2 + \epsilon}},
+\end{equation}
+
+\noindent where $\epsilon$ is a small number large enough to make the denominator non-zero, usually $\epsilon = \num{1e-8}$. The final part of the batch normalization procedure is to let the network determine a scale and shift of the new features, adding new features to the gradient descent procedure. The final expression for the features being fed forward is then 
+
+\begin{equation}\label{eq:bn}
+\text{BN}_{\gamma, \beta}(a_{ik}^{[l]}) = \gamma  \hat{a}_{ik}^{[l]} + \beta.
+\end{equation} 
+
+\noindent The primary effect of batch normalization is then to speed up training, and empirically \cite{Ioffe2015} shows that learning rates orders of magnitude larger can be used with the batch normalization procedure inserted after each layer. As bonus effects the procedure lessens the potential problems with exploding and vanishing gradients. By placing the normalization layer before a sigmoid layer the probability of the activations being in the active region of the functions increases, conversely for the rectifier units placing the normalization after the activation lessens the chance for an exploding value in the gradient. 
