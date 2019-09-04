@@ -313,7 +313,7 @@ C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 
 
 \subsubsection{Dropout}\label{sec:dropout}
 
-Armed with the knowledge that neural networks usually are more complex than the problem at hand has need \citet{Srivastava2014} proposed a wonderfully simple remedy; dropout. The premise is very simple: after the activation of a layer randomly set $d$ of these activations to zero. The fraction of the activations that $d$ represents is called the dropout-rate, and is typically chosen to be some few tenths. Dropout adds a regularizing effect by having the network increase the redundancy of its prediction and thus forcibly reducing the complexity of the network. 
+Armed with the knowledge that neural networks are usually more complex than the problem at hand warrants \citet{Srivastava2014} propose a wonderfully simple remedy; dropout. The premise is very simple: after the activation of a layer randomly set $d$ of these activations to zero. The fraction of the activations that $d$ represents is called the dropout-rate, and is typically chosen to be some few tenths. Dropout adds a regularizing effect by having the network increase the redundancy of its prediction and thus forcibly reducing the complexity of the network. 
 
 \subsubsection{Batch Normalization}\label{sec:batchnorm}
 

@@ -8,16 +8,16 @@ The primary challenge we face with data from the AT-TPC (active target time proj
 
 An autoencoder is an attempt at learning a distribution over some data by reconstruction. The interesting part of the algorithm is in many applications that it is in the family of latent variable models. This means that the model encodes the data into a much lower dimensional latent space before reconstruction. The goal, as a matter of course, is then to learn the true distribution, $P(\mathcal{X})$, over the data with some parametrized model $Q(\mathcal{X};\theta)$. The model consists of two discrete parts; an encoder and a decoder. The encoder is in general a non linear map $\psi$
 
-\begin{align*}
+\begin{align}
   \psi: \mathcal{X} \rightarrow \mathcal{Z},
-\end{align*}
+\end{align}
 
 \noindent where $\mathcal{X} $ and $\mathcal{Z}$ are arbitrary vector spaces with $\text{dim}(\mathcal{X}) > \text{dim}(\mathcal{Z})$.
 The second part of the model is the decoder that maps back to the original space
 
-\begin{align*}
+\begin{align}
   \phi: \mathcal{Z} \rightarrow \mathcal{X}.
-\end{align*}
+\end{align}
 
 \noindent The objective is then to find the configuration of the two maps $\phi$ and $\psi$ which gives the best possible reconstruction. That is the objective $\mathcal{O}$ for the model is given as
 
@@ -25,7 +25,7 @@ The second part of the model is the decoder that maps back to the original space
   \mathcal{O} = \argmin_{\phi, \psi} || X - \phi \circ \psi||^2,
 \end{align}
 
-\noindent where the $\circ$ operator denotes function composition in the standard manner. As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. This objective function is optimized by a mean-squared-error cost in the event of real valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to PCA (principal component analysis)(\cite{Marsland2009}) which we introduced in chapter \ref{chap:fundament}. In practice the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. In section \ref{sec:ANN} we described neural networks some detail .
+\noindent where the $\circ$ operator denotes function composition in the standard manner. As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. This objective function is optimized by a mean-squared-error cost in the event of real valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to PCA (principal component analysis)(\cite{Marsland2009}) which we introduced in chapter \ref{chap:fundament}. In practice the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. We refer to section \ref{sec:ANN} for a detailed discussion on neural networks.
 
 The autoencoder has previously been successfully implemented in de-noising tasks. \todo{Citation needed} More recently the Machine Learning community discovered that one could impose a constraining term on the latent distribution to allow for the imposition of structure in the latent space. The goal in mind was to create a generative algorithm, a class of models used to sample from the distribution $P(\mathcal{X})$.
 
@@ -59,7 +59,7 @@ p(x) = \int_z p(x|z)p(z)
 
 This is also the same problem that MCMC (Markov chain Monte Carlo) methods are commonly applied to. In physics this family of algorithms has been applied to solve many-body problems in quantum mechanics primarily by gradient descent on variational parameters \todo{citation-Comph-phys 2 compendium}.
 
-We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive a solution we begin by introducing the KL-divergence (\cite{Kullback1951}), which is a measure of how much two distributions are alike. It is important to not that it is however not a metric. We define the KL-divergence in equation \ref{eq:kl} from a probability measure P, to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$
+We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive a solution we begin by introducing the KL-divergence (\cite{Kullback1951}), which is a measure of how much two distributions are alike. It is important to note that it is however not a metric. We define the KL-divergence in equation \ref{eq:kl} from a probability measure P, to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$
 
 \begin{align}\label{eq:kl}
 D_{KL} (P || Q) &= - \int^{\infty}_{-\infty} p(x) \log \left(\frac{p(x)}{q(x)}\right) dx, \\
@@ -159,3 +159,7 @@ D_{KL}(q||p) = \frac{1}{2} \sum_i -\log \sigma_i^2 - 1 + \sigma^2_i + \mu_i^2 .
 
 
 \noindent We note that equation \ref{eq:kl_opt} satisfies the equality that the divergence is zero when the target and model distributions are equal. An important feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. Which was the topic of the argument presented by \citet{Zhao} when proposing alternate measures for regularizing the latent space. The intuitive alternative to a point-wise measurement is comparing the moments of the distribution and minimize their difference. 
+
+\subsection{Mode collapse}
+
+When training a VAE we are balancing the evidence and prior latent distribution loss-terms. \citet{Kingma2013} note that equation \ref{eq:vae_cost} is unbalanced in favor of the latent space regularization. As a consequence the un-weighted loss suffers from mode collapse. When the reconstruction is under-valued in the optimization the model will quickly learn the prior, without encoding the input. As the prior has become uninformative the decoder proceeds to learn a rough representation that covers as many of the outputs as possible. This can often visually be identified by the output being a vague cloud with some distinct regions. 
