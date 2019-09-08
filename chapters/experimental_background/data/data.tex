@@ -1,41 +1,42 @@
 \section{Data}\label{sec:data}
 
-In this thesis we will work with data from the ${}^{46}Ar(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. Both data produced with simulation tools and data recorded from the active target time projection chamber (AT-TPC). For the experimental data we use data collected from a single run of the experiment.	
+In this thesis we will work with data from the ${}^{46}Ar(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. Both data produced with simulation tools and data recorded from the active target time projection chamber (AT-TPC). For the experimental data we use data collected from a single run of the experiment, which yields on the order of $\sim 10^4$ events.	
+
+In this section we give a brief overview of the data, and we refer to \cite{Mittig2015}, \cite{Suzuki2012} and  \cite{Bradt2017a}  for descriptions of greater detail.
 
 \subsection{Simulated \texorpdfstring{${}^{46}Ar$}{46Ar}  events}\label{sec:data_sim}
 
-The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package developed at the NSCL (\cite{Bradt2017a}). Using the same parameters as for the $Ar^{46}(p, p)$ experiment a set of $N=4000$ events were generated per class. The events are generated in the same format as the semi-raw experimental data. That is they are represented as peak-only 4-tuples of $e_i = (x_i, y_i, t_i, c_i)$. Each event is then a set of these four-tuples: $\epsilon_j = \{e_i\}$ creating a track in three dimensional space with charge amplitude for each point. To process these events with the algorithms implemented for this thesis we chose to represent these 3D tracks as 2D images with charge represented as pixel images. For the analysis we chose to view the x-y projection of the data.
+The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package developed at the NSCL (\cite{Bradt2017a}). Using the same parameters as for the $Ar^{46}(p, p)$ experiment a small set of $N=4000$ events were generated per class, as well as a larger set of $N=80000$. The events are generated as point-clouds, consisting of position data on the x-y plane, a time-stamp and an associated charge value. These point-clouds are transformed to pure x-y projections with charge intensity for the analysis in this thesis. This description is entirely analogous to the real experimental data. Using python plotting tools we transform the data to two dimensional matrices with the axes representing the x-y plane, binned in $M=128$ discrete buckets. The values in this matrix are charge values, which we log-scale and normalize to the $[0, 1]$ range. 
 
- To emulate the real-data case we set a subset of the simulated data to be labeled and treat the rest as unlabeled data. We chose this partition to be $15\%$ of each class. We denote this subset and its associated labels as $\gamma_L=(\mathbf{X}_L, \mathbf{y}_L)$, the entire dataset which we will denote as $\mathbf{X}_F$. To clarify please note that $\mathbf{X}_L \subset \mathbf{X}_F$.
+More formally the events are originally composed of peak-only 4-tuples of $e_i = (x_i, y_i, t_i, c_i)$. The peak-only designation indicates that we use the recored peak amplitude on each pad, the tuples then correspond to pads that recorded a signal for that event. Each event is then a set of these four-tuples: $\epsilon_j = \{e_i\}$ creating a track in three dimensional space with charge amplitude for each point. To process these events with the algorithms implemented for this thesis we chose to represent these 3D tracks as 2D images with charge represented as pixel images. For the analysis we chose to view the x-y projection of the data.
+
+To emulate the real-data case we set a subset of the simulated data to be labeled and treat the rest as unlabeled data. We chose this partition to be $15\%$ of each class. We denote this subset and its associated labels as $\gamma_L=(\mathbf{X}_L, \mathbf{y}_L)$, the entire dataset which we will denote as $\mathbf{X}_F$. To clarify please note that $\mathbf{X}_L \subset \mathbf{X}_F$.
  \todo{Added part from previous results, needs molding}
-\todo{figure of 3D simulated track and 2D representation}
+
 
 \subsection{Full \texorpdfstring{${}^{46}Ar$}{46Ar}  events}\label{sec:data_real}
 
-The events analyzed in this section were retrieved from the on-going AT-TPC experiment at Michigan State University. In the experiment a beam of a particular isotope is accelerated and directed into a chamber with a gas that acts as the reaction medium and target. As reactions occur between the gas and beam ejected electrons from these drift towards the anode and the Micromegas measuring the impact over time from the reactions. The measuring apparatus is very sensitive, and though filtering is performed such that only the peaks of deposited charge the events are noisy in the ${}^{46}Ar$ experiment subject to analysis in this thesis. There is probable structural noise that can be attributed to electronics cross-talk and possible interactions with cosmic background radiation and other sources of charged particles. Indeed one of the confounding factors is that there is currently not an understanding of the physics of the major contributing factors to this noise. 
+The events analyzed in this section were retrieved from the on-going AT-TPC experiment at Michigan State University. In the experiment a beam of a particular isotope is accelerated and directed into a chamber with a gas that acts as the reaction medium and target. As reactions occur between the gas and beam, ejected electrons from these drift towards the anode and the Micromegas. The Micromegas measures the impact over time from the reactions.
 
-\todo{describe the physics in a bit more detail boy}
+The measuring apparatus is very sensitive, as such there is substantial noise in the ${}^{46}Ar$ data. The noise can be attributed to structural noise from electronics cross-talk, and possible interactions with cosmic background radiation, as well as other sources of charged particles. Part of the challenge for this data is then in understanding of the physics of the major contributing factors to this noise. 
 
+\subsection{Filtered \texorpdfstring{${}^{46}Ar$}{46Ar} events}
 
-\subsection{Filtered \texorpdfstring{${}^46Ar$}{46Ar} events}
-
-As we saw in the previous section the events pick up 
+As we saw in the previous section the detector picks up significant amounts of noise. The noise can be broadly attributed to random-uncorrelated noise and structured noise. The former can be quite trivially removed with a nearest-neighbor algorithm that checks if a tuple is close to any other. To remove the correlated noise researchers at the NSCL developed an algorithm based on the Hughes' transform. This transformation is a common technique in computer vision, used to identify common geometric shapes like lines and circles. In essence the algorithm draws many lines (of whatever desired geometry) and checks whether this line intersects with other points in the data-set. The algorithm works to great effect and is computationally rather cheap.
 
 
 \begin{table}
 \centering
+\caption{Description of the data used for analysis. In principle we can simulated infinite data, but it is both quite simple and not very interesting outside a case for a proof-of-concept}
 \begin{tabular}{lccc}
 \toprule
-{} & Simulated & Real & Filtered \\
+{} & Simulated & Full & Filtered \\
 \midrule
 Total &  $8000$ & $51891$ & $49169$ \\
 Labeled & $2400$ & $1774$ &  $1582$ \\ 
 \bottomrule
 \end{tabular}
-\caption{Description of the data used for analysis. In principle we can simulated infinite data, but it is both quite simple and not very interesting outside a case for a proof-of-concept}
-
 \end{table}
 
 \todo{write filtered section}
 \todo{add plots of events in 2d and 3d}
-\todo{add table with data descriptions. N samples, N labelled }

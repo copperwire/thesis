@@ -1,4 +1,4 @@
-\section{VGG16}
+\section{Classification using a pre-trained model}
 
 As outlined in section \ref{sec:architectures} the pre-trained VGG16 network will serve as the base-line comparison for this work. We chose VGG16 as it has a tried and true performance on labeled AT-TPC data from the $^{46}Ar$ experiment.(\cite{Kuchera2019}). For each labeled dataset listed in section \ref{sec:data} a logistic regression model was fit to the respective VGG16-representation. To estimate the variability in the result a K-fold cross validation approach was taken, with $K=5$. We report test-$f1$ scores for each class and average for the classification. The results are listed in table \ref{tab:vgg_results}
 

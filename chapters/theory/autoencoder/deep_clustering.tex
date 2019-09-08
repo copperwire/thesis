@@ -1,1 +1,55 @@
-\subsection{Deep Clustering}\label{sec:dc}
+\section{Deep Clustering}\label{sec:deep_clustering}
+
+One of the holy grails of machine learning is achieving a general clustering algorithm. As retrieving labeled samples is often a very costly process. In some cases labeled data is unavailable altogether. This is the case for some of the AT-TPC experiments, and so discovering clustering algorithms for event data is of some academic interest. 
+
+Clustering algorithms based on neural networks are knows collectively as deep clustering algorithms. Many of which are based on autoencoder architectures. In this thesis we will focus on two such algorithms: the DCEC (deep clustering with convolutional autoencoders) algorithm, developed by \citet{Guo2017}. And the MIXAE (mixture of autoencoders) model, developed by \cite{Zhang}. 
+
+\subsection{Deep Clustering With Convolutional Autoencoders}
+
+The DCEC architecture is at its core a simple convolutional autoencoder. To convert it to a clustering algorithm \citet{Guo2017} adds a fully connected transformation to a soft class assignment, and a loss term for that assignment. 
+
+To describe the DCEC we begin by letting the convolutional autoencoder be given in terms of the encoder $\psi(\mathbf{z}|\mathbf{x} ; \theta_e)$ and decoder $\phi(\mathbf{x}|\mathbf{z}; \theta_d)$, where the $\theta$ indicates the neural network parameters and $z \in \mathcal{R}^D$. Furthermore let the algorithm maintain $K$ cluster centers $\{\mathbf{\mu}_j\}^K$, where $j \in [0,\, 1,\, \dots,\, N]$ denote the clusters. These cluster centers are trainable parameters and maps the latent samples to a soft assignment by a Student's t-distribution, in the model we parametrize them as a matrix $\mu_ij$. The assignment is then given as 
+
+\begin{equation}\label{eq:qij}
+q_{ij} = \frac{(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}{\sum_j(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}.
+\end{equation}
+
+\noindent The matrix elements $q_{ij}$ are then the probability of the latent sample $\mathbb{z}_i$ belonging to cluster $j$. To define the corresponding clustering loss we first compute a target distribution $p_{ij}$, which represents the confidence of the mapping $q_{ij}$. We thus define the target distribution as 
+
+\begin{equation}
+p_{ij} = \frac{q_{ij}^2/\sum_i q_{ij}}{\sum_j q_{ij}^2/\sum_i q_{ij}}.
+\end{equation}
+
+\noindent It is important to note that these distributions are not chosen arbitrarily. The soft assignments are computed in a way that is analogous to the t-SNE method described by \citet{VanDerMaaten2008}. Furthermore, the distribution $p_{ij}$ is chosen to improve cluster purity and emphasize the assignments with high confidence according to \cite{Xie2016}. The loss is then computed as the KL-divergence between $p_{ij}$ and $q_{ij}$, i.e
+
+\begin{equation}
+\mathcal{L}_z = D(P ||Q ) = \sum_i \sum_j p_{ij} \log \frac{p_{ij}}{q_{ij}}.
+\end{equation} 
+
+\noindent \citet{Guo2017} show that the target distribution should not be update with each epoch, rather it needs to be changed on a regular schedule. They found that for the handwritten digits dataset MNIST a suitable update was once every $T=140$ epochs. 
+
+Training the DCEC algorithm is split in two phases. First, the convolutional autoencoder is trained until convergence with no regularization on the latent space. Secondly, the cluster centers are initialized using a k-means algorithm and which is then used to compute the target distribution for the first $T$ epochs. Lastly, the algorithm is trained with the KL-divergence loss and the original reconstruction term. We can then write the total cost as the sum of the reconstruction-, $\mathcal{L}_x$, and clustering-loss, $\mathcal{L}_z$ as 
+
+\begin{equation}
+\mathcal{L} = \mathcal{L}_x + \gamma \mathcal{L}_z,
+\end{equation}
+
+\noindent where $\gamma$ is a weighting term for the clustering loss. \cite{Guo2017} empirically set $\gamma=0.1$ for their experiments. 
+
+The fundamental challenge that DCEC faces is that it is dependent on a K-means solution that is good enough after the pre-training of the convolutional autoencoder. As the K-means algorithm is susceptible to outliers, scale differences in the latent axes,  and assumes that the clusters are isotropic Gaussians. 
+
+\subsection{Mixture of autoencoders}
+
+Another way of representing the clusters is by having multiple latent spaces representing the underlying manifolds that describe each class. This is the central idea in the MIXAE (Mixture of autoencoders) algorithm, introduced by  \cite{Zhang}. To ensure that each autoencoder represents a cluster a soft-max classifier is coupled with the set of latent samples. The soft-max classifier is trained to output cluster probabilities, and penalized for collapsing to assigning one cluster only. To connect the cluster probabilities to the reconstruction a multiplier by the cluster confidence is attached to the reconstruction error of each autoencoder.
+
+More formally let $\{\mathbf{z}_j\}^N$ be the set of $N$ latent samples from each of the $N$ auto-encoders for a single sample $\hat{\mathbf{x}}$. Furthermore, let the soft cluster assignments be given as $\{p_j\}^N$ and the reconstructed samples be given as $\{\mathbf{x}_j\}$. The reconstruction loss is then the sum over each autoencoder multiplied with each cluster assignment, i.e.
+
+\begin{equation}\label{eq:mixae_reconst}
+\mathcal{L}_x = \sum_j p_j \mathcal{C}(\mathbf{x}_j, \hat{\mathbf{x}}),
+\end{equation}
+
+where $\mathcal{C}(\cdot)$ is a cost function like the mean squared error etc. 
+
+To ensure that the soft cluster assignments encourage clustering two terms have to be added to the total loss. The first is a simple entropy term which when minimized encourages the assignments to be one-hot vectors. 
+
+ \todo{finishing mixae sec}
