@@ -16,7 +16,7 @@ To illustrate the problems created by noise we'll consider a one-dimensional pol
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{../figures/y_distr.png}
+\includegraphics[width=\textwidth]{../figures/y_distr.pdf}
 \caption[Illustrating over-fitting with polynomial regression]{Polynomial regression of varying degrees on data drawn from a linear distribution on above and a cubic distribution on the bottom. Models of varying complexity indicated by their basis $P^n$ are fit to the train data and evaluated on the test region, shown in the left and right columns. We observe that the higher order solutions follow what we observe to be  spurious-noise generated features in the data. This is what we call over-fitting. In the bottom column observe that the model with appropriate complexity, $f(x_i) \in P^3$, follows the true trend also in the test region while the linear and higher order models all miss. The linear model does not have the capability to express the complexities of the data and is said to be under-fit. Additionally we observe that the higher order polynomials degrade in performance extremely rapidly outside the training region.}\label{fig:overfit}
 \end{figure}
 

@@ -1,2 +1,116 @@
 
-\section{DRAW}\label{sec:draw_implement}
+\section{Deep Recurrent Attentive Writer}\label{sec:draw_implement}
+
+Like the convolutional autoencoder discussed in the previous section the DRAW (Deep Recurrent Attentive Writer) is implemented as a subclass of the \lstinline{LatentModel} class. Consequently it follows the same formula and implements the  \lstinline{_ModelGraph} and \lstinline{_ModelLoss} methods. We re-iterate from section \ref{sec:draw} that the  DRAW algorithm wraps the autoencoder structure in a recurrent framework, which means that it constructs a set of latent samples and iteratively builds a reconstruction of the input. Each new iteration is fed with an error image from the previous $n$ iterations, making the reconstruction a conditional distribution instead of an independent one as for the ordinary convolutional autoencoder. 
+
+\subsection{Computational graph}
+
+In the same manner as for the \lstinline{ConVae} model the construction of the computational graph starts with a good amount of set-up for the graph. Our implementation notably includes the option for an increased number of  LSTM (Long Term Short Term) cells, but most important is the extension of the paired read and write functions to include the option for a paired set of convolutional layers. This contrasts with the original implementation from \citet{Gregor2015} which uses a more traditional overlay of Gaussian filters on the image as a feature extraction tool. 
+
+
+The principal computation is wrapped in a for loop over pseudo time-steps which we label as \lstinline{DRAW.T}. In this loop the attributes \lstinline{self.encode} and \lstinline{self.decode} are the sets of LSTM cells that act as the encoder and decoder networks. As input the encoder takes features extracted from the canvas $\mathbf{x}_t$ and error image $\mathbf{\hat{x}}_t$ by the read function. Conversely the write function uses the decoder output to add to the canvas. 
+
+The internals of this for-loop were written to follow the style of the set of equations that yield equation \ref{eq:draw}. To adhere to the idiosyncrasies of TensorFlow we maintain an attribute \lstinline{self.DO_SHARE} that ensures that parameters are shared between the iterations in the for-loop.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+# excerpt from draw.py
+# at https://github.com/ATTPC/VAE-event-classification
+# from commit 6b64323
+for t in range(self.T):
+	# computing the error image
+	if t == 0:
+	    x_hat = c_prev
+	else:
+	    x_hat = self.x - c_prev
+
+	""" Encoder operations  """
+	r = self.read(self.x, x_hat, h_dec_prev)
+	if self.batchnorm:
+	    r = BatchNormalization(axis=-1, center=True, scale=True, epsilon=1e-4)(
+	        r
+	    )
+	h_enc, enc_state = self.encode(enc_state, tf.concat([r, h_dec_prev], 1))
+	if self.batchnorm:
+	    h_enc = BatchNormalization(
+	        axis=-1, center=True, scale=True, epsilon=1e-4
+	    )(h_enc)
+
+	""" Compute latent sample """
+	z  = self.compute_latent_sample(t, h_enc)
+
+	""" Decoder operations """
+	h_dec, dec_state = self.decode(dec_state, z)
+	# dropout_h_dec = tf.keras.layers.Dropout(0.1)(h_dec, )
+	if self.batchnorm:
+	    h_dec = BatchNormalization(
+	        axis=-1, center=True, scale=True, epsilon=1e-4
+	    )(h_dec)
+
+	self.canvas_seq[t] = c_prev + self.write(h_dec)
+
+	"""
+	... code omitted for brevity
+	"""
+
+	""" Storing and updating values """
+	self.z_seq[t] = z
+	self.dec_state_seq[t] = dec_state
+	h_dec_prev = h_dec
+	c_prev = self.canvas_seq[t]
+
+	self.DO_SHARE = True
+\end{lstlisting}
+\end{minipage}
+
+As most of the trappings around the model are the same as for the convolutional autoencoder we do not re-tread that ground. This includes the convolutional read and write functions as they are functionally identical to the encoder and decoder structures in the convolutional autoencoder. 
+
+Instead we will walk through the attentive part of the DRAW algorithm. The goal of the attentive component is to extract patches of the image that are passed to the encoder-decoder pair. The location and zoom of that patch is dynamically determined at each time-step. This procedure starts with the read function and its innermost functionality. Recall from equation \ref{eq:draw_params} that to compute the filter-banks used for the extraction of image patches first the parameters have to be dynamically determined. Once those four are determined we compute filter-banks $F_x$ and $F_y$ as they are defined in \ref{eq:Fx} and \ref{eq:Fy}. These equations define matrices and so we construct the grid over the exponential using the convenient \lstinline{tf.meshgrid} which creates objects with the same dimension from different spacings. To explore the attention parameters outside the model we implemented a \lstinline{numpy} version. Conveniently those libraries are rather homogeneous and as such the \lstinline{numpy} is implemented to be 1-1 with the TensorFlow version. 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+# excerpt from numpy_filterbank.py
+# at https://github.com/ATTPC/VAE-event-classification
+# from commit 6416f96
+def filters(self, gx, gy, sigma_sq, delta, gamma, N):
+    i = np.arange(N, dtype=np.float32)
+
+    mu_x = gx + (i - N / 2 - 0.5) * delta  #dim = batch_size, N
+    mu_y = gy + (i - N / 2 - 0.5) * delta
+    a = np.arange(self.H, dtype=np.float32)
+    b = np.arange(self.W, dtype=np.float32)
+
+    A, MU_X = np.meshgrid(a, mu_x)  #dim = batch_size, N * self.H
+    B, MU_Y = np.meshgrid(b, mu_y)
+
+    A = np.reshape(A, [1, N, self.H])
+    B = np.reshape(B, [1, N, self.W])
+
+    MU_X = np.reshape(MU_X, [1, N, self.H])
+    MU_Y = np.reshape(MU_Y, [1, N, self.W])
+
+    sigma_sq = np.reshape(sigma_sq, [1, 1, 1])
+
+    Fx = np.exp(-np.square(A - MU_X) / (2 * sigma_sq))
+    Fy = np.exp(-np.square(B - MU_Y) / (2 * sigma_sq))
+
+    Fx = Fx / np.maximum(np.sum(Fx, 1, keepdims=True), eps)
+    Fy = Fy / np.maximum(np.sum(Fy, 1, keepdims=True), eps)
+
+    return Fx, Fy
+\end{lstlisting}
+\end{minipage}
+
+With $F_x$ and $F_y$ determined the read-representation of the input is trivially computed from \ref{eq:read}. The same procedure is repeated for the write-function with bespoke parameters determined for that function.
+
+\subsection{Computing losses}
+
+As with the computational graph most of the details about the implementation translate directly. The major difference is that the DRAW algorithm maintains $T$ samples in the latent space and so forms a trajectory in that space. It's implementation is entirely analogous to the variational autoencoder loss and so we omit it for brevity. 
+
+\subsection{Applying the framework}
+
+As we did for the convolutional autoencoder we walk through the configuration and fitting of the DRAW model to simulated AT-TPC data to illustrate its usage. This tutorial is also available in notebook form and can be retrieved  from our \href{https://github.com/ATTPC/VAE-event-classification/blob/master/notebooks/simulated_draw_tutorial.ipynb}{repository} and hosted locally.
+
+We begin by considering the semi-supervised case to explore the latent configurations that yield high quality latent spaces. 
+
+\subsubsection{Semi-supervised classification }

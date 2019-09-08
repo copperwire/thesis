@@ -4,7 +4,7 @@
 
 Modern machine learning has its foundations in the familiar framework of linear regression. Many fairly interesting problems can be cast as systems of linear problems, and as such there are multitudes of ways to solve the problem. The most straight forward of which is with just a little bit of linear algebra.
 
-We begin by defining the constituents of our model: let our data be denoted as a matrix $\mathbf{X} \in \mathcal{R}^{m\times n+1}$ where $m$ is the number of data-points and $n$ the number of features. The $+1$ factor in the dimension is to accommodate the addition of a column of ones to our data as a convenient placeholder for the model intercept. Note also that the term features is used broadly in machine learning literature and denotes the measurable aspects of our system; in the 1D ising model the $n$ would denote the number of spins and $m$ the number of measurements we made on that system. Furthermore let the parameter, or weight, matrix be given as $\mathbf{w} \in \mathcal{R}^{n + 1\times k}$. Generally the outcome-dimension $k$ can be greater than one when estimating multi-variate outcomes. For illustrative purposes we limit this section and the following to the case where $k=1$. The linear regression model is then the transformation of the input using the weight matrix, i.e. 
+We begin by defining the constituents of our model: let our data be denoted as a matrix $\mathbf{X} \in \mathcal{R}^{m\times n+1}$ where $m$ is the number of data-points and $n$ the number of features. The $+1$ factor in the dimension is to accommodate the addition of a column of ones to our data as a convenient placeholder for the model intercept. Note also that the term features is used broadly in machine learning literature and denotes the measurable aspects of our system; in the 1D Ising model the $n$ would denote the number of spins and $m$ the number of measurements we made on that system. Furthermore let the parameter, or weight, matrix be given as $\mathbf{w} \in \mathcal{R}^{n + 1\times k}$. Generally the outcome-dimension $k$ can be greater than one when estimating multi-variate outcomes. For illustrative purposes we limit this section and the following to the case where $k=1$. The linear regression model is then the transformation of the input using the weight matrix, i.e. 
 
 \begin{equation}\label{eq:og_linreg}
 \mathbf{y} = \mathbf{X}\mathbf{w}.
@@ -46,9 +46,11 @@ Returning to the least squares problem the task is finding the optimal parameter
 \mathbf{w} &=(\mathbf{X}^T\mathbf{X})^{-1} \mathbf{X}^T\mathbf{\hat{y}}. \label{eq:least_squares}
 \end{align}
 
- \noindent This problem is of course solvable with a plethora of other tools, most notably we have the ones that don't perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this inverse is not unique for data that does not have full rank.
+ \noindent This problem is analytically solvable with a plethora of tools, most notably we have the ones that don't perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this inverse is not unique for data that does not have full rank.
 
-Admittedly the least squares linear regression model is fairly simple and is rarely applicable to complex systems. Additionally we've not mentioned the assumptions made to ensure the validity of the model, the most important of which concerns the measurement errors which should be independent identical normally distributed. But given it's relative simplicity and the fact that an analytical solution can be found we'll use it for reference in understanding the following sections.
+Admittedly the least squares linear regression model is fairly simple and is rarely applicable to complex systems. Additionally, we've not discussed the assumptions made to ensure the validity of the model. Most important of which concerns the measurement errors, which we assume to be be identical independent normally distributed.
+
+Given the relative simplicity of the linear regression model, and the fact that an analytical solution can be found, we'll use it for reference in understanding the coming sections in this chapter.
 
 
 
