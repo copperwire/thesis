@@ -14,7 +14,7 @@ To describe the DCEC we begin by letting the convolutional autoencoder be given 
 q_{ij} = \frac{(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}{\sum_j(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}.
 \end{equation}
 
-\noindent The matrix elements $q_{ij}$ are then the probability of the latent sample $\mathbb{z}_i$ belonging to cluster $j$. To define the corresponding clustering loss we first compute a target distribution $p_{ij}$, which represents the confidence of the mapping $q_{ij}$. We thus define the target distribution as 
+\noindent The matrix elements $q_{ij}$ are then the probability of the latent sample $\mathbf{z}_i$ belonging to cluster $j$. To define the corresponding clustering loss we first compute a target distribution $p_{ij}$, which represents the confidence of the mapping $q_{ij}$. We thus define the target distribution as 
 
 \begin{equation}
 p_{ij} = \frac{q_{ij}^2/\sum_i q_{ij}}{\sum_j q_{ij}^2/\sum_i q_{ij}}.
@@ -42,14 +42,39 @@ The fundamental challenge that DCEC faces is that it is dependent on a K-means s
 
 Another way of representing the clusters is by having multiple latent spaces representing the underlying manifolds that describe each class. This is the central idea in the MIXAE (Mixture of autoencoders) algorithm, introduced by  \cite{Zhang}. To ensure that each autoencoder represents a cluster a soft-max classifier is coupled with the set of latent samples. The soft-max classifier is trained to output cluster probabilities, and penalized for collapsing to assigning one cluster only. To connect the cluster probabilities to the reconstruction a multiplier by the cluster confidence is attached to the reconstruction error of each autoencoder.
 
-More formally let $\{\mathbf{z}_j\}^N$ be the set of $N$ latent samples from each of the $N$ auto-encoders for a single sample $\hat{\mathbf{x}}$. Furthermore, let the soft cluster assignments be given as $\{p_j\}^N$ and the reconstructed samples be given as $\{\mathbf{x}_j\}$. The reconstruction loss is then the sum over each autoencoder multiplied with each cluster assignment, i.e.
+More formally let $\{\mathbf{z}_j^{(i)}\}^N$ be the set of $N$ latent samples from each of the $N$ auto-encoders from a single sample $\hat{\mathbf{x}}^{(i)}$. Furthermore, let the soft cluster assignments be given as $\{p_j^{(i)}\}^N$ and the reconstructed samples be given as $\{\mathbf{x}_j^{(i)}\}$. The reconstruction loss is then the sum over each autoencoder multiplied with each cluster assignment, i.e.
 
 \begin{equation}\label{eq:mixae_reconst}
-\mathcal{L}_x = \sum_j p_j \mathcal{C}(\mathbf{x}_j, \hat{\mathbf{x}}),
+\mathcal{L}_x = \sum_j p_j^{(i)} \mathcal{C}(\mathbf{x}_j^{(i)}, \hat{\mathbf{x}}^{(i)}),
 \end{equation}
 
-where $\mathcal{C}(\cdot)$ is a cost function like the mean squared error etc. 
+\noindent where $\mathcal{C}(\cdot)$ is a cost function like the mean squared error etc. 
 
-To ensure that the soft cluster assignments encourage clustering two terms have to be added to the total loss. The first is a simple entropy term which when minimized encourages the assignments to be one-hot vectors. 
+To ensure that the soft cluster assignments encourage clustering two terms have to be added to the total loss. The first is a simple entropy term which when minimized encourages the assignments to be one-hot vectors. Mathematically this loss can then be written as the entropy $S(\cdot)$ of a cluster assignment $\mathbf{p}$
 
- \todo{finishing mixae sec}
+\begin{equation}\label{eq:mixae_sample}
+S(\mathbf{p}^{(i)})_{\text{sample}} = -\sum_j p_j^{(i)} \log p_j^{(i)}. 
+\end{equation}
+
+\noindent The last ingredient in the loss is then the term which discourages the trivial solution where only one cluster is assigned to. This is formulated as a batch-wise entropy term, given a mini-batch of $\beta$ samples we compute this loss as 
+
+\begin{equation}\label{eq:mixae_batch}
+\begin{split}
+S(\{\mathbf{p}^{(i)}\}_i)_{\text{batch}}&= \left(-\sum_j \bar{p}_j \log \bar{p}_j \right)^{-1} \\
+\bar{\mathbf{p}} &= \frac{1}{\beta} \sum_i ^\beta \mathbf{p}^{(i)} 
+\end{split}
+\end{equation}
+
+\noindent The negative exponent in equation \ref{eq:mixae_batch} owes to the fact that we want to maximize the batch-wise entropy.
+
+From equations \ref{eq:mixae_reconst}, \ref{eq:mixae_sample}, and \ref{eq:mixae_batch} we can then compose the full loss for the MIXAE model. \cite{Zhang} note that the optimization depends heavily on the weighting of the different terms and so we introduce the weighting hyperparameters $\alpha$, $\gamma$ and $\theta$, and write the total loss over a mini-batch as 
+
+\begin{equation}
+\begin{split}
+\mathcal{L}_{\text{total}}(\{\hat{\mathbf{x}}^{(i)}\}^\beta_i) = \frac{1}{\beta}\sum_i \Big( &\theta \mathcal{L}_x(\mathbf{p}^{(i)},\,\mathbf{x}^{(i)},\, \hat{\mathbf{x}}^{(i)} ) \\
+&+ \alpha S(\mathbf{p}^{(i)})_{\text{sample}} \Big) \\
+&+\gamma S(\{\mathbf{p}^{(i)}\}_i)_{\text{batch}}
+\end{split}
+\end{equation}
+
+\noindent \cite{Zhang} not that this algorithm has a couple of shortcomings. The batch-entropy term encourages the cluster assignments to be uniformly distributed within the classes. For biased datasets with large variations in the number of samples in each class this can create problems for the algorithm. Additionally it suffers from the same problem that K-means does in that we need to guess at the number of clusters present in the data, which may not be known.

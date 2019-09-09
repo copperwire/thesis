@@ -2,9 +2,9 @@
 
 \section{Neural Networks}\label{sec:ANN}
 
-While the basis for the modern neural network was laid more than a hundred years ago in the late 1800's what we think of as neural networks in modern terms was proposed by \citet{McCulloch1943}. They described a computational structure analogous to a set of biological neurons. The premise is that a biological neuron accepts signals from many other adjacent neurons, and if it receives enough of a signal it fires and emits a signal to those neurons it is connected to.  
+While the basis for the modern neural network was laid more than a hundred years ago, modern neural networks were proposed by \citet{McCulloch1943}. They described a computational structure analogous to a set of biological neurons. The premise is that a biological neuron accepts signals from many other adjacent neurons, and if it receives a large enough signal it fires, and emits a signal to those neurons it is connected to.  
 
-Dubbed an ANN (artificial neural network) this computational analogue takes input from multiple sources, weights that input and produces an output if the signal from the weighted input is strong enough. A proper derivation will follow but for the moment we explore this simple intuition. These artificial neurons are ordered in layers, each successively passing information forward to a final output. Depending on the application, the output can be categorical or real-valued in nature. Each layer uses a matrix matrix multiplication and a non-linear function to transform the input space in a way that condenses information, as most applications use transformations that reduce the dimensionality substantially before making a prediction.
+Dubbed an ANN (artificial neural network) this computational analogue takes input from multiple sources, weights that input and produces an output if the signal from the weighted input is strong enough. A proper derivation will follow but for the moment we explore this simple intuition. These artificial neurons are ordered in layers, each successively passing information forward to a final output. Depending on the application, the output can be categorical or real-valued in nature. Each layer uses a matrix multiplication and a non-linear function to transform the input space in a way that condenses information, as most applications use transformations that reduce the dimensionality substantially before making a prediction.
 
 A simple illustration of two neurons in one layer is provided in figure \ref{fig:ann_illustration} \todo{make proper figure for ann}
 
@@ -18,38 +18,38 @@ A simple illustration of two neurons in one layer is provided in figure \ref{fig
 \end{figure}
 
 
-\noindent The ANN produces an output by a "forward pass". Let the input to an ANN be $\mathbf{x} \in \R^N$, and the matrix $\mathbf{W}^{[1]} \in \R^{N \times D}$ be a representation of the weight matrix forming the connections between the input and the artificial neurons, each layer has its own weights which we denote with bracketed superscripts. For a network with $n$ layers each layer then maintains a weight matrix 
+\noindent The ANN produces an output by what we call a forward pass. This defines all the mathematical operations from the input to the output of the network. More formally, let the input to an ANN be $\mathbf{x} \in \R^N$, and the matrix $\mathbf{W}^{[1]} \in \R^{N \times D}$ be a representation of the weight matrix forming the connections between the input and the artificial neurons, each layer has its own weights which we denote with bracketed superscripts. For a network with $n$ layers each layer then maintains a weight matrix 
 
 \begin{align}
-\mathbf{W}^{[l]} \; \forall \; l \in \{1,\, 2,\, \dots, l\},
+\mathbf{W}^{[l]} \; \forall \; l \in \{1,\, 2,\, \dots, n\},
 \end{align}
 
 \noindent which are used to transform the input to a space which enables regression or classification.  
 
 Lastly we define the activation function $f(x)$ as a monotonic, once differentiable, function on $\R^1$. The function $f(x)$ determines the complexity of the neural network together with the number of neurons per layer and number of layers. The use of a non-linear activation is what allows for the ANN to represent more complex problems than we were able to with logistic and linear regression.
 
-A layer in a network implements what we will call a forward pass, which transforms the input to an intermediate representation $\mathbf{a}$. The simplest such transformation is the fully connected, or dense, layer. It bears close resemblance to the formulation of linear and logistic regression and is defined as 
+We are now ready to fully describe the forward pass, which transforms the input to an intermediate representation $\mathbf{a}$. The simplest such transformation is the fully connected, or \textit{dense}, layer. It bears close resemblance to the formulation of linear and logistic regression and is defined as 
 
 \begin{equation}\label{eq:fwd}
 	\mathbf{a}^{[1]} = f(\mathbf{x}\mathbf{W}^{[1]})_D,
 \end{equation}
 
-\noindent for the first layer in the network with inputs $\mathbf{x}$. In equation \ref{eq:fwd} the subscript denotes that the function is applied element-wise. 
+\noindent for the first layer in the network with inputs $\mathbf{x}$. In equation \ref{eq:fwd} the subscript, $D$, denotes that the function is applied element-wise on the output of dimension $\R^D$. 
 
-Each node is additionally associated with a bias, ensuring that even zero valued neurons can encode information. Let the bias for the layer be given as $\mathbf{b} \in \R^D$ in keeping with the notation above. Equation \ref{eq:fwd} then becomes
+Each node is additionally associated with a bias, ensuring that even zero valued weights in $\mathbf{W}^{[l]}$ can encode information. Let the bias for the layer be given as $\mathbf{b} \in \R^D$ in keeping with the notation above. Equation \ref{eq:fwd} then becomes
 
 \begin{equation}\label{eq:fwd_b}
 	\mathbf{a}^{[1]} = f(\mathbf{x}\mathbf{W}^{[1]} + \mathbf{b}^{[1]})_D.
 \end{equation}
 
-\noindent To tie the notation back to more traditional methods we note that if we only have one layer and a linear activation $f(x) = x$ the ANN becomes a formulation of a linear regression model. Keeping the linear regression formulation in mind we illustrate the difference by showing the full forward pass of a two-layer neural network
+\noindent To tie the notation back to more traditional methods we note that if we only have one layer and a linear activation $f(x) = x$ the ANN becomes a formulation of a linear regression model. Keeping the linear regression formulation in mind we illustrate the difference by showing the full forward pass of a two-layer neural network, where we also introduce the output activation function $o(\cdot)$
 
 \begin{align}
 \mathbf{a}^{[1]} &= f(\mathbf{x}\mathbf{W}^{[1]}+ \mathbf{b}^{[1]})_D , \\
 \mathbf{y} &= o(\mathbf{a}^{[1]}\mathbf{W}^{[2]} + \mathbf{b}^{[2]})_D .
 \end{align}  
 
-\noindent The difference between the intermediate representations $\mathbf{a}^{[l]}$ and the output $\mathbf{y}$ is largely semantic. We find it useful to separate the notation to provide clarity for what constitutes the last layer output, and because the last layer of a network usually has an activation which differs from the rest of the network. We denote this with the function $o(\cdot)$. For regression tasks $o$ is commonly just a linear activation. Conversely for classification the logistic sigmoid is used for binary outcomes, or in the event of multiple classes we use the soft-max function. For a network with $n$ layers the soft-max function is defined as 
+\noindent The difference between the intermediate representations $\mathbf{a}^{[l]}$ and the output $\mathbf{y}$ is largely semantic. However, we find it useful to separate the notations in an effort to provide clarity, and because the last layer of a network usually has an activation which differs from the rest of the network. This output activation $o(\cdot)$ is usually formulated depending on the analysis at hand. For regression tasks $o$ is commonly just a linear activation. Conversely for classification the logistic sigmoid is used for binary outcomes, or in the event of multiple classes we use the soft-max function. For a network with $n$ layers the soft-max function is defined as 
 
 \begin{equation}\label{eq:softmax}
 o(\mathbf{z})_i = \frac{e^{z_i^{[n]}}}{\sum_j e^{z_j^{[n]}}},
@@ -76,7 +76,7 @@ a_j ^{[l]} = f(z_j^{[l]})_D.
 \mathbf{y} &= o(\mathbf{a}^{[n-1]}\mathbf{W}^{[n]} + \mathbf{b}^{[n]})_D .
 \end{align} 
 
-\noindent Furthermore we note that the dimensions of the weight matrices are largely user specified, excepting the first dimension of $\mathbf{W}^{[1]}$ which maps to the input dimension and the second dimension of the last layer which maps to the output. Otherwise the first dimension is chosen to fit with the previous output and the second is specified as a hyperparameter. Recall from section \ref{sec:hyperparams} that hyperparameters have to be specified and tuned outside the ordinary optimization procedure and are usually related to the complexity of the model and so cannot be arbitrarily chosen. 
+\noindent Furthermore we note that the dimensions of the weight matrices are largely user specified, excepting the first dimension of $\mathbf{W}^{[1]}$ which maps to the input dimension, and the second dimension of the last layer which maps to the output. Otherwise the first dimension is chosen to fit with the previous output and the second is specified as a hyperparameter. Recall from section \ref{sec:hyperparams} that hyperparameters have to be specified and tuned outside the ordinary optimization procedure and are usually related to the complexity of the model and so cannot be arbitrarily chosen. 
 
 We can now turn to the process of optimizing the model. In a neural network the variables that need to be fit are the elements of $\mathbf{W}^{[l]}$ that we denote $\wij^{[l]}$, and the biases which we denote with $b_j^{[l]}$. And while one can solve the linear regression optimization problem by matrix inversion, the multi-layer neural net does not have a closed form first derivative for $\wij^{[l]}$ or  $b_j^{[l]}$ because of the non-linearities between each layer. We are then forced to turn to iterative methods of the gradient, which we previously introduced in section \ref{sec:gd}
 
@@ -88,9 +88,9 @@ Based on whether the output is described by real values or a set of probabilitie
 
 \subsection{Backpropagation}\label{sec:backpropagation}
 
-In the vernacular of the machine learning literature the aim of the optimization procedure is to train the model to perform optimally on the regression, reconstruction or classification task at hand. Training the model requires the computation of the total derivative in equation \ref{eq:gd}. This is also where the biological metaphor breaks down, as the brain is almost certainly not employing gradient descent.
+In the vernacular of the machine learning literature the aim of the optimization procedure is to train the model to perform optimally on the regression, reconstruction or classification task at hand. Training the model requires the computation of the total derivative in equation \ref{eq:gd}. This is also where the biological metaphor breaks down, as the brain is probably not employing gradient descent.
 
-Backpropagation, or automatic differentiation, first described by \citet{Linnainmaa1976} is a method of computing the partial derivatives required to go from the gradient of the loss to individual parameter derivatives. Conceptually we wish to describe the slope of the error in terms of our model parameters, but having multiple layers complicate this somewhat. 
+Backpropagation of errors by automatic differentiation, first described by \citet{Linnainmaa1976}, is a method of computing the partial derivatives required to go from the gradient of the loss to individual parameter derivatives. Conceptually we wish to describe the slope of the error in terms of our model parameters, but having multiple layers complicate this somewhat. 
 
 The backpropagation algorithm begins with computing the total loss, here exemplified with the squared error function,
 \begin{equation}\label{eq:tot_err}
@@ -224,7 +224,7 @@ Compute derivatives\;
 
 The backward propagation framework is highly generalizable to variations of activation functions and network architectures. The two major advancements in the theory of ANNs are both predicated on being fully trainable by the backpropagation of errors. Before we consider these improvements made by the introduction of recurrent neural networks (RNN) and convolutional neural networks (CNN), we remark again on the strength of this algorithm. We are not only free to chose the activation function from a wide selection, the backpropagation algorithm also makes no assumptions on the transformation that constructs $z_j$. As long as it is once differentiable we are free to choose a different approach. This flexibility of the framework is part of the resurgent success of deep learning in the last decade. 
 
-\subsection{Neural architectures}
+\subsection{Neural network architectures}
 
 When creating a neural network on a computer with finite resources, a principled consideration must be made on the width and depth of the network. These terms are common in machine learning literature and describes how many nodes per layer, and how many layers a network consists of respectively. A discussion of this consideration is neatly summarized in the work of \citet{Lin2017}. The authors provide strong reasoning for prioritizing deep networks over wide ones. They show that one can view many physical systems that generate the data a causal hierarchy (see figure 3 in \citet{Lin2017} for an illustration). This representation of stepwise transformations intuitively lends itself well to representation by a sequence of layers. This intuition builds on the fact that each layer contains a transformed, compressed, representation of the data. It is this bottleneck property of information compression that motivates the use of autoencoders, neural networks that compress and reconstruct the input, when unlabeled data is plentiful and labeled data is scarce.
 
@@ -258,12 +258,12 @@ Two sigmoid functions have been traditionally used in neural networks, while the
 \frac{d \tanh x}{d x}  = 1-\tanh^2 x
 \end{equation}
 
-\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure we observe that for relatively small values the gradient goes to zero, which makes optimization hard. Additionally we note one of the convenient properties of the sigmoid functions; their values are capped. This prohibits the gradient from exploding but also causes problems in the gradient. We also note that the logistic sigmoid is capped at zero, like the ReLU function, while the hyperbolic tangent is bonded at $-1$. The hyperbolic tangent then has the option to emit an anti-signal.
+\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure we observe that for relatively small values the gradient goes to zero, which makes optimization hard. Additionally we note one of the convenient properties of the sigmoid functions; their values are capped. This prohibits the gradient from exploding but also causes problems in the gradient. We also note that the logistic sigmoid is capped at zero, like the ReLU function, while the hyperbolic tangent is bonded at $-1$. The hyperbolic tangent then has the option to emit a bounded anti-signal.
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{../figures/activationssigmoids.pdf}
-\caption[Sigmoid activation functions]{Sigmoid activation functions and their derivatives, the colorization indicates that the function is multiplied with a second variable. We observe that the derivative deteriorates to zero as the function moves away from zero. The derivative going to zero means that a network using sigmoid activations generally struggle with saturated gradients which slows down training dramatically.}\label{fig:sigmoid}
+\caption[Sigmoid activation functions]{Sigmoid activation functions and their derivatives. The colorization indicates the value of the multiplicative weight $w$ in addition to the function argument $x$, which we differentiate with respect to. We observe that the derivative deteriorates to zero as the function moves away from zero. The derivative going to zero means that a network using sigmoid activations generally struggle with saturated gradients which slows down training dramatically.}\label{fig:sigmoid}
 \end{figure}
 
 \subsubsection{Rectifiers}
@@ -291,7 +291,7 @@ On the other end of the scale rectified activations have gained traction in late
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{../figures/activationselus.pdf}
-\caption[Rectifier activation functions]{Rectifier activation functions and their derivatives, the colorization indicates that the function is multiplied with a second variable. In contrast with the sigmoid activations the derivative is non-zereo in $\mathcal{R}^+$ for the ReLU and non-zero on the entirety of $\mathcal{R}$ for the LReLU.}\label{fig:elu}
+\caption[Rectifier activation functions]{Rectifier activation functions and their derivatives, the colorization indicates that the function is multiplied with a second variable. In contrast with the sigmoid activations the derivative is non-zereo in $\R^+$ for the ReLU and non-zero on the entirety of $\R$ for the LReLU.}\label{fig:elu}
 \end{figure}
 
 One heuristic method of handling exploding gradients that has seen wide applications is gradient capping. When computing the gradients one chooses a maximum value for e.g. the norm of a layers gradient and shrink any update that crosses that threshold. The downside of this is that it can slow down training substantially. More elegant solutions are usually employed in conjunction with a capped gradient which we'll discuss in the next section on the regularization of neural networks. 
@@ -303,17 +303,17 @@ As neural networks can be made arbitrarily complex reducing the degree of over-f
 
 Traditional measures of regularization like using cross validation and weight constraints are both important features of reducing over-fitting in deep learning algorithms. We introduced cross validation in section \ref{sec:cv} as a way to estimate appropriate model complexities. Cross validation is model agnostic and can be applied to estimate an appropriate complexity for a network modeling a given process, or the optimal values for the gradient descent hyperparameters etc. 
 
-Weight constraints are similarly convenient additions to the cost function. The only modification required from \ref{eq:mse_ridge} is adding a summation term over the layers. For a $L_2$ regularized neural net the cost function can then be written as 
+Weight constraints are similarly convenient additions to the cost function. The only modification required from equation \ref{eq:mse_ridge} is adding a summation term over the layers. For a $L_2$ regularized neural net the cost function can then be written as 
 
 \begin{equation}
-C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum_l\sum_{ij}||w_{ij}^{[l]}||^2_2.
+C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum_{lij}||w_{ij}^{[l]}||^2_2.
 \end{equation}
 
 \noindent More specific tools for neural networks have been developed in later years, we will discuss two of these that have seen wide use in recent works. 
 
 \subsubsection{Dropout}\label{sec:dropout}
 
-Armed with the knowledge that neural networks are usually more complex than the problem at hand warrants \citet{Srivastava2014} propose a wonderfully simple remedy; dropout. The premise is very simple: after the activation of a layer randomly set $d$ of these activations to zero. The fraction of the activations that $d$ represents is called the dropout-rate, and is typically chosen to be some few tenths. Dropout adds a regularizing effect by having the network increase the redundancy of its prediction and thus forcibly reducing the complexity of the network. 
+Armed with the knowledge that neural networks are usually more complex than the problem at hand warrants, \citet{Srivastava2014} propose a wonderfully simple remedy; dropout. The premise is simply: after the activation of a layer, randomly set $d$ of these activations to zero. The fraction of the activations that $d$ represents is called the dropout-rate, and is typically chosen to be some few tenths. Dropout adds a regularizing effect by having the network increase the redundancy of its prediction and thus forcibly reducing the complexity of the network. 
 
 \subsubsection{Batch Normalization}\label{sec:batchnorm}
 

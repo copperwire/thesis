@@ -31,7 +31,7 @@ One of the central challenges of the ELBO as presented in equation \ref{eq:elbo}
 
  The read/write functions are paired processing functions that create a sub-sampled representation of the input. The trivial versions of which is just the concatenation of the error image with the input for the read-function and a weight transformation from the decoder state to the output dimension as the write. This pair of functions have not been considered for this work. 
 
- Instead of the trivial implementations the DRAW network implemented grids of Gaussian filters to extract patches of smoothly varying location and size (\cite{Gregor2015}). To control the patch the authors compute centers,$g_X$ and $g_Y$ , and stride, which controls the size, of a $N \times N$ patch of Gaussian filters over the $H \times W$ input image. The mean location of those filters are computed from the centers, $g_X$ and $g_Y$, and the stride $\delta$. From \citet{Gregor2015} the means at row $i$ and column $j$ are defined as 
+ Instead of the trivial implementations the DRAW network implemented grids of Gaussian filters to extract patches of smoothly varying location and size (\cite{Gregor2015}). To control the patch the authors compute centers, $g_X$ and $g_Y$, and stride, which controls the size, of a $N \times N$ patch of Gaussian filters over the $H \times W$ input image. The mean location of those filters are computed from the centers, $g_X$ and $g_Y$, and the stride $\delta$. From \citet{Gregor2015} the means at row $i$ and column $j$ are defined as 
 
  \begin{align}
  \mu_X^i &= g_X + (i - N/2-0.5)\delta, \\
