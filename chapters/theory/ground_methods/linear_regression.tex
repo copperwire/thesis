@@ -2,85 +2,56 @@
 
 \section{Linear Regression}\label{sec:LinReg}
 
-Modern machine learning has its foundations in the familiar framework of linear regression. Many fairly interesting problems can be cast as systems of linear problems, and as such there are multitudes of ways to solve the problem. In this section we'll detail the derivation of linear regression in the formalism of a maximum likelihood estimate, as it is in this formalism the thesis writ large is framed. Linear regression can be expressed on a general form as the linear relationship expressed in equation \ref{eq:linreg} where we don't specify the basis of $\mathbf{w}$, but we are free to model using polynomial, sinusoidal or ordinary Cartesian basis-sets.
+Modern machine learning has its foundations in the familiar framework of linear regression. Many fairly interesting problems can be cast as systems of linear problems, and as such there are multitudes of ways to solve the problem. The most straight forward of which is with just a little bit of linear algebra.
 
-\begin{equation}\label{eq:linreg}
-\hat{y}_i = \mathbf{x}_i^T\mathbf{w} + b
+We begin by defining the constituents of our model: let our data be denoted as a matrix $\mathbf{X} \in \mathcal{R}^{m\times n+1}$ where $m$ is the number of data-points and $n$ the number of features. The $+1$ factor in the dimension is to accommodate the addition of a column of ones to our data as a convenient placeholder for the model intercept. Note also that the term features is used broadly in machine learning literature and denotes the measurable aspects of our system; in the 1D Ising model the $n$ would denote the number of spins and $m$ the number of measurements we made on that system. Furthermore let the parameter, or weight, matrix be given as $\mathbf{w} \in \mathcal{R}^{n + 1\times k}$. Generally the outcome-dimension $k$ can be greater than one when estimating multi-variate outcomes. For illustrative purposes we limit this section and the following to the case where $k=1$. The linear regression model is then the transformation of the input using the weight matrix, i.e. 
+
+\begin{equation}\label{eq:og_linreg}
+\mathbf{y} = \mathbf{X}\mathbf{w}.
 \end{equation}
+\noindent Finally let the outcome we wish to approximate be given as a vector $\mathbf{\hat{y}} \in \mathcal{R}^m$. We'll not concern ourselves overly with the properties of the process that generates $\mathbf{\hat{y}}$ in this section as this is elaborated on in the coming sections, and assume that that the outcome has no noise.
 
-\noindent In addition to equation \ref{eq:linreg} we introduce the error term $\epsilon_i= y_i - \hat{y_i}$ which is the difference between the models prediction, $\hat{y}_i$, and the actual value $y_i$. The goal of linear regression is to minimize this error, in mathematical terms we have an optimization problem on the form
+The challenge is then finding the weights that give correct predictions from data. To measure the quality of our model we introduce the squared distance between our predictions and $\mathbf{\hat{y}}$, which also gives us a path to optimization by the first derivative in terms of the model parameters. The squared error is defined in terms of the Euclidean vector norm  
+
+$$L_2(\mathbf{x}) =||\mathbf{x}||_2 = \left(\sum x_i^2\right)^{\frac{1}{2}},$$
+
+\noindent which we apply to the vector difference between model output and true values and take the square to give us a nice differentiable form. In mathematical terms we define the squared error objective as
 
 \begin{equation}
-\mathcal{O} = \argmin _{\mathbf{w}, b} || \mathbf{y} - \mathbf{Xw} ||^2
+\mathcal{O} = || \mathbf{\hat{y}} - \mathbf{y} ||_2 ^2.
 \end{equation}
 
-\noindent In physics there are many relationships which have successfully been modeled with linear regression. From the very simple single regression problem of Ohm's law to more complex problems like identifying the Hamiltonian in a thermodynamic system like the Ising model. The latter of the two is elegantly demonstrated in \citet{Mehta2019}. The central assumption of linear regression, that provides the opportunity for a closed form solution, is the independent identically distributed (IID) nature of $\epsilon_i$. We assume that the error is normally distributed with zero-mean and identical variance across all samples, e.g. 
+\noindent An objective function $\mathcal{O}$ defines some optimization problem to minimize or maximize. In machine learning these are mostly commonly cast as minimization problems. Objective functions for finding minima are termed cost functions in machine learning literature and we'll adopt that name moving forward. In this thesis we use the symbol $\mathcal{C}$ to indicate such functions and the optimization problem is then finding the minimum w.r.t the parameters $\theta^*$, i.e. 
 
-\begin{align}
-\epsilon_i \sim \mathcal{N}(0, \sigma^2)
+\begin{align}\label{eq:cost}
+\theta^* = \argmin_\theta \mathcal{C}(\mathbf{\hat{y}}, f(\mathbf{X}; \theta)).
 \end{align}
 
-\noindent And similarly we consider the model predictions to be normally distributed, but with zero variance, e.g.
+\noindent We use the starred notation to indicate the optimal parameters for the given cost function.
 
-\begin{align}
-\hat{y}_i \sim \mathcal{N}(\mathbf{x}_i^T\mathbf{w}, 0)
-\end{align}
-
-\noindent For simplicity we include the intercept term, $b$,  in $\mathbf{w}$ and extend the full data-matrix $\mathbf{x}$ with a column of ones to compensate. Where we use $\mathcal{N}(\mu, \sigma^2)$ to denote a Gaussian normal distribution which has a probability density function (PDF) defined as 
-
-\begin{align}
-p(x | \mu, \sigma) = \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x - \mu)^2}{\sigma^2}}
-\end{align}
-
-\noindent This allows us to consider the real outcomes $y_i$ as a set of normally distributed variables too. By the linearity of the expectation operator we have 
-
-\begin{align}
-\langle y \rangle &= \langle \hat{y} + \epsilon \rangle  \\
-\langle y \rangle &= \langle \hat{y} \rangle + \langle \epsilon \rangle \\
-\langle y \rangle &= \mathbf{x}_i^T\mathbf{w}
-\end{align}
-
-\noindent And by the exact same properties we have that the variance of the prediction is the variance of the error term 
-
-\begin{align}
-\langle y\rangle^2 + \langle y^2\rangle = \sigma^2
-\end{align}
-
-\noindent In concise terms we simply consider our outcome as a set of IID normal variables on the form $y_i \sim \mathcal{N}(\mathbf{x}_i^T\mathbf{w}, \sigma^2)$. The likelihood of the linear regression can then be written using the same tuple notation as for equation \ref{eq:likelihood}
-
-\begin{align}
-p(S|\mathbf{\theta}) &= \prod_i^n p(y_i) \\
-&= \prod_i^n \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(y_i - \mathbf{x}^T\mathbf{w})^2}{\sigma^2}} \\
-&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n \prod_i^n e^{-\frac{(y_i - \mathbf{x}^T\mathbf{w})^2}{\sigma^2}} \\
-&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n  e^{-\sum_i\frac{(y_i - \mathbf{x}^T_i\mathbf{w})^2}{\sigma^2}} \\
-&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n  e^{-\frac{(\mathbf{y} - \mathbf{X}\mathbf{w})^T(\mathbf{y} - \mathbf{X}\mathbf{w})}{\sigma^2}} 
-\end{align}
-
-\noindent We recall from section \ref{sec:models} that the best parameters of a model can be estimated with 
-
-\begin{equation}
-\mathbf{\theta}^* = \argmax_\mathbf{\theta} p(S|\mathbf{\theta})
-\end{equation}
-
-\noindent To find the optimal values we then want to take the derivative w.r.t the parameters and find a saddle point, but as we saw before this is impractical, if not impossible, with the product sum in the likelihood. To solve this problem we repeat the log-trick from section \ref{sec:models} re-familiarizing ourselves with the log-likelihood
-\begin{align}
-\log(p(S|\theta)) = n \log(\frac{1}{\sqrt{2\pi \sigma^2}}) - \frac{(\mathbf{y} - \mathbf{X}\mathbf{w})^T(\mathbf{y} - \mathbf{X}\mathbf{w})}{\sigma^2}
-\end{align}
-
-\noindent Taking the derivative with respect to the model parameters and setting to zero we get
+Returning to the least squares problem the task is finding the optimal parameters now requires a differentiation, and to aid in that we write the objective as a matrix inner product 
 
 \begin{align*}
-\nabla_\mathbf{w} \log(p(S|\theta)) &=\nabla_\mathbf{w}\left( - \frac{1}{\sigma^2} (\mathbf{y} - \mathbf{X}\mathbf{w})^T(\mathbf{y} - \mathbf{X}\mathbf{w}) \right) \\
-&=  - \frac{1}{\sigma^2}(-2\mathbf{X}^Ty + 2\mathbf{X}^T\mathbf{X}\mathbf{w}) \\
-&= -\frac{1}{\sigma^2} 2 \mathbf{X}^T(\mathbf{y}- \mathbf{X}\mathbf{w}) \\
-0 & = -\frac{2}{\sigma^2}(\mathbf{X}^T\mathbf{y} - \mathbf{X}^T\mathbf{Xw})&& \text{setting derivative to zero} \\
-\mathbf{X}^T\mathbf{Xw} &= \mathbf{X}^T\mathbf{y}  && \text{multiplying away constants} 
+\mathcal{C} &= || \mathbf{\hat{y}} - \mathbf{y} ||_2 ^2, \\
+\mathcal{C} &= ( \mathbf{\hat{y}} - \mathbf{Xw})^T( \mathbf{\hat{y}} - \mathbf{Xw}).
 \end{align*}
 
-\noindent Which ultimately supplies us with the solution, equal to the least squares derivation, of the optimal parameters. Which we present in equation \ref{eq:ls}
-\begin{equation}\label{eq:ls}
-\mathbf{w}= (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T\mathbf{y} 
-\end{equation}
+\noindent Since the problem is one of minimization we take the derivative with respect to the model parameters and locate its minima by setting it to zero 
+
+\begin{align}
+\nabla _{\mathbf{w}}\mathcal{C} &= \nabla _{\mathbf{w}} ( \mathbf{\hat{y}} - \mathbf{Xw})^T( \mathbf{\hat{y}} - \mathbf{Xw}), \\
+&= -2\mathbf{X}^T\mathbf{\hat{y}} + 2\mathbf{X}^T\mathbf{X}\mathbf{w}, \\
+\mathbf{0} &= -2\mathbf{X}^T\mathbf{\hat{y}} + 2\mathbf{X}^T\mathbf{X}\mathbf{w}, \\
+\mathbf{X}^T\mathbf{\hat{y}} &= \mathbf{X}^T\mathbf{X}\mathbf{w}, \\
+\mathbf{w} &=(\mathbf{X}^T\mathbf{X})^{-1} \mathbf{X}^T\mathbf{\hat{y}}. \label{eq:least_squares}
+\end{align}
+
+ \noindent This problem is analytically solvable with a plethora of tools, most notably we have the ones that don't perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this inverse is not unique for data that does not have full rank.
+
+Admittedly the least squares linear regression model is fairly simple and is rarely applicable to complex systems. Additionally, we've not discussed the assumptions made to ensure the validity of the model. Most important of which concerns the measurement errors, which we assume to be be identical independent normally distributed.
+
+Given the relative simplicity of the linear regression model, and the fact that an analytical solution can be found, we'll use it for reference in understanding the coming sections in this chapter.
 
 
-\noindent Which is the same solution for the parameters as we get with ordinary least squares. This problem is of course solvable with a plethora of other tools, most notably we have the ones that don't perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this derivative might not be well defined. It's also important to note that the \todo{add some plots of linear data with noise, regression line and show the errors?}
+
+

@@ -1,0 +1,17 @@
+\section{Summary}
+
+In this chapter we have introduced and discussed fundamental aspects of machine learning theory. In particular we've introduced two fundamental models and framed modern considerations of performance and optimization on those. Moving forward to more advanced models the considerations of regularization, hyper-parameter tuning and performance validation.
+
+Our goal is to create a model $f(x_i; \theta)$ of parameters $\theta$ that best approximates our true distribution $p(y_i | x_i)$. To evaluate the quality of our model 
+
+Typically $C(\cdot, \cdot)$ is something like a squared distance, or a cross entropy like we introduced in section \ref{sec:information}. If the measurement errors $\epsilon_i$ from equation \ref{eq:target} are independent identically distributed Gaussian variables then the method of least squares and the squared distance cost are appropriate. With those assumptions we form the basis for linear regression, a foundational model we elaborate on in section \ref{sec:LinReg}. For probability-like outcomes the cross entropy is a more common choice, represented by the other cornerstone of machine learning; logistic regression. We detail this method also in a later section \ref{sec:LogReg}. 
+
+In equation \ref{eq:target} the $\epsilon_i$ term expresses a noise term at that point, and the function $P(\cdot)$ is the true process which we are interested in modeling but whose shape is hidden from us. It is important to note that for data with no noise, most of the problems and cautions we describe in this chapter do not apply, however measuring any physical phenomenon inherently carries with it some noise.
+
+To quantify the quality of the model during optimization we measure the change in the value of the cost function. In the machine learning community the best practice for this in settings were we train on tuples of response variables and data, e.g. $s_i = \{y_i, \mathbf{x}_i\}$ is to split the data in disjoint sets. From the full data one selects a subset of around $\sim 20\%$ or so that is withheld from training. After training we can evaluate the cost function on this data to create an unbiased estimate the out-of-sample error
+
+\begin{equation}
+E_{out} = C(y_{test}, f(x_{test}; \theta^*))
+\end{equation}
+
+During training we usually split the data yet again in two disjoint subsets, the larger of which the model is trained on. The training data gives us another measure of how good the model is, the in-sample-error, or $E_{in}$. Lastly the data that is not seen during that iteration but can be randomly selected from the train data we call validation and is our measure of when we should stop the optimization. The training error will likely decrease but for complex models this validation error $E_{val}$ will diverge and signal that the optimization should be terminated. We investigate the relationships between each of these errors and the model complexity in section \ref{sec:bv}. As to the exact size of the different partitions is largely a heuristic decision made by the amount of data available. It is also important to note that some models operate without a ground-truth labeling, or target, $y_i$. The models investigated in this thesis are either completely divorced from the ground truth variables during training or only use them in an auxiliary step. We show that this separation allows well trained models to estimate the ground truth using surprisingly few samples. 

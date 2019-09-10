@@ -26,6 +26,7 @@
 \usepackage{tabularx}
 \usepackage{adjustbox}
 \usepackage[section]{placeins}
+\usepackage{pdflscape}
 
 %\usepackage{subcaption}
 
@@ -178,6 +179,12 @@
 \listoftodos
 
 \newpage
+\section*{Acknowledgments}
+Who to thank \\
+Reading: Tommy, Sigmund, Geir, Øyvind, Maiken \\
+Academic: Morten, Michelle, Daniel \\
+Sanity: Maiken \\
+\newpage
 
 \subimport*{chapters/abstract/}{abstract.tex}
 \subimport*{chapters/introduction/}{introduction.tex}
@@ -187,21 +194,24 @@
 \part{Theory and Experimental Background}
 
 % Machine learning theory
-\subimport*{chapters/theory/}{theory.tex}
-
-\subimport*{chapters/theory/optimization/}{model_optimization.tex}
-\subimport*{chapters/theory/ground_methods/}{logistic_regression.tex}
+\subimport*{chapters/theory/}{background_theory.tex}
 \subimport*{chapters/theory/ground_methods/}{linear_regression.tex}
-\subimport*{chapters/theory/optimization/}{regularization}
-\subimport*{chapters/theory/optimization/}{validation}
+\subimport*{chapters/theory/optimization//}{overfitting.tex}
 \subimport*{chapters/theory/optimization/}{bias_variance.tex}
+\subimport*{chapters/theory/optimization/}{regularization}
 \subimport*{chapters/theory/neural_network/}{hyperparameters.tex}
+\subimport*{chapters/theory/optimization/}{information.tex}
+\subimport*{chapters/theory/ground_methods/}{logistic_regression.tex}
+\subimport*{chapters/theory/ground_methods/}{revisiting_linreg.tex}
 \subimport*{chapters/theory/optimization/}{gradient_descent.tex}
+\subimport*{chapters/theory/optimization/}{validation}
+\subimport*{chapters/theory/optimization/}{unsupervised}
+%\subimport{chapters/theory/optimization/}{summary}
 
+\subimport*{chapters/theory/}{theory.tex}
 \subimport*{chapters/theory/neural_network/}{neural_network.tex}
 \subimport*{chapters/theory/neural_network/}{convolution.tex}
 \subimport*{chapters/theory/neural_network/}{rnn.tex}
-
 \subimport*{chapters/theory/autoencoder/}{autoencoder.tex}
 \subimport*{chapters/theory/autoencoder/}{regularizing_latent.tex}
 \subimport*{chapters/theory/autoencoder/}{draw.tex}
@@ -234,6 +244,7 @@
 \subimport*{chapters/results/classification/}{convae.tex}
 \subimport*{chapters/results/classification/}{draw.tex}
 \subimport*{chapters/results/clustering/}{clustering}
+\subimport*{chapters/results/clustering/}{vgg}
 \subimport*{chapters/results/clustering/}{convae.tex}
 \subimport*{chapters/results/clustering/}{draw.tex}
 
