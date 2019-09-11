@@ -1,0 +1,43 @@
+\section{Unsupervised learning}
+
+In section \ref{sec:information} we presumed the data was comprised of system states and measured outcomes of the set of states. For some applications we do not have measured outcomes of states and are left with only the data itself. In that case we often wish to extract information about the differences in the data from the data itself. Clustering is one such approach wherein similarities are measured between points of data and grouped based on respective similarities.
+
+Clustering analysis is well illustrated by the k-means algorithm (\cite{Neyman1967}), which is to clustering what logistic regression is to classification.  In the k-means algorithm one uses the euclidean distance between each point in the data and objects in data space called centroids to allocate clusters. The simplest version of the k-means algorithm initializes random cluster centroids and follow an update rule where new centroids are allocated by computing the mean of all points that are closest to the given centroid. This procedure is repeated until convergence of the centroid locations. Of course this algorithm is dependent on the cluster initialization, and performs poorly in high-dimensional spaces where the euclidean distance looses its discriminatory power. 
+
+The latter restriction can be addressed by representing the data in a much smaller dimensional space. Choosing this representation then becomes the primary challenge we're trying to solve. A naive approach is to find the eigenvectors of the co-variance matrix and project the data along those with the highest corresponding eigenvalues. This method is called PCA (principal component analysis, \cite{Marsland2009}) and has been a staple in the machine learning community for decades. The PCA defines a dimensionality reduction by a projection of the data along the major axes of variation. More formally we let $\mathbf{Z} = \langle \mathbb{X}^T\mathbf{X}\rangle$ be the covariance matrix of our data. The principal components, $\mathbf{p}_i$, are then the eigenvectors of $Z$ 
+
+\begin{equation}\label{eq:pca}
+\lambda_i \mathbf{Z} = \mathbf{p}_i \mathbf{Z},
+\end{equation}
+
+\noindent with eigenvalues $\lambda_i$. The immediately apparent problem with PCA is that it captures linear axes of variation, while the data might very well have non-linear relationships. In principle one can modify this property by using a kernel trick to evaluate the projections along kernelized principal components. Common choices for the kernel are the linear, $\mathbf{x}^T\mathbf{x}'$, and the Gaussian kernel, $e^{-||\mathbf{x} - \mathbf{x}'||^2_2}$. The representations of the data in the kernel space is never evaluated, we only compute the associated inner-product space allowing for high dimensional kernels to be used (\cite{Scholkopf1996}). 
+
+In practice methods with more flexibility have seen more use, but PCA is still often the first step in an exploratory analysis pipeline. Of the more flexible nonlinear methods we will focus on the the neural network, and more specifically the autoencoder. The neural network architecture known as autoencoders describe models which aim to achieve efficient information-bottlenecking of complex data by reconstruction. To enact an efficient information bottle-neck the auto-encoder enacts two non-linear mappings. One from the input dimension to a much lower dimensional projection, that is the map $\psi: \mathcal{R}^n \rightarrow \mathcal{R}^m,\, n >> m$, which we call the encoder network. The second part of the model then maps from the lower dimensional projection to the original dimension, i.e. $\phi: \mathcal{R}^m \rightarrow \mathcal{R}^n$, and is known as the decoder. And the objective of this model is the reconstruction of the input which means the compression map $\psi$ is optimized to capture salient information about the data. This compressions are interesting because they have been shown to convey semantic information through the compression given some restrictions on the compression that we discuss in the next chapter (\cite{Fertig}).
+
+In this thesis we will use autoencoder models to explore the semantic information when processing events from a nuclear physics experiment. We will explore both the case where no labeled data exists and where there exists some subset of labeled data. Autoencoders and how to encourage semantic information in the compressed representation is discussed in greater detail in section \ref{sec:autoencoder}
+
+\section{Unsupervised performance metrics}\label{sec:unsupervised_perf}
+
+When performing clustering and other unsupervised methods the goal is to estimate some class belonging without the model having knowledge of this correspondence between class and data. This disconnect makes measuring performance a little more abstract. In general there is a separation between performance metrics that assumes that one has access to ground-truth labels and those that do not. We will principally use the ARS (adjusted rand score) which formally defines the agreement between two separate clusterings adjusted for random chance. To compute the ARS we first need to define the contingency table, similar to the confusion matrix from classification, which lists the coinciding elements of one clustering with another. A general representation of this is shown in table \ref{tab:contingency}. 
+
+\begin{table}
+\centering
+\begin{tabular}{c|ccc}
+& $c_1$ &$c_2$ & $\cdots$\\
+\midrule
+$d_1$ & $n_{11}$ & $n_{12}$ &  $\cdots$ \\
+$d_2$ & $n_{21}$ & $n_{22}$ &  $\cdots$ \\
+$\vdots$ & $\vdots$ & \vdots & $\ddots$ \\
+\end{tabular}
+\caption{General form of a contingency table. $d_n$ and $c_n$ are classes measured by two different processes on the same data. The $n_{ij}$'s then describe how many samples are in clusters $d_i$ and simultaneously in $c_j$}\label{tab:contingency}
+\end{table}
+
+Introduced by \cite{Hubert1985} the ARS computes the agreement between the two clusterings $d_i$ and $c_j$. As with the supervised metrics we use the \lstinline{scikit-learn} implementation of the ARS (\cite{Pedregosa2011}). The computation is performed as shown in equation \ref{eq:ars}:
+
+\begin{equation}\label{eq:ars}
+\text{ARS} = \frac{\sum  \binom{n_{ij}}{2} - \left[\sum  \binom{x_{i}}{2} \sum  \binom{y_{j}}{2}  \right]/\binom{n}{2}}{\frac{1}{2}\left[\sum  \binom{x_{i}}{2} + \sum  \binom{y_{j}}{2}  \right]- \left[\sum  \binom{x_{i}}{2} \sum  \binom{y_{j}}{2}  \right]/\binom{n}{2}}.
+\end{equation}
+
+\noindent In equation \ref{eq:ars} we introduce the terms $x_i$ and $y_i$ which are just the row-wise and column wise sums of the the contingency table, respectively.
+
+If we take one of the clusterings to be a ground-truth measurement the ARS becomes a clear measure of performance. 

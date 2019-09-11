@@ -1,0 +1,7 @@
+% !TEX spellckeck=en_GB
+
+\chapter{Autoencoders}\label{sec:autoencoder}
+
+In the previous chapters we discussed the components which are commonly used to make neural network models. These include dense, convolutional and recurrent layers, as well as different types of activation functions and regularization techniques. In this chapter we will discuss the autoencoder family of deep learning algorithms. All of the algorithms discussed in this chapter are constructed using the elements from the previous chapter. But we frame them in a very general way such that we are free to implement the algorithms using convolutions, dense layers, or a combination of those depending on the problem at hand.
+
+As mentioned in the beginning of the previous chapter this thesis explores the feasibility of using latent spaces to model nuclear physics events. In the context of this thesis a latent space is a representation of the data when passed through a set of trained neural network layers. One way of training a latent space is by enacting a compression of the data and using this to reconstruct the original input; this is the essence of the autoencoder algorithms.

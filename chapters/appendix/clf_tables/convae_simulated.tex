@@ -1,48 +1,40 @@
-\chapter{Results on simulated data}
+\chapter{Hyper-parameter search results}\label{appendix:hyperparams}
 \setlength{\LTleft}{-0.9in}
-\begin{longtable}{llllllllllll}
+\savegeometry{thesis}
+\newgeometry{margin=0pt}
+\begin{landscape}
+\begin{table}
+\begin{tabular}{llllllllllllll}
+%\small
 \toprule
-\MyHead{0.7cm}{proton\\f1-score} & \MyHead{1.8cm}{N \\parameters} & \MyHead{0.9cm}{largest\\kernel} & \MyHead{0.6cm}{N\\layers} & \MyHead{1.5cm}{latent\\ dimension} & \MyHead{0.6cm}{latent\\loss} &\MyHead{1.5cm}{reconst\\-ruction loss} & \MyHead{2cm}{activation\\function} & \MyHead{1.5cm}{batch\\-norm} & $\beta$ & $\beta_1$ &  $\eta$  \\
-\midrule \endhead
-           0.99 &         4754 &             17 &        3 &              150 &        none &                 mse &                relu &     False &   1e-05 &      0.73 &  1e-05 \\
-           0.99 &         3798 &             13 &        6 &               50 &         mmd &                 bce &               lrelu &     False &   0.001 &      0.82 &  0.001 \\
-           0.98 &         3636 &             15 &        5 &              150 &         mmd &                 mse &               lrelu &     False &   1e-05 &      0.69 &  1e-05 \\
-           0.98 &         2408 &             11 &        3 &                3 &         mmd &                 bce &                relu &      True &     0.1 &      0.56 &    0.1 \\
-           0.98 &          760 &              7 &        5 &              150 &        none &                 bce &               lrelu &      True &   1e-05 &      0.25 &  1e-05 \\
-           0.96 &         1712 &              7 &        3 &              200 &         mmd &                 mse &                relu &     False &     0.1 &      0.43 &    0.1 \\
-           0.95 &         1740 &             11 &        5 &               50 &         mmd &                 bce &                relu &     False &  0.0001 &      0.53 & 0.0001 \\
-           0.94 &          464 &              7 &        5 &              100 &         mmd &                 mse &                relu &     False &  0.0001 &      0.69 & 0.0001 \\
-           0.94 &         5194 &             15 &        4 &               50 &        none &                 mse &                relu &      True &     0.1 &      0.93 &    0.1 \\
-           0.92 &         9266 &             17 &        5 &               10 &        none &                 bce &                relu &      True &   1e-05 &      0.32 &  1e-05 \\
-           0.92 &          272 &              5 &        5 &               50 &         mmd &                 bce &                relu &     False &   0.001 &      0.46 &  0.001 \\
-           0.91 &         4770 &             11 &        5 &              200 &         kld &                 bce &                relu &      True &    0.01 &      0.67 &   0.01 \\
-            0.9 &         7346 &             17 &        4 &              150 &         mmd &                 mse &                relu &      True &  0.0001 &      0.71 & 0.0001 \\
-            0.9 &         1524 &             11 &        4 &               10 &        none &                 bce &               lrelu &      True &   0.001 &      0.51 &  0.001 \\
-           0.89 &          688 &              5 &        3 &               50 &         mmd &                 bce &               lrelu &     False &     0.1 &      0.81 &    0.1 \\
-           0.88 &         3676 &             15 &        4 &               20 &         kld &                 bce &               lrelu &     False &  0.0001 &      0.28 & 0.0001 \\
-           0.83 &          562 &              7 &        6 &              200 &         mmd &                 mse &               lrelu &     False &   0.001 &      0.37 &  0.001 \\
-           0.81 &         7316 &             11 &        6 &               20 &         kld &                 bce &                relu &     False &     0.1 &      0.63 &    0.1 \\
-           0.79 &         3546 &             17 &        5 &               50 &        none &                 bce &               lrelu &     False &  0.0001 &      0.85 & 0.0001 \\
-           0.76 &         1112 &             11 &        5 &              100 &        none &                 mse &                relu &     False &  0.0001 &      0.92 & 0.0001 \\
-           0.75 &         3416 &              9 &        6 &               10 &         mmd &                 bce &               lrelu &     False &    0.01 &      0.77 &   0.01 \\
-           0.74 &          676 &              5 &        3 &              150 &         mmd &                 mse &               lrelu &     False &    0.01 &      0.57 &   0.01 \\
-           0.67 &          154 &              5 &        5 &               20 &        none &                 mse &                relu &     False &   0.001 &      0.93 &  0.001 \\
-           0.65 &          108 &              3 &        6 &              100 &         mmd &                 mse &               lrelu &     False &   1e-05 &      0.22 &  1e-05 \\
-           0.65 &        14904 &             17 &        6 &              200 &        none &                 mse &                relu &      True &   1e-05 &      0.63 &  1e-05 \\
-           0.59 &         6280 &             13 &        6 &               20 &         kld &                 mse &                relu &      True &     0.1 &      0.63 &    0.1 \\
-           0.57 &         7008 &             17 &        4 &               10 &         kld &                 bce &               lrelu &      True &     0.1 &      0.82 &    0.1 \\
-           0.55 &         1480 &              7 &        5 &              200 &         kld &                 mse &                relu &     False &  0.0001 &      0.61 & 0.0001 \\
-           0.53 &         6656 &             11 &        6 &              100 &         kld &                 mse &                relu &     False &  0.0001 &      0.39 & 0.0001 \\
-           0.53 &         5984 &             13 &        6 &              200 &         mmd &                 mse &               lrelu &     False &    0.01 &      0.82 &   0.01 \\
-           0.52 &        12824 &             13 &        6 &              200 &         kld &                 mse &               lrelu &     False &   0.001 &      0.77 &  0.001 \\
-           0.52 &          688 &              5 &        3 &                3 &         mmd &                 bce &                relu &     False &  0.0001 &      0.25 & 0.0001 \\
-           0.51 &         1314 &              9 &        5 &              200 &         kld &                 mse &               lrelu &      True &    0.01 &       0.8 &   0.01 \\
-            0.5 &         5140 &             15 &        6 &                3 &         mmd &                 bce &                relu &     False &  0.0001 &      0.46 & 0.0001 \\
-            0.5 &          216 &              3 &        6 &                3 &         kld &                 bce &               lrelu &      True &  0.0001 &      0.25 & 0.0001 \\
-            0.5 &          626 &              5 &        3 &              150 &         kld &                 mse &                relu &     False &     0.1 &      0.91 &    0.1 \\
-           0.46 &         1276 &             11 &        3 &               50 &         kld &                 mse &                relu &      True &   0.001 &      0.84 &  0.001 \\
-           0.45 &         1636 &              7 &        4 &              150 &         kld &                 bce &                relu &     False &   0.001 &      0.45 &  0.001 \\
-              0 &         4658 &             13 &        4 &              200 &        none &                 bce &               lrelu &     False &   1e-05 &      0.28 &  1e-05 \\
+      F1 score &             $L_x$ &             $L_z$ & N parameters & largest kernel & N layers & latent dimension & latent loss & reconstruction loss & activation function & batchnorm &          $\beta$ &      $\beta_1$ &           $\eta$ \\
+\midrule
+$\num{ 0.99 }$ & $\num{ 0.00032 }$ &   $\num{ 1e+05 }$ &         4754 &             17 &        3 &              150 &        none &                 mse &                relu &     False &  $\num{ 1e-05 }$ & $\num{ 0.73 }$ &  $\num{ 1e-05 }$ \\
+$\num{ 0.99 }$ & $\num{ 1.1e+03 }$ &      $\num{ 34 }$ &         3798 &             13 &        6 &               50 &         mmd &                 bce &               lrelu &     False &  $\num{ 0.001 }$ & $\num{ 0.82 }$ &  $\num{ 0.001 }$ \\
+$\num{ 0.98 }$ & $\num{ 0.00063 }$ & $\num{ 0.00028 }$ &         3636 &             15 &        5 &              150 &         mmd &                 mse &               lrelu &     False &  $\num{ 1e-05 }$ & $\num{ 0.69 }$ &  $\num{ 1e-05 }$ \\
+$\num{ 0.98 }$ & $\num{ 1.1e+03 }$ &    $\num{ 0.84 }$ &         2408 &             11 &        3 &                3 &         mmd &                 bce &                relu &      True &    $\num{ 0.1 }$ & $\num{ 0.56 }$ &    $\num{ 0.1 }$ \\
+$\num{ 0.97 }$ & $\num{ 1.7e+02 }$ &   $\num{ 1e+05 }$ &          760 &              7 &        5 &              150 &        none &                 bce &               lrelu &      True &  $\num{ 1e-05 }$ & $\num{ 0.25 }$ &  $\num{ 1e-05 }$ \\
+$\num{ 0.97 }$ &  $\num{ 0.0011 }$ &  $\num{ 0.0038 }$ &         1712 &              7 &        3 &              200 &         mmd &                 mse &                relu &     False &    $\num{ 0.1 }$ & $\num{ 0.43 }$ &    $\num{ 0.1 }$ \\
+$\num{ 0.95 }$ & $\num{ 1.6e+02 }$ &      $\num{ 34 }$ &         1740 &             11 &        5 &               50 &         mmd &                 bce &                relu &     False & $\num{ 0.0001 }$ & $\num{ 0.53 }$ & $\num{ 0.0001 }$ \\
+$\num{ 0.94 }$ & $\num{ 0.00076 }$ & $\num{ 0.00075 }$ &          464 &              7 &        5 &              100 &         mmd &                 mse &                relu &     False & $\num{ 0.0001 }$ & $\num{ 0.69 }$ & $\num{ 0.0001 }$ \\
+$\num{ 0.94 }$ &  $\num{ 0.0011 }$ &   $\num{ 1e+05 }$ &         5194 &             15 &        4 &               50 &        none &                 mse &                relu &      True &    $\num{ 0.1 }$ & $\num{ 0.93 }$ &    $\num{ 0.1 }$ \\
+$\num{ 0.92 }$ & $\num{ 1.9e+02 }$ &   $\num{ 1e+05 }$ &         9266 &             17 &        5 &               10 &        none &                 bce &                relu &      True &  $\num{ 1e-05 }$ & $\num{ 0.32 }$ &  $\num{ 1e-05 }$ \\
+$\num{ 0.92 }$ & $\num{ 2.5e+02 }$ &   $\num{ 0.034 }$ &          272 &              5 &        5 &               50 &         mmd &                 bce &                relu &     False &  $\num{ 0.001 }$ & $\num{ 0.46 }$ &  $\num{ 0.001 }$ \\
+$\num{ 0.91 }$ & $\num{ 3.2e+02 }$ & $\num{ 1.5e+02 }$ &         4770 &             11 &        5 &              200 &         kld &                 bce &                relu &      True &   $\num{ 0.01 }$ & $\num{ 0.67 }$ &   $\num{ 0.01 }$ \\
+$\num{ 0.91 }$ &  $\num{ 0.0003 }$ &    $\num{ 0.01 }$ &          688 &              5 &        4 &              150 &         mmd &                 mse &                relu &      True &  $\num{ 0.001 }$ & $\num{ 0.62 }$ &  $\num{ 0.001 }$ \\
+ $\num{ 0.9 }$ & $\num{ 1.5e+02 }$ &   $\num{ 1e+05 }$ &         1524 &             11 &        4 &               10 &        none &                 bce &               lrelu &      True &  $\num{ 0.001 }$ & $\num{ 0.51 }$ &  $\num{ 0.001 }$ \\
+ $\num{ 0.9 }$ & $\num{ 0.00033 }$ &  $\num{ 0.0013 }$ &         7346 &             17 &        4 &              150 &         mmd &                 mse &                relu &      True & $\num{ 0.0001 }$ & $\num{ 0.71 }$ & $\num{ 0.0001 }$ \\
+$\num{ 0.89 }$ & $\num{ 1.1e+03 }$ &   $\num{ 0.034 }$ &          688 &              5 &        3 &               50 &         mmd &                 bce &               lrelu &     False &    $\num{ 0.1 }$ & $\num{ 0.81 }$ &    $\num{ 0.1 }$ \\
+$\num{ 0.88 }$ & $\num{ 3.8e+02 }$ & $\num{ 9.1e-06 }$ &         3676 &             15 &        4 &               20 &         kld &                 bce &               lrelu &     False & $\num{ 0.0001 }$ & $\num{ 0.28 }$ & $\num{ 0.0001 }$ \\
+$\num{ 0.83 }$ & $\num{ 0.00079 }$ &  $\num{ 0.0092 }$ &          562 &              7 &        6 &              200 &         mmd &                 mse &               lrelu &     False &  $\num{ 0.001 }$ & $\num{ 0.37 }$ &  $\num{ 0.001 }$ \\
+$\num{ 0.81 }$ & $\num{ 7.3e+02 }$ &   $\num{ 1e+05 }$ &         7316 &             11 &        6 &               20 &         kld &                 bce &                relu &     False &    $\num{ 0.1 }$ & $\num{ 0.63 }$ &    $\num{ 0.1 }$ \\
+ $\num{ 0.8 }$ & $\num{ 1.1e+03 }$ &   $\num{ 1e+05 }$ &         3546 &             17 &        5 &               50 &        none &                 bce &               lrelu &     False & $\num{ 0.0001 }$ & $\num{ 0.85 }$ & $\num{ 0.0001 }$ \\
 \bottomrule
+\end{tabular}
+
 \caption{Randomsearch runs for the convolutional autoencoder sorted by the resulting proton f1 score of the logistic regression classifier using the latent samples to classify event-types. We note the high occurrence of the maximum mean discrepancy with the higher performing classifications. We also note that simply no latent loss is able to achieve near perfect proton f1 scores.}\label{tab:convae_randomsearch}
-\end{longtable}
+\end{table}
+\end{landscape}
+
+\clearpage
+\loadgeometry{thesis}
