@@ -1,0 +1,83 @@
+\section{Deep clustering algorithms}\label{sec:convae_clustering}
+
+In the previous section we demonstrated a potential for clustering of events from the AT-TPC experiment. To build on this result we will in this section explore the application of the MIXAE (mixture of autoencoders) algorithm introduced in section \ref{sec:deep_clustering}. The other algorithm introduced in section \ref{sec:deep_clustering}, DCEC (deep clustering with convolutional autoencoders), consistently collapsed to just one cluster for all datasets.
+
+In the MIXAE algorithm the hyper-parameters to adjust are all the ordinary parameters that we introduced in table \ref{tab:convae_hyperparams}. In addition to those parameters come the weighting of the loss terms: $\theta$, $\alpha$ and $\gamma$. These weighting parameters are attached to the reconstruction loss, sample entropy and batch-wise entropy respectively. \cite{Zhang} note that these parameters are very important for the model performance and so we focus primarily on these. 
+
+We empirically freeze the convolutional autoencoder hyperparameters to compress the original $128 \times 128$ to a $8 \times 8$ pixel grid using four convolutional layers. The parameters chosen for the autoencoders are listed in full in table \ref{tab:mixe_ae_hyperparams} 
+
+
+\begin{table}[H]
+\centering
+\caption{Hyperparameters selected for the autoencoder components of the MIXAE algorithm, see table \ref{tab:convae_hyperparams} for a full description of the parameters.}\label{tab:mixe_ae_hyperparams}
+\setlength{\extrarowheight}{15pt}
+\hspace*{-0.5in}
+\begin{tabular}{ll}
+\toprule
+Hyperparameter & Value \\
+\midrule
+\multicolumn{2}{l}{Convolutional parameters: } \\
+\midrule
+Number of layers & $4$ \\
+Kernels & $[3,\,3,\,3,\,3]$\\
+Strides & $[2,\,2,\,2,\,2]$ \\
+Filters & $[64,\, 32, \,16, \,8,]$ \\ 
+\midrule
+\multicolumn{2}{l}{Network parameters: } \\
+\midrule
+Activation & LRelu \\
+Latent type & None \\
+Latent dimension & 20  \\
+$\beta$ & N/A \\
+Batchnorm & False \\
+\midrule
+\multicolumn{2}{l}{Optimizer parameters: } \\
+\midrule
+$\eta$ & $10^{-3}$ \\
+$\beta_1$ & $0.9$ \\
+$\beta_2$ & $0.99$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Since there are then only three remaining hyperparameters we choose to perform a coarse grid-search as described in section \ref{sec:hyperparam_search_arch}.
+
+\begin{table}
+\centering
+\caption{Hyperparameter grid for the MIXAE loss weighting terms}\label{tab:mixae_loss_weights}
+\begin{tabular}{lll}
+\toprule
+Parameter & Grid & Scale \\
+\midrule 
+$\theta$ & $[-1,\, 5]$ & Logarithmic \\
+$\alpha$ & $[-5,\, -1]$ & Logarithmic \\
+$\gamma$ & $[3,\, 5]$ & Logarithmic
+\end{tabular}
+\end{table}
+
+In contrast with earlier sections we present separate sections for each of the datasets. We begin by considering simulated AT-TPC data
+
+\subsection{Simulated AT-TPC data}
+
+In the clustering algorithm we use the large simulated dataset with $M=80000$ points, evenly distributed between proton- and carbon-events. The algorithm is trained on a subset of $60000$ of these samples, and we track performance on the remaining $20000$ events. 
+
+The grids selected for the search are listed in table \ref{tab:mixae_loss_weights}. The search yielded an optimal configuration with 
+
+\begin{align}
+\theta = 10^{-1}, \\
+\alpha = 10^{-2}, \\
+\gamma = 10^5.
+\end{align}
+
+Finally, for these parameters we re-ran the algorithm $N=10$ times to investigate the stability of the algorithm. The results are reported in figure \ref{fig:mixae_sim}. We observe that while the algorithm can achieve very strong performance, i.e. $ARI > 0.8$, it fluctuates strongly. As the batch entropy is consistently low it is not clear how to couple the unsupervised performance with the consistency with the ground truth labels.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{./plots/sim_mixae.pdf}
+\caption{Performance for the MIXAE model on simulated AT-TPC data. In the top row the loss components are plotted for each run, and in the bottom row the ARI (adjusted rand index) and clustering accuracy are shown. Each run is color-coded with the ARI achieved at the end of the run. }\label{fig:mixae_sim}
+\end{figure}
+
+\subsection{Filtered AT-TPC data}
+
+
+\subsection{Full AT-TPC data}
