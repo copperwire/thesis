@@ -42,7 +42,7 @@ The fundamental challenge that DCEC faces is that it is dependent on a K-means s
 
 Another way of representing the clusters is by having multiple latent spaces representing the underlying manifolds that describe each class. This is the central idea in the MIXAE (Mixture of autoencoders) algorithm, introduced by  \cite{Zhang}. To ensure that each autoencoder represents a cluster a soft-max classifier is coupled with the set of latent samples. The soft-max classifier is trained to output cluster probabilities, and penalized for collapsing to assigning one cluster only. To connect the cluster probabilities to the reconstruction a multiplier by the cluster confidence is attached to the reconstruction error of each autoencoder.
 
-More formally let $\{\mathbf{z}_j^{(i)}\}^N$ be the set of $N$ latent samples from each of the $N$ auto-encoders from a single sample $\hat{\mathbf{x}}^{(i)} \in \R ^{t\times v}$. Furthermore, let the soft cluster assignments be given as $\{p_j^{(i)}\}^N$ and the reconstructed samples be given as $\{\mathbf{x}_j^{(i)}\}$. The reconstruction loss is then the sum over each autoencoder multiplied with each cluster assignment, i.e.
+More formally let $\{\mathbf{z}_j^{(i)}\}^N$ be the set of $N$ latent samples from each of the $N$ auto-encoders from a single sample image $\hat{\mathbf{x}}^{(i)} \in \R ^{t\times v}$ with height $t$ and width $v$. Furthermore, let the soft cluster assignments be given as $\{p_j^{(i)}\}^N$ and the reconstructed samples be given as $\{\mathbf{x}_j^{(i)}\}$. The reconstruction loss is then the sum over each autoencoder multiplied with each cluster assignment, i.e.
 
 \begin{equation}\label{eq:mixae_reconst}
 \mathcal{L}_x = \sum_j p_j^{(i)} \mathcal{C}(\mathbf{x}_j^{(i)}, \hat{\mathbf{x}}^{(i)}),

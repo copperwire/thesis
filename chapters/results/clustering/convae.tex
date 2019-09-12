@@ -79,5 +79,30 @@ Finally, for these parameters we re-ran the algorithm $N=10$ times to investigat
 
 \subsection{Filtered AT-TPC data}
 
+We repeat the optimization steps in the previous section for the filtered AT-TPC data. Beginning with a wide grid equal to the grid used for the simulated data we searched over all parameter configurations to find promising values. We then performed a local search around these values to pin-point the hyperparameter configuration. This search yielded the optimal hyper-parameters 
+
+\begin{align}
+\theta &= 10^{1}, \\
+\alpha &= 10^{-1}, \\
+\gamma &= 3.162\times 10^3.
+\end{align}
+
+\noindent The results of the runs are included in figure \ref{fig:mixae_clean}. We observe ghat the highest performing models reach an $ARI > 0.5$, which is higher than the performance achieved by the K-means algorithm applied to the VGG16 latent space. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{./plots/clean_mixae.pdf}
+\caption{Performance for the MIXAE model on filtered AT-TPC data. In the top row the loss components are plotted for each run, and in the bottom row the ARI (adjusted rand index) and clustering accuracy are shown. Each run is color-coded with the ARI achieved at the end of the run.}\label{fig:mixae_clean}
+\end{figure}
+
 
 \subsection{Full AT-TPC data}
+
+Like the two previous sections we repeat the same procedure of iterative grid searches on the MIXAE loss-weights. Each configuration is re-run a total of $N=10$ times to capture fluctuations in the performance before a final selection is made on the hyperparameters. For the full dataset the MIXAE hyperparameters converge to the same values as for the clean data, i.e. 
+
+
+\begin{align}
+\theta &= 10^{1}, \\
+\alpha &= 10^{-1}, \\
+\gamma &= 3.162\times 10^3.
+\end{align}
