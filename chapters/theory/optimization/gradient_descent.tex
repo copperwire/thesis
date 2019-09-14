@@ -64,6 +64,8 @@ The first problem of multiple local minima has a proposed solution that to physi
 \noindent Each $\mathbf{v}_t$ is then an exponentially weighted average over all the previous gradients. This representation indicates that the factor $1-\beta$ controls how much of a view there is backwards in the iteration. Leading to the conclusion that $\beta$ must be reasonably restricted to $\beta \in [0, 1]$ to avoid overpowering the new gradient. How many steps in the past sequence that this average "sees" we illustrate in figure \ref{fig:beta}. Adding momentum is then a partial answer to the challenge of how to overcome both local minima and saddle regions in the loss function curvature. To summarize we list the parameters that need tuning for a gradient descent with momentum in table \ref{tab:momentum}
 
 \begin{table}
+\centering
+\caption{Hyperparameter table for momentum gradient descent. These parameters have to be tuned without gradient information, we discuss ways to achieve this in section \ref{sec:hyperparams}}\label{tab:momentum}
 \begin{tabular}{cccl}
 \toprule
 Name &Default value & Scale  & Description\\
@@ -72,7 +74,6 @@ $\beta$  & $0.9$ & Gaussian normal & Exponential decay rate of the momentum step
 $\eta$  & $10^{-3}$ & Linear & Weight of the momentum update \\
 \bottomrule
 \end{tabular}
-\caption{Hyperparameter table for momentum gradient descent. These parameters have to be tuned without gradient information, we discuss ways to achieve this in section \ref{sec:hyperparams}}\label{tab:momentum}
 \end{table}
 
 
