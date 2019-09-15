@@ -159,6 +159,6 @@ D_{KL}(q||p) = \frac{1}{2} \sum_i -\log \sigma_i^2 - 1 + \sigma^2_i + \mu_i^2 .
 
 \noindent We note that equation \ref{eq:kl_opt} satisfies the equality that the divergence is zero when the target and model distributions are equal. An important feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. Which was the topic of the argument presented by \citet{Zhao} when proposing alternate measures for regularizing the latent space. The intuitive alternative to a point-wise measurement is comparing the moments of the distribution and minimize their difference. 
 
-\subsection{Mode collapse}
+\subsection{Mode collapse}\label{sec:mode_collapse}
 
 When training a VAE we are balancing the evidence and prior latent distribution loss terms. \citet{Kingma2013} note that equation \ref{eq:vae_cost} is unbalanced in favor of the latent space regularization. As a consequence the un-weighted loss suffers from mode collapse. When the reconstruction is under-valued in the optimization the model will quickly learn the prior, without encoding the input. As the prior has become uninformative the decoder proceeds to learn a rough representation that covers as many of the outputs as possible. This can often visually be identified by the output being a vague cloud with some distinct regions. 

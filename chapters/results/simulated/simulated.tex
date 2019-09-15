@@ -18,6 +18,7 @@ The classifier was a logistic regression model from the \lstinline{scikit-learn}
 
 \begin{table}
 \centering
+\caption{Hyperparameters that gives the strongest performance with the least complexity on the simulated events. The configuration chosen is listed in appendix \ref{tab:convae_randomsearch}}\label{tab:param_vals_sim_convae}
 \setlength{\extrarowheight}{15pt}
 \hspace*{-0.5in}
 \begin{tabular}{ll}
@@ -45,7 +46,6 @@ $\beta_1$ & $0.55$ \\
 $\beta_2$ & $0.99$ \\
 \bottomrule
 \end{tabular}
-\caption{Hyperparameters that gives the strongest performance with the least complexity on the simulated events. The configuration chosen is listed in appendix \ref{tab:convae_randomsearch}}\label{tab:param_vals_sim_convae}
 \end{table}
 
 Furthermore we wish to estimate the variability of the highest performing model. To achieve this we then re-ran the convolutional autoencoder $N=10$ times using the configuration listed in table \ref{tab:param_vals_sim_convae}. The model performs strongly with very little variation in the proton $f1$ scores. We list the $f1$ scores by class in table \ref{tab:clf_simulated} and display the associated loss curves in figure \ref{fig:best_model_sim_clf}.

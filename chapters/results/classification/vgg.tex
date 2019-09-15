@@ -4,6 +4,7 @@ As outlined in section \ref{sec:architectures} the pre-trained VGG16 network wil
 
 \begin{table}
 \centering
+\caption[VGG classification results]{Logistic regression classification results using the VGG16 representation of the labeled data listed in section \ref{sec:data}. The error is given as the standard deviation in the $f1$ score over the $K=5$ folds of cross validation.}\label{tab:vgg_results}
 \begin{tabular}{lllll}
 \toprule
 {} & Proton & Carbon & Other & All \\
@@ -13,7 +14,6 @@ Filtered  &  $\underset{\num{+- 5.108e-02 }  }{\num{ 0.918 } }$ &  $\underset{\n
 Full      &  $\underset{\num{+- 4.653e-02 }  }{\num{ 0.84 } }$ &  $\underset{\num{+- 4.860e-02 }  }{\num{ 0.668 } }$ &  $\underset{\num{+- 1.730e-02 }  }{\num{ 0.89 } }$ &  $\underset{\num{+- 3.748e-02 }  }{\num{ 0.799 } }$ \\
 \bottomrule
 \end{tabular}
-\caption[VGG classification results]{Logistic regression classification results using the VGG16 representation of the labeled data listed in section \ref{sec:data}. The error is given as the standard deviation in the $f1$ score over the $K=5$ folds of cross validation.}\label{tab:vgg_results}
 \end{table}
 
  Additionally the scarceness of labeled data begs the question of how much labeled data is needed to achieve strong classification. To estimate this relationship we sample increasing subsets of the labeled data, each containing the previously selected data. For each selection a logistic regression model is fit and a $f1$ core is computed. This procedure is sensitive to which subset selected for fitting first and so a variability estimate is computed by running this procedure $N=100$ times. We report the mean and standard deviation for each dataset. The result of this analysis is shown in figure \ref{fig:vgg_n_samples}

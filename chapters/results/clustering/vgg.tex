@@ -16,6 +16,7 @@ In addition to the performance measures reported in table \ref{tab:clstr_vgg} it
 
 \begin{figure}
 \centering
+\caption[Pre-trained network - confusion matrices]{Confusion matrices for the K-means clustering of simulated, filtered and full AT-TPC events. The true labels indicate samples belonging to the p (proton), C (carbon), or other classes. }\label{fig:clster_confmat}
 	\subfloat{
 	\includegraphics[width=0.35\textwidth]{./plots/Simulatedconf_mat.pdf}
 
@@ -28,7 +29,6 @@ In addition to the performance measures reported in table \ref{tab:clstr_vgg} it
 	\subfloat{
 	\includegraphics[width=0.35\textwidth]{plots/Fullconf_mat.pdf}
 }
-\caption[Pre-trained network - confusion matrices]{Confusion matrices for the K-means clustering of simulated, filtered and full AT-TPC events. The true labels indicate samples belonging to the p (proton), C (carbon), or other classes. }\label{fig:clster_confmat}
 \end{figure}
 
-We repeat this analysis using a PCA dimensionality reduction on the latent space of the VGG16 model. This is done to estimate to what degree the class separating information is encoded in the entirety of the latent space, or in some select regions. The results from the PCA analysis were virtually identical to the results sans the PCA, and so we omit them for brevity. 
+We repeat this analysis using a PCA dimensionality reduction on the latent space of the VGG16 model. This is done to estimate to what degree the class separating information is encoded in the entirety of the latent space, or in some select regions. The results from the PCA analysis were virtually identical to the results sans the PCA, and so we omit them for brevity. In addition to the results presented in this section we performed clustering with a number of different algorithms included in the \lstinline{scikit-learn} package. None of them provided any notable differences from the K-means results or were significantly worse. Notably, the DBSCAN algorithm failed to provide any useful clustering results. We find this important as one of the major drawbacks of K-means, and the deep clustering algorithms presented in section \ref{sec:deep_clustering}, are all dependent on pre-determining the number of clusters, while this is not the case for DBSCAN. 
