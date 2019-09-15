@@ -1,1 +1,9 @@
 \section{Clustering of AT-TPC events}
+
+From the semi-supervised results we know that we can construct class separating latent spaces. The challenge is that, while linear separability is not a sufficient characteristic for the application of clustering methods. We begin by considering the results from clustering on the pre-trained VGG16 model latent space. 
+
+\subsection{Clustering with a pre-trained network}
+
+What is immediately clear from the results in table \ref{tab:clstr_vgg} is that the VGG16 latent space is able to capture the differing events, achieving an ARI (adjusted rand index) score of $>0.88$. Recall that the ARI is a measure of clustering similarities, adjusted for chance. A particularly interesting aspect of the clustering is the ability to cluster despite the very high-dimensional latent space. As previously mentioned Euclidean vector distances are in general problematic in high dimensional spaces as shown by \cite{Aggarwal}. We can explain a part of this behavior by the fact that a vast majority, on the order of $\sim 80\%$, of the entries in the latent vectors are zero valued. However, that leaves some $\sim \num{1.5e3}$ non-zero elements per sample, which is still very much a high dimensional representation. For the Euclidean norm to have discriminatory power we must then infer that the space contains some very dense regions in-between regions of very small density. In such a configuration the ratios between distances will not tend to unity, and we find some success with K-means clustering.
+
+We then consider the confusion matrices shown in figure \ref{fig:clster_confmat}. From these matrices we can infer some interesting properties about the  
