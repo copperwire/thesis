@@ -14,6 +14,7 @@ To aid in the understanding of the choice of architecture we compare the similar
 
 \begin{table}
 \centering
+\caption{Hyperparameters that gives the strongest classifier performance on the three simulated, filtered and full datasets.}\label{tab:best_params_clf_convae}
 \setlength{\extrarowheight}{15pt}
 \hspace*{-0.5in}
 \begin{tabular}{llll}
@@ -42,7 +43,6 @@ $\beta_1$ & $0.73$ & $0.72$ & $0.25$ \\
 $\beta_2$ & $0.99$ & $0.99$ & $0.99$ \\
 \bottomrule
 \end{tabular}
-\caption{Hyperparameters that gives the strongest classifier performance on the three simulated, filtered and full datasets.}\label{tab:best_params_clf_convae}
 \end{table}
 
 For the best models found by random search we re-compute the performance with $K=5$ fold cross validation on the logistic regression classifier. We begin with the model using no information from the VGG16 benchmark, i.e. configuration \ref{item:clf_no_vgg}. It shows strong performance on the classification task for all datasets. The results are listed in table \ref{tab:clf_no_vgg}

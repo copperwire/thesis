@@ -5,6 +5,7 @@
 \begin{landscape}
 \begin{table}
 \begin{tabular}{llllllllllllll}
+\caption{Randomsearch runs for the convolutional autoencoder sorted by the resulting proton f1 score of the logistic regression classifier using the latent samples to classify event-types. We note the high occurrence of the maximum mean discrepancy with the higher performing classifications. We also note that simply no latent loss is able to achieve near perfect proton f1 scores.}\label{tab:convae_randomsearch}
 %\small
 \toprule
       F1 score &             $L_x$ &             $L_z$ & N parameters & largest kernel & N layers & latent dimension & latent loss & reconstruction loss & activation function & batchnorm &          $\beta$ &      $\beta_1$ &           $\eta$ \\
@@ -32,7 +33,7 @@ $\num{ 0.81 }$ & $\num{ 7.3e+02 }$ &   $\num{ 1e+05 }$ &         7316 &         
 \bottomrule
 \end{tabular}
 
-\caption{Randomsearch runs for the convolutional autoencoder sorted by the resulting proton f1 score of the logistic regression classifier using the latent samples to classify event-types. We note the high occurrence of the maximum mean discrepancy with the higher performing classifications. We also note that simply no latent loss is able to achieve near perfect proton f1 scores.}\label{tab:convae_randomsearch}
+
 \end{table}
 \end{landscape}
 

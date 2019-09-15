@@ -27,8 +27,12 @@
 \usepackage{adjustbox}
 \usepackage[section]{placeins}
 \usepackage{pdflscape}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[backend=biber]{biblatex}
+%\usepackage{natbib}
+%\usepackage[super]{cite}
 
-%\usepackage{subcaption}
 
 
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -37,10 +41,8 @@
 \newcommand\MyHead[2]{\multicolumn{1}{l}{\parbox{#1}{\centering #2}}}
 % set python environment 
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
 
-
+%\addbibresource{link.bib}
 
 \usepackage{xcolor}
 \definecolor{maroon}{cmyk}{0, 0.87, 0.68, 0.32}
@@ -212,12 +214,15 @@ Sanity: Maiken \\
 \subimport*{chapters/theory/neural_network/}{neural_network.tex}
 \subimport*{chapters/theory/neural_network/}{convolution.tex}
 \subimport*{chapters/theory/neural_network/}{rnn.tex}
+\subimport*{chapters/theory/}{model_architecture}
+
+\subimport*{chapters/theory/autoencoder/}{intro_autoenc.tex}
 \subimport*{chapters/theory/autoencoder/}{autoencoder.tex}
 \subimport*{chapters/theory/autoencoder/}{regularizing_latent.tex}
 \subimport*{chapters/theory/autoencoder/}{draw.tex}
 \subimport*{chapters/theory/autoencoder/}{deep_clustering.tex}
 
-\subimport*{chapters/theory/}{model_architecture}
+
 % \subimport*{chapters/theory/}{todo.tex}
 
 % Experimental context and background
@@ -257,14 +262,15 @@ Sanity: Maiken \\
 \begin{appendices}
 \subimport{chapters/appendix/maths/}{kl_divergence}
 \subimport{chapters/appendix/architectures/}{vgg}
-\subimport{chapters/appendix/clf_tables/}{convae_simulated}
+%\subimport{chapters/appendix/clf_tables/}{convae_simulated}
 \end{appendices}
 
 \subimport*{chapters/notes/}{notes.tex}
 
 
 % \bibliographystyle{te}
-\bibliographystyle{apalike}
+\bibliographystyle{plainnat}
 \bibliography{link.bib}
+%\printbibliography
 
 \end{document}
