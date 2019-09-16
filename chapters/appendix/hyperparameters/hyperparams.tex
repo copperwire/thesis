@@ -1,0 +1,67 @@
+\chapter{Model hyperparameters}
+
+The convolutional autoencoder and the deep recurrent attentive writer each have many hyperparameters that need to be specified. We provide a complete listing with descriptions in tables \ref{tab:convae_hyperparams} and \ref{tab:draw_hyperparams}.
+
+
+
+\begin{table}
+\centering
+\caption{Detailing the hyperparameters that need to be determined for the convolutional autoencoder. The depth and number of filters strongly influence the number of parameters in the network. For all the search-types we follow heuristics common in the field, the network starts with larger kernels and smaller numbers of filters etc.}\label{tab:convae_hyperparams}
+\setlength{\extrarowheight}{15pt}
+\hspace*{-0.5in}
+\begin{tabular}{lll}
+\toprule
+Hyperparameter & Scale & Description \\
+\midrule
+\multicolumn{3}{l}{Convolutional parameters: } \\
+\midrule
+Number of layers & Linear integer & \makecell[l]{A number describing how many \\ convolutional layers to use }\\
+Kernels & Set of linear integers & \makecell[l]{An array describing the kernel size for \\ each layer} \\
+Strides & Set of linear integers & An array describing the stride for each layer \\
+Filters & Set of logarithmic integers & \makecell[l]{An array describing the number of filters \\ for each layer} \\ 
+\midrule
+\multicolumn{3}{l}{Network parameters: } \\
+\midrule
+Activation & Multinomial & \makecell[l]{An activation function as detailed in  \\ section \ref{sec:activation}} \\
+Latent type & Multinomial & \makecell[l]{One of the latent space regularization \\techniques (KLD, MMD, clustering loss)} \\
+Latent dimension & Integer & The dimensionality of the latent space \\
+$\beta$ & Logarithmic int & Weighting parameter for the latent term \\
+Batchnorm & Binary & Whether to use batch-normalization in each layer \\
+\midrule
+\multicolumn{3}{l}{Optimizer parameters: } \\
+\midrule
+$\eta$ & Logarithmic float & Learning rate, described in \ref{sec:gd} \\
+$\beta_1$ & Linear float & Momentum parameter, described in \ref{sec:momentum_gd} \\
+$\beta_2$ & Linear float & \makecell[l]{Second moment momentum parameter. \\ Described in \ref{sec:adam}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Hyperparameters for the draw algorithm as outlined in section \ref{sec:draw}. The implementation of the convolutional read and write functions is a novel contribution to the DRAW algorithm. We investigate which read/write paradigm is most useful for classification and clustering. Additionally as a measure ensuring the comparability of latent sample we fix the $\delta$ parameter determining the glimpse size. The effect of $\delta$ is explored in detail in the paper by \citet{Gregor2015} and in the earlier section \ref{sec:draw}.}\label{tab:draw_hyperparams}
+\setlength{\extrarowheight}{15pt}
+\hspace*{-0.5in}
+\begin{tabular}{lll}
+\toprule
+Hyperparameter & Scale & Description \\
+\midrule
+\multicolumn{3}{l}{Recurrent parameters: } \\
+\midrule
+Read\/write functions & Binary & \makecell[l]{One of attention or convolutional describing  \\ the way draw looks and adds to the canvas.} \\
+Nodes in recurrent layer & Integer & Describing the number of cells in the LSTM cells \\
+\midrule
+\multicolumn{3}{l}{Network parameters: } \\
+\midrule
+Latent type & Multinomial & \makecell[l]{One of the latent space regularization \\techniques (KLD, MMD, clustering loss)} \\
+Latent dimension & Integer & The dimensionality of the latent space \\
+$\beta$ & Logarithmic int & Weighting parameter for the latent term \\
+\midrule
+\multicolumn{3}{l}{Optimizer parameters: } \\
+\midrule
+$\eta$ & Logarithmic float & Learning rate, described in \ref{sec:gd} \\
+$\beta_1$ & Linear float & Momentum parameter, described in \ref{sec:momentum_gd} \\
+$\beta_2$ & Linear float & \makecell[l]{Second moment momentum parameter. \\ Described in \ref{sec:adam}}\\
+\bottomrule
+\end{tabular}
+\end{table}
