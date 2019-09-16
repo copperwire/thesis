@@ -131,3 +131,18 @@ It is also interesting to compare and contrast the clustering results from the M
 }
 \caption[MIXAE - confusion matrices]{Confusion matrices for the MIXAE clustering algorithm on filtered and full AT-TPC events. The true labels indicate samples belonging to the p (proton), C (carbon), or other classes. }\label{fig:mixae_confmat}
 \end{figure}
+
+Lastly we wish to further investigate if there are systematic differences between proton events that were placed in different clusters for the clean and full data. From figure \ref{fig:mixae_confmat} we see that the MIXAE algorithm creates two proton clusters for the filtered data, and places about fifty per-cent of the proton events in a cluster with the amorphous "other" events. We extract some proton events from these clusters to inspect whether systematic differences occur. 
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{plots/clean_cluster_repr.pdf}
+\caption[Selection of carbon events in differing clusters]{Selection of carbon events belonging to different clusters. Each row represents one of the clusters for the filtered data as shown in figure \ref{fig:mixae_confmat}. There seems to be no clear distinction between these rows.}	
+\end{figure} 
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{plots/real_cluster_repr.pdf}	
+\caption[Selection of proton events in differing clusters]{Selection of proton events belonging to different clusters. Each row represents one of the clusters for the full data as shown in figure \ref{fig:mixae_confmat}. We observe a tendency for the more noisy events to be placed in the "other" cluster}
+\end{figure} 
