@@ -4,7 +4,6 @@ To test the hypothesis that classification can be improved by using unsupervised
 \begin{enumerate}[start=0, label={(\bfseries Ar\arabic*):}, ref={(Ar\arabic*)}]
 	\item \label{item:clf_no_vgg} End-to-end training on data using kernel and filter architectures in a naive manner with decreasing kernel sizes, increasing filter sizes and a mirrored encoder-decoder structure
 	\item \label{item:clf_freeze_vgg} Using the VGG16 network to compute a representation of the data which is compressed by one or more dense layers and finally reconstructed to the original image by a naively constructed decoder. 
-	\item  \label{item:clf_tuning_vgg} Using the VGG16 network as the encoder, adjusting it's weights by the reconstruction loss with a naively constructed decoder. 
 \end{enumerate}
 
 \noindent Choosing an architecture for the convolutional autoencoder is the principal challenge to solve. We want to estimate if the reconstruction and optional latent losses relate to the classification accuracy achieved by the logistic regression classifier. \todo{add plot with reconst/loss vs f1 scores}
