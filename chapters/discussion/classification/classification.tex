@@ -15,7 +15,7 @@ To understand why the MMD cost is preferable, in terms of classifier performance
 
 \begin{figure}
 \centering
-\includegraphics[width=0.8\textwidth, height=2.6in]{plots/latent_traversal}
+\includegraphics[width=0.9\textwidth, height=2.3in]{plots/latent_traversal}
 \caption[Difference between generative and discriminative latent spaces]{Demonstrating the difference of capturing class and feature information in the latent space. On the left the $\beta$-VAE pushes the autoencoder to a representation favoring encoded class information in the latent space. The spaces between the class blobs makes for a poor generative algorithm, but for the purpose of classification or even clustering this is strongly preferable. On the right the natural clustering of feature information is demonstrated by the convincingly isotropic nature of the latent space distribution. The subplots under the latent distributions demonstrate reconstructions of a traversal along a latent axis, clearly showing the difference between feature and class information. Figure copied from \citet{Antoran2019}}\label{fig:latent_traversal}
 \end{figure}
 

@@ -18,16 +18,16 @@ In addition to the performance measures reported in table \ref{tab:clstr_vgg} it
 \centering
 
 	\subfloat{
-	\includegraphics[width=0.35\textwidth]{./plots/Simulatedconf_mat.pdf}
+	\includegraphics[width=0.35\textwidth]{./plots/Simulatedvgg_pca_conf_mat.pdf}
 
 }
 	\hspace{-1cm}
 	\subfloat{
-	\includegraphics[width=0.35\textwidth]{plots/Filteredconf_mat.pdf}
+	\includegraphics[width=0.35\textwidth]{plots/Filteredvgg_pca_conf_mat.pdf}
 }
 	\hspace{-1cm}
 	\subfloat{
-	\includegraphics[width=0.35\textwidth]{plots/Fullconf_mat.pdf}
+	\includegraphics[width=0.35\textwidth]{plots/Fullvgg_pca_conf_mat.pdf}
 }
 \caption[Pre-trained network - confusion matrices]{Confusion matrices for the K-means clustering of simulated, filtered and full AT-TPC events. The true labels indicate samples belonging to the p (proton), C (carbon), or other classes. }\label{fig:clster_confmat}
 \end{figure}
@@ -38,12 +38,12 @@ Furthermore, we wish to further characterize the clusters presented in figure \r
 
 \begin{figure}
 \includegraphics[width=\textwidth]{plots/filtered_vgg_cluster_repr.pdf}
-\caption[Filtered proton samples by cluster belonging]{Illustrating a sample of proton events from different K-means clusters from the filtered dataset. Each row belongs to a single cluster corresponding to the filtered confusion matrix in figure \ref{fig:clster_confmat}}\label{fig:vgg_clster_repr}
+\caption[Filtered proton samples by cluster belonging]{Illustrating a sample of proton events from different K-means clusters from the filtered dataset. Each row belongs to a single cluster corresponding to the filtered confusion matrix in figure \ref{fig:clster_confmat}}\label{fig:filtered_vgg_clster_repr}
 \end{figure} 
 
 \begin{figure}
 \includegraphics[width=\textwidth]{plots/full_vgg_cluster_repr.pdf}
-\caption[Full proton samples by cluster belonging]{Illustrating a sample of proton events from different K-means clusters from the full dataset. Each row belongs to a single cluster corresponding to the full confusion matrix in figure \ref{fig:clster_confmat}}\label{fig:vgg_clster_repr}
+\caption[Full proton samples by cluster belonging]{Illustrating a sample of proton events from different K-means clusters from the full dataset. Each row belongs to a single cluster corresponding to the full confusion matrix in figure \ref{fig:clster_confmat}}\label{fig:full_vgg_clster_repr}
 \end{figure} 
 
 In addition to the results presented in this section we performed clustering with a number of different algorithms included in the \lstinline{scikit-learn} package. None of them provided any notable differences from the K-means results or were significantly worse. Notably, the DBSCAN algorithm failed to provide any useful clustering results. We find this important as one of the major drawbacks of K-means, and the deep clustering algorithms presented in section \ref{sec:deep_clustering}, are all dependent on pre-determining the number of clusters, while this is not the case for DBSCAN. 
