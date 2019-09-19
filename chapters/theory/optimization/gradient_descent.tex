@@ -25,7 +25,7 @@ Directly inspecting the progress is not feasible for the high-dimensional update
 
 \begin{figure}
 \centering
-\includegraphics[width=0.6\textwidth, height=4cm]{../figures/lr_loss.png}
+\includegraphics[width=0.56\textwidth, height=4.4cm]{../figures/lr_loss.png}
 \caption[The impact of $\eta$ on performance]{A hand-drawn figure showing the impact of the choice of the learning rate parameter on the shape of the loss function. The optimal choice has a nice slowly decaying shape that we will use as a benchmark when tuning the learning rate in our applications. Copied from the cs231 course material from Stanford authored by \citet{Karpathy}.}\label{fig:lrloss}
 
 \end{figure} 
@@ -79,7 +79,7 @@ $\eta$  & $10^{-3}$ & Linear & Weight of the momentum update \\
 
 \begin{figure}
 \centering
-\includegraphics[height=3in]{../figures/beta_decay.pdf}
+\includegraphics[width=0.65\textwidth, height=5.5cm]{../figures/beta_decay.pdf}
 \caption[Exponential decay in momentum gradient descent]{A figure illustrating the decay rate of different choices of $\beta$. The lines go as $\beta^n$ and shows that one can quite easily infer how many last steps is included for each choice. A good starting value for the parameter has been empirically found to be $\beta=0.9$ for many applications. In this thesis we'll use a gaussian distribution around this value as a basis for a random search.}\label{fig:beta}
 \end{figure}
 

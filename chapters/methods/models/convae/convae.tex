@@ -1,13 +1,15 @@
 
 \section{Convolutional Autoencoder}\label{sec:convae_implement}
 
-The convolutional autoencoder class \lstinline{ConVae} is implemented as a subclass of \lstinline{LatentModel}. It implements the construction of the computational graph and the compute operations needed for the available losses. To ascertain that the graph is constructed before the loss is computed the user never interfaces with the \lstinline{_ModelGraph} and \lstinline{ModelLoss} methods that implement those respective functionalities. Instead the user calls a wrapper method from the parent class \lstinline{LatentModel.compile_model} which compiles the model for training.
+The convolutional autoencoder class \lstinline{ConVae} is implemented as a subclass of \lstinline{LatentModel}. It implements the construction of the computational graph and the compute operations needed for the available losses. To ascertain that the graph is constructed before the loss is computed the user never interfaces with the \lstinline{_ModelGraph} and \lstinline{_ModelLoss} methods that implement the respective functionalities. Instead the user calls a wrapper method from the parent class \lstinline{LatentModel.compile_model} which compiles the model for training.
 
-The graph is constructed with specifications from supplied configuration dictionary passed through the \lstinline{compile_model} method. The dictionary includes options for additional regularization terms like batch-normalization and instructs the class on what losses to compile the model with. 
+The graph is constructed with specifications from configuration dictionaries passed through the \lstinline{compile_model} method. The first of which specifies the activation function as well as the strength, and type of, weight regularization. The second dictionary specifies the type of reconstruction loss used in the optimization.
 
 \subsection{Computational graph}
 
-The private\footnote{The term private is used loosely in the context of python as the language does not actually maintain private methods unaccessible to the outside. By convention methods that are prefixed with an underscore are to be treated as private and are not exposed with public apis and in documentation.} function which enacts the computational graph is \lstinline{_ModelGraph}. It accepts arguments for the strength and type of regularization on the kernel and bias parameters as well as the activation function to be used for the internal representations and the projection to output space. The encoder is constructed with a for loop over the number of layers, using a 2D convolutional layer and best practices for the application of batch-normalization. Wherein the normalization is applied after the activation for exploding-gradient susceptible functions and before for functions with a vanishing gradient problem. In TensorFlow the construction of the encoder is coded as 
+The private\footnote{The term private is used loosely in the context of python programs, as the language does not actually maintain private methods. However, methods that are prefixed with an underscore are to be treated as private and are not exposed with public apis and in documentation by convention.} function which enacts the computational graph is \lstinline{_ModelGraph}. It accepts arguments for the strength and type of regularization on the kernel and bias parameters as well as the activation function to be used for the internal representations, and the projection to output space. 
+
+The encoder is constructed with a for loop over the number of layers, using a 2D convolutional layer and best practices for the application of batch-normalization. Wherein the normalization is applied after the activation for exploding-gradient susceptible functions and before for functions with a vanishing gradient problem. In TensorFlow the construction of the encoder is coded as 
 
 \begin{lstlisting}[language=iPython]
 # excerpt from convolutional_VAE.py
@@ -65,7 +67,10 @@ for i in range(self.n_layers):
                         with tf.name_scope("batch_norm"):
                             if self.batchnorm:
                                 h1 = BatchNormalization(
-                                    axis=-1, center=True, scale=True, epsilon=1e-4
+                                    axis=-1,
+                                    center=True,
+                                    scale=True,
+                                    epsilon=1e-4
                                 )(h1)
                                 self.variable_summary(h1)
                     else:
@@ -73,7 +78,10 @@ for i in range(self.n_layers):
                         with tf.name_scope("batch_norm"):
                             if self.batchnorm:
                                 h1 = BatchNormalization(
-                                    axis=-1, center=True, scale=True, epsilon=1e-4
+                                    axis=-1,
+                                    center=True,
+                                    scale=True,
+                                    epsilon=1e-4
                                 )(h1)
                                 self.variable_summary(h1)
                         h1 = a(h1)
@@ -83,32 +91,26 @@ for i in range(self.n_layers):
 
 \end{lstlisting}
 
-Inside the method the placeholder variable \lstinline{ConVae.x} is defined. The placeholder defines the entry point of the forward pass and is where tensorflow allocates the batched data in the training operation. Depending on whether the model is instructed to use the VGG16 representation of the data or a specified encoder structure it applies dense weight transformations with non-linearities or runs a series of convolutional layers, respectively. Each convolutional layer is specified with a kernel size, a certain number of filters and the striding of the convolutions. We also use a trick from \citet{Guo2017} to determine the padding size ensuring that the padding is chosen such that the reconstruction size is unambiguous. 
+Inside the method the placeholder variable \lstinline{ConVae.x} is defined. The placeholder defines the entry point of the forward pass and is where tensorflow allocates the batched data when optimizing and making predictions. Depending on whether the model is instructed to use the VGG16 representation of the data or a specified encoder structure it applies dense weight transformations with non-linearities, or computes a series of convolutions respectively. Each convolutional layer is specified with a kernel size, a certain number of filters, and the striding. We also use a trick from \citet{Guo2017} to determine the padding size ensuring that the padding is chosen such that the reconstruction size is unambiguous. The padding is set to preserve the input dimensionality and is only reduced in dimensionality with striding or max-pooling. If the input dimension is of size $2^n$, where $n$ is the number of layers, the last convolution is adjusted to have no zero-padding. 
 
-The padding is set to preserve the input dimensionality and is only reduced in dimensionality with striding or max-pooling. Depending on whether the output width(height) is an integer multiple of $2^n$, where $n$ is the number of layers, the last convolution is adjusted to have no zero-padding if this is the case. 
+After each layer the specified non-linearity is applied. The models accepts one of the sigmoid activations (logistic sigmoid or hyperbolic tangent) or the rectified linear unit family of functions as activations\footnote{The model accepts a \lstinline{None} argument for the activation in practice for debugging but this is not used fro any models in this thesis.}. If the model configuration specifies to use batch normalization, this is applied before sigmoid functions and after rectified units. The reason for different points of application relates to the challenges of the respective activation families; sigmoids' saturate and so the input should be scaled and rectified units are not bounded and so the output is scaled. The output from the encoder is then a tensor with dimensions \lstinline{h = (o, o, f)} where \lstinline{f} is the number of filters in the last layer and \lstinline{o} $= \frac{H}{2^n}$ where $n$ denotes the number of layers with stride $2$ or the count of \lstinline{MaxPool} layers, and $H$ gives the input image size.
 
-After each layer the specified non-linearity is applied. This is one of the sigmoid activations (logistic sigmoid or hyperbolic tangent) or the rectified linear unit family of activations\footnote{The model accepts a \lstinline{None} argument for the activation in practice for debugging but this is not used fro any models in this thesis.}. If the model configuration specifies to use batch normalization this is applied before sigmoid functions and after rectified units. The reason for different points of application relates to the challenges of the respective activation families; sigmoids' saturate and so the input should be scaled and rectified units explode so the output is scaled. The output from the convolutional layers is then an object with dimensions \lstinline{h = (o, o, f)} where \lstinline{f} is the number of filters in the last layer and \lstinline{o} $= \frac{H}{2^n}$ with $n$ denoting the number of layers with stride $2$ or the count of \lstinline{MaxPool} layers and $H$ the input image size.
-
-The tensor output from the convolutional layers is then transformed to the latent space with either a simple dense transformation, e.g. \lstinline{z = Dense(flatten(h))}. Or if a variational loss is specified a pair mean and standard deviation tensors are constructed with dense transformations from \lstinline{h}. These are stored as class attributes of the ConVae instance
+The tensor output from the encoder is then transformed to the latent space with either a simple dense transformation, e.g. \lstinline{z = Dense(flatten(h))}. Or, if a variational loss is specified, a pair mean and variance tensors. These are constructed with dense transformations from \lstinline{h}. The mean and variance tensors are then stored as class attributes of the ConVae instance:
 
 \begin{lstlisting}[language=iPython]
 self.mean = Dense(self.latent_dim, kernel_regularizer=k_reg)(h1)
 self.var = Dense(self.latent_dim, kernel_regularizer=k_reg)(h1)
 \end{lstlisting}
 
- Using the re-parametrization trick shown by \citet{Kingma2013} a sample is generated by \lstinline{z = mu + sigma*epsilon} where epsilon is a stochastic tensor from the multivariate uniform normal distribution, $\mathcal{N}(0, 1)$. Note that the \lstinline{self.var} is treated as the log of the variance. The mean and standard deviation tensors are stored to be used in the computation of the loss. The latent sample is also stored retrieval or other usage. 
+ Using the re-parametrization trick shown by \citet{Kingma2013} we introduce stochasticity to the sample tensor in a manner which allows training by backpropagation. With re-parametrization the sample is generated with \lstinline{z = self.mean + tf.exp(self.var)*epsilon}, where epsilon is a stochastic tensor from the multivariate uniform normal distribution $\mathcal{N}(0, 1)$. Note that the \lstinline{self.var} is treated as the log of the variance. The mean and standard deviation tensors are stored to be used in the computation of the loss. The latent sample is also set as a class attribute for prediction.
 
-After a sample \lstinline{z} is drawn the reconstruction is computed with either a mirrored decoder for the naive autoencoder structure or for a VGG16 representation of the data a reconstruction is computed based on a specified decoder structure. The VGG16 representation has the same call structure, but with a boolean flag to the model \lstinline{use_vgg} that indicates that the configuration is explicitly for the decoder. 
-
-Finally, after the decoding from the latent sample, the output is passed through a sigmoid function if the reconstruction loss is specified as a binary cross-entropy to ensure that the log-term doesn't blow up. Otherwise no transformation is applied on the output. 
+After a sample \lstinline{z} is drawn the reconstruction is computed by the decoder whose configuration is supplied in the initialization of the algorithm. In the case that the inputs are from a pre-trained model representation the model has the same call structure, but with a boolean flag to the model \lstinline{use_vgg} that indicates that the configuration is explicitly for the decoder. 
 
 \subsection{Computing losses}
 
-To compute the loss(es) the \lstinline{ConVae} implements the second of \lstinline{LatentModel}s abstract methods; \lstinline{_ModelLoss}. Like the graph construction this method is never called directly but through the interface of the parent class in the \lstinline{LatentModel.compile_model} method. In the same manner the losses are configured using a configuration dictionary. 
+To compute the loss(es) the \lstinline{ConVae} implements the second of \lstinline{LatentModel}s abstract methods; \lstinline{_ModelLoss}. Like the graph construction, this method is never called directly but through the interface of the parent class in the \lstinline{LatentModel.compile_model} method. Also in a similar vein losses are configured using a supplied dictionary.
 
-In the configuration dictionary the loss for both the reconstruction and latent spaces is specified. For the reconstruction the model accepts either a mean squared error or binary cross-entropy loss, the cross-entropy is the default. 
-
-Each of these losses acts pixel-wise on the output and target images. The reconstruction loss is then stored as a class attribute \lstinline{ConVae.Lx} which is monitored by the \lstinline{TensorFlow} module \lstinline{TensorBoard} for easy monitoring during training. The reconstruction loss is then implemented as 
+The reconstruction loss is specified in the configuration dictionary, and th e model accepts either a mean squared error or binary cross-entropy loss with cross-entropy as the default. Each of these losses acts pixel-wise on the output and target images. When computed the construction loss is stored as a class attribute, \lstinline{ConVae.Lx}, which is logged to a \lstinline{TensorBoard}\footnote{This is a module for tracking the progress of a model during training. It supports visualizations as well as automatically plotting the model graph etc.} instance. The reconstruction loss is then implemented as 
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
@@ -131,7 +133,7 @@ elif reconst_loss == "mse":
 \end{minipage}
 
 
-Depending on the configuration the model then compiles a loss over the latent space. For a variational autoencoder the loss is a Kullback-Leibler divergence over the latent distribution and a multivariate normal distribution with zero mean and unit variance. This has a closed form solution given a tensor representing the mean and standard deviation which we derived in equation \ref{eq:kl_opt}. This equation is relatively straightforward to implement as it just implies a sum over the mean and standard deviation tensor. The form of equation \ref{eq:kl_opt} also makes clear why we parametrize the standard deviation and not the variance directly as the exponentiation ensures positivity of the variance.
+Depending on the configuration the model then compiles a loss over the latent space. For a variational autoencoder the loss is a  KL-divergence (Kullback-Leibler divergence) of the latent distribution with a multivariate normal distribution with zero mean and unit variance. This has a closed form solution given a tensor representing the mean and standard deviation, which we derived in equation \ref{eq:kl_opt}. This equation is relatively straightforward to implement, as it just implies a sum over the mean and log-variance tensor. The form of equation \ref{eq:kl_opt} also makes clear why we parametrize the log-variance and not the variance directly as the exponentiation ensures positivity of the variance.
 
 
 \begin{minipage}{\linewidth}
@@ -148,7 +150,7 @@ def kl_loss(self, args):
 \end{lstlisting}
 \end{minipage}
 
-Alternatively to a Kullback-Leibler divergence the latent space may be regularized in the style proposed by \citet{Zhao}. Which measures the  We use the radial basis function kernel to compute the maximum mean discrepancy divergence term introduced in equation \ref{eq:mmd} \todo{include implement of MMD?}
+Alternatively to a KL-divergence the latent space may be regularized in the style proposed by \citet{Zhao}. In this paradigm we compute a loss over the entire latent sample, and not component wise as the KL-divergence does. We use the radial basis function kernel to compute the maximum mean discrepancy divergence term introduced in equation \ref{eq:mmd} \todo{include implement of MMD?}
 
 \subsection{Applying the framework}
 
