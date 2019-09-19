@@ -1,25 +1,39 @@
 \chapter{Introduction}\label{ch:introduction}
 
-\section{Research question and hypotheses}
-In this thesis we explore the following research question and hypotheses 
-
-\begin{enumerate}[start=0, label={(\bfseries R\arabic*):}]
-\item To what degree are we able to separate event classes from an AT-TPC experiment. 
-\end{enumerate}
-
-\noindent with the related hypotheses 
-
-\begin{enumerate}[start=0, label={(\bfseries H\arabic*):}]
-\item[] There exists a mapping from raw AT-TPC data to some lower dimensional vector space $\mathbf{z}$ such that: 
-\item a set of hyperplanes in this space separates the event types present
-\item the mapping clusters the event types present in disjoint sets under some distance metric
-\end{enumerate}
-
-\section{Why machine learning?}
-
 \begin{itemize}
-\item Advent of large amounts of data \\
-\item Precedence from High energy \\
-\item Promise of discovery from unsupervised methods \\
+\item Modern nuclear physics - rare events - detectors with high efficiency - loads of data 
+\item Traditional methods of fitting are expensive, and have a problematic bias 
+\item Machine learning allows a different approach
+\item Promise of discovery from unsupervised methods 
 \item Need for exploration 
 \end{itemize}
+
+In this thesis we address a long standing challenge in modern nuclear physics. The necessity of detectors with a very high efficiency for the analysis of rare nuclides means that much of the collected data is not pertinent to the questions we ask. One way of filtering out these unwanted events is to use machine learning algorithms. Machine learning is a sub-field of mathematics and computer science, bred from advanced statistical analysis, that deals in pattern recognition and function approximation. In this thesis we explore the feasibility of a set of such algorithms for separating events from a rare isotope detector.
+
+Nuclear physics is the pursuit of understanding nuclides, which are the building blocks of the visible universe. These building blocks are made up of protons and neutrons. But while most matter we interact with is stable, the vast majority of the hitherto discovered nuclides are not. However, understanding these unstable nuclides are important to our understanding of the universe, as well as having implications in medicine and the industry. Detecting these nuclides require very sensitive, and specialized, equipment. One such piece of equipment is the AT-TPC (active target time-projection chamber) detector, which when running produces on the order of $10^4$ events each hour. In this thesis we work with data from an AT-TPC detector constructed and commissioned at the National Cyclotron Laboratory located on the Michigan State University campus. 
+
+The two main topics we address in this thesis is how many events from known reactions do we need to construct a good model, and given the absence of known reactions can we segment events by reaction type. 
+
+\section{Machine Learning}
+
+In modern science, data analysis has become ubiquitous. For many applications it is now possible to collect data with samples numbering from several thousands to billions, which has transformed the modeling needs in those sciences. Machine learning is closely tied to this development. These models have for example been used to beat human professionals in chess and go\footnote{Go is a strategy game played on a grid, and is like chess in that it rewards long-term planning.} from just knowing the rules of the game (\cite{Silver2017}), they also fundamentally affect our on-line interactions\footnote{\href{https://research.fb.com/category/machine-learning/}{Facebook} invests heavily in machine learning research, and apply insights from this research to dictate what we view and interact with on their platforms.}. However, in the models we consider to be machine learning models we also include familiar methods. These include the method of least squares, which simply projects a line through data to minimize the error. 
+
+At the heart of modern machine learning is the Artificial Neural Network. These models, which are based on systems of biological neurons, have shown themselves to be very good at approximating complex functions (\cite{Lin2017}). They are also fundamentally extremely flexible algorithms, and can be applied to image analysis, time-series prediction or regression tasks with relative ease.
+
+In this thesis we will consider a special property of these algorithms. We know that they can achieve a high degree of compression of complex input, and that these compressions can be informative of the differences in the input space. In our case the input space is the space of possible reactions in a nuclear physics experiment.
+
+\section{Why Machine Learning?}
+
+Traditionally, data from experiments recorded with an AT-TPC is analyzed with a Monte Carlo method. In this framework each event is treated as a potential candidate for the reaction of interest, and a number of physical parameters are tested to find the best fit for that event. Once this is performed for all events in the dataset, a threshold value for the fit-statistic is chosen. Events that are below this threshold value are then said to be events of interest, and the rest are discarded. 
+
+This method of analysis turns out to be very computationally costly. Additionally, the presumption that each event is considered a possible candidate for the reaction of interest can be problematic. Some of the events of interest are bound to be discarded with this method, which we would want to avoid. Secondly, in the case where the breadth of possible reactions is not known fitting against the reaction of interest can give unexpected results. Lastly, the fitting method requires that the records are of complete tracks, but this is not always the case.
+
+In this thesis we then propose computationally feasible models, that do not explicitly fit against the reaction of interest, from the machine learning literature.
+
+\section{Structure of the thesis}
+
+As machine learning is still nascent in its application to nuclear physics we begin with a thorough introduction to the theory in the first chapter of part I. We continue in the second chapter with an introduction to the models implemented and applied in this thesis. Lastly in part I we elaborate on the experiment which forms the basis for our analysis.
+
+Part II is devoted to the details of the implementation. We've chosen the python programming language as the basis for the implementation because of the mature machine learning libraries developed for the language. 
+
+Lastly, in parts III and IV we present our findings and discuss those. We also present avenues for further research based on our findings.

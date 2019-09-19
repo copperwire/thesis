@@ -8,7 +8,7 @@ Clustering algorithms based on neural networks are knows collectively as deep cl
 
 The DCEC architecture is at its core a simple convolutional autoencoder. To convert it to a clustering algorithm \citet{Guo2017} adds a fully connected transformation to a soft class assignment, and a loss term for that assignment. 
 
-To describe the DCEC we begin by letting the convolutional autoencoder be given in terms of the encoder $\psi(\mathbf{z}|\mathbf{x} ; \theta_e)$ and decoder $\phi(\mathbf{x}|\mathbf{z}; \theta_d)$, where the $\theta$ indicates the neural network parameters and $z \in \mathcal{R}^D$. Furthermore let the algorithm maintain $K$ cluster centers $\{\mathbf{\mu}_j\}^K$, where $j \in [0,\, 1,\, \dots,\, N]$ denote the clusters. These cluster centers are trainable parameters and maps the latent samples to a soft assignment by a Student's t-distribution, in the model we parametrize them as a matrix $\mu_ij$. The assignment is then given as 
+To describe the DCEC we begin by letting the convolutional autoencoder be given in terms of the encoder $\psi(\mathbf{z}|\mathbf{x} ; \theta_e)$ and decoder $\phi(\mathbf{x}|\mathbf{z}; \theta_d)$, where the $\theta$ indicates the neural network parameters and $z \in \mathcal{R}^D$. Furthermore let the algorithm maintain $K$ cluster centers $\{\mathbf{\mu}_j\}^K$, where $j \in [0,\, 1,\, \dots,\, N]$ denote the clusters. These cluster centers are trainable parameters and maps the latent samples to a soft assignment by a Student's t-distribution, in the model we parametrize them as a matrix $\mu_{ij}$. The assignment is then given as 
 
 \begin{equation}\label{eq:qij}
 q_{ij} = \frac{(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}{\sum_j(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}.
@@ -28,7 +28,7 @@ p_{ij} = \frac{q_{ij}^2/\sum_i q_{ij}}{\sum_j q_{ij}^2/\sum_i q_{ij}}.
 
 \noindent \citet{Guo2017} show that the target distribution should not be update with each epoch, rather it needs to be changed on a regular schedule. They found that for the handwritten digits dataset MNIST a suitable update was once every $T=140$ epochs. 
 
-Training the DCEC algorithm is split in two phases. First, the convolutional autoencoder is trained until convergence with no regularization on the latent space. Secondly, the cluster centers are initialized using a k-means algorithm and which is then used to compute the target distribution for the first $T$ epochs. Lastly, the algorithm is trained with the KL-divergence loss and the original reconstruction term. We can then write the total cost as the sum of the reconstruction-, $\mathcal{L}_x$, and clustering-loss, $\mathcal{L}_z$ as 
+Training the DCEC algorithm is split in two phases. First, the convolutional autoencoder is trained until convergence with no regularization on the latent space. Secondly, the cluster centers are initialized using a k-means algorithm and which is then used to compute the target distribution for the first $T$ epochs. Lastly, the algorithm is trained with the KL-divergence loss and the original reconstruction term. We can then write the total cost as the sum of the reconstruction, $\mathcal{L}_x$, and clustering-loss, $\mathcal{L}_z$ as 
 
 \begin{equation}
 \mathcal{L} = \mathcal{L}_x + \gamma \mathcal{L}_z,
