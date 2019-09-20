@@ -2,13 +2,13 @@
 
 One of the holy grails of machine learning is achieving a general clustering algorithm. As retrieving labeled samples is often a very costly process. In some cases labeled data is unavailable altogether. This is the case for some of the AT-TPC experiments, and so discovering clustering algorithms for event data is of some academic interest. 
 
-Clustering algorithms based on neural networks are knows collectively as deep clustering algorithms. Many of which are based on autoencoder architectures. In this thesis we will focus on two such algorithms: the DCEC (deep clustering with convolutional autoencoders) algorithm, developed by \citet{Guo2017}. And the MIXAE (mixture of autoencoders) model, developed by \cite{Zhang}. 
+Clustering algorithms based on neural networks are knows collectively as deep clustering algorithms. Many of which are based on autoencoder architectures. In this thesis we will focus on two such algorithms: the deep clustering with convolutional autoencoders (DCEC) algorithm, developed by \citet{Guo2017}. And the mixture of autoencoders (MIXAE) model, developed by \cite{Zhang}. 
 
 \subsection{Deep Clustering With Convolutional Autoencoders}
 
 The DCEC architecture is at its core a simple convolutional autoencoder. To convert it to a clustering algorithm \citet{Guo2017} adds a fully connected transformation to a soft class assignment, and a loss term for that assignment. 
 
-To describe the DCEC we begin by letting the convolutional autoencoder be given in terms of the encoder $\psi(\mathbf{z}|\mathbf{x} ; \theta_e)$ and decoder $\phi(\mathbf{x}|\mathbf{z}; \theta_d)$, where the $\theta$ indicates the neural network parameters and $z \in \mathcal{R}^D$. Furthermore let the algorithm maintain $K$ cluster centers $\{\mathbf{\mu}_j\}^K$, where $j \in [0,\, 1,\, \dots,\, N]$ denote the clusters. These cluster centers are trainable parameters and maps the latent samples to a soft assignment by a Student's t-distribution, in the model we parametrize them as a matrix $\mu_{ij}$. The assignment is then given as 
+To describe the DCEC we begin by letting the convolutional autoencoder be given in terms of the encoder $\psi(\mathbf{z}|\mathbf{x} ; \theta_e)$ and decoder $\phi(\mathbf{x}|\mathbf{z}; \theta_d)$, where the $\theta$ indicates the neural network parameters and $z \in \R^D$. Furthermore let the algorithm maintain $K$ cluster centers $\{\mathbf{\mu}_j\}^K$, where $j \in [0,\, 1,\, \dots,\, N]$ denote the clusters. These cluster centers are trainable parameters and maps the latent samples to a soft assignment by a Student's t-distribution, in the model we parametrize them as a matrix $\mu_{ij}$. The assignment is then given as 
 
 \begin{equation}\label{eq:qij}
 q_{ij} = \frac{(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}{\sum_j(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}.
@@ -40,7 +40,7 @@ The fundamental challenge that DCEC faces is that it is dependent on a K-means s
 
 \subsection{Mixture of autoencoders}
 
-Another way of representing the clusters is by having multiple latent spaces representing the underlying manifolds that describe each class. This is the central idea in the MIXAE (Mixture of autoencoders) algorithm, introduced by  \cite{Zhang}. To ensure that each autoencoder represents a cluster a soft-max classifier is coupled with the set of latent samples. The soft-max classifier is trained to output cluster probabilities, and penalized for collapsing to assigning one cluster only. To connect the cluster probabilities to the reconstruction a multiplier by the cluster confidence is attached to the reconstruction error of each autoencoder.
+Another way of representing the clusters is by having multiple latent spaces representing the underlying manifolds that describe each class. This is the central idea in the Mixture of autoencoders (MIXAE) algorithm, introduced by  \cite{Zhang}. To ensure that each autoencoder represents a cluster a soft-max classifier is coupled with the set of latent samples. The soft-max classifier is trained to output cluster probabilities, and penalized for collapsing to assigning one cluster only. To connect the cluster probabilities to the reconstruction a multiplier by the cluster confidence is attached to the reconstruction error of each autoencoder.
 
 More formally let $\{\mathbf{z}_j^{(i)}\}^N$ be the set of $N$ latent samples from each of the $N$ auto-encoders from a single sample image $\hat{\mathbf{x}}^{(i)} \in \R ^{t\times v}$ with height $t$ and width $v$. Furthermore, let the soft cluster assignments be given as $\{p_j^{(i)}\}^N$ and the reconstructed samples be given as $\{\mathbf{x}_j^{(i)}\}$. The reconstruction loss is then the sum over each autoencoder multiplied with each cluster assignment, i.e.
 

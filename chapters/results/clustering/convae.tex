@@ -1,6 +1,6 @@
 \section{Deep clustering algorithms}\label{sec:convae_clustering}
 
-In the previous section we demonstrated a potential for clustering of events from the AT-TPC experiment. To build on this result we will in this section explore the application of the MIXAE (mixture of autoencoders) algorithm introduced in section \ref{sec:deep_clustering}. The other algorithm introduced in section \ref{sec:deep_clustering}, DCEC (deep clustering with convolutional autoencoders), consistently collapsed to just one cluster for all datasets.
+In the previous section we demonstrated a potential for clustering of events from the AT-TPC experiment. To build on this result we will in this section explore the application of the mixture of autoencoders (MIXAE) algorithm introduced in section \ref{sec:deep_clustering}. The other algorithm introduced in section \ref{sec:deep_clustering}, deep clustering with convolutional autoencoders (DCEC), consistently collapsed to just one cluster for all datasets.
 
 In the MIXAE algorithm the hyper-parameters to adjust are all the ordinary parameters that we introduced in table \ref{tab:convae_hyperparams}. In addition to those parameters come the weighting of the loss terms: $\theta$, $\alpha$ and $\gamma$. These weighting parameters are attached to the reconstruction loss, sample entropy and batch-wise entropy respectively. \cite{Zhang} note that these parameters are very important for the model performance and so we focus primarily on these. 
 
@@ -74,7 +74,7 @@ Finally, for these parameters we re-ran the algorithm $N=10$ times to investigat
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{./plots/sim_mixae.pdf}
-\caption{Performance for the MIXAE model on simulated AT-TPC data. In the top row the loss components are plotted for each run, and in the bottom row the ARI (adjusted rand index) and clustering accuracy are shown. Each run is color-coded with the ARI achieved at the end of the run. }\label{fig:mixae_sim}
+\caption{Performance for the MIXAE model on simulated AT-TPC data. In the top row the loss components are plotted for each run, and in the bottom row the adjusted rand index (ARI) and clustering accuracy are shown. Each run is color-coded with the ARI achieved at the end of the run. }\label{fig:mixae_sim}
 \end{figure}
 
 \subsection{Filtered AT-TPC data}
@@ -92,7 +92,7 @@ We repeat the optimization steps in the previous section for the filtered AT-TPC
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{./plots/clean_mixae.pdf}
-\caption{Performance for the MIXAE model on filtered AT-TPC data. In the top row the loss components are plotted for each run, and in the bottom row the ARI (adjusted rand index) and clustering accuracy are shown. Each run is color-coded with the ARI achieved at the end of the run.}\label{fig:mixae_clean}
+\caption{Performance for the MIXAE model on filtered AT-TPC data. In the top row the loss components are plotted for each run, and in the bottom row the adjusted rand index (ARI) and clustering accuracy are shown. Each run is color-coded with the ARI achieved at the end of the run.}\label{fig:mixae_clean}
 \end{figure}
 
 
@@ -112,7 +112,7 @@ Like the two previous sections we repeat the same procedure of iterative grid se
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{./plots/real_mixae.pdf}
-\caption{Performance for the MIXAE model on un-filtered AT-TPC data. In the top row the loss components are plotted for each run, and in the bottom row the ARI (adjusted rand index) and clustering accuracy are shown. Each run is color-coded with the ARI achieved at the end of the run.}\label{fig:mixae_full}
+\caption{Performance for the MIXAE model on un-filtered AT-TPC data. In the top row the loss components are plotted for each run, and in the bottom row the adjusted rand index (ARI) and clustering accuracy are shown. Each run is color-coded with the ARI achieved at the end of the run.}\label{fig:mixae_full}
 \end{figure}
 
 \subsection{Comparing performance}
@@ -129,7 +129,7 @@ It is also interesting to compare and contrast the clustering results from the M
 	\subfloat{
 	\includegraphics[width=0.5\textwidth]{plots/full_mixae_conf_mat.pdf}
 }
-\caption[MIXAE - confusion matrices]{Confusion matrices for the MIXAE clustering algorithm on filtered and full AT-TPC events. The true labels indicate samples belonging to the p (proton), C (carbon), or other classes. }\label{fig:mixae_confmat}
+\caption[MIXAE - confusion matrices]{Confusion matrices for the MIXAE clustering algorithm on filtered and full AT-TPC events. The true labels indicate samples belonging to the p (proton), carbon (C), or other classes. }\label{fig:mixae_confmat}
 \end{figure}
 
 Lastly we wish to further investigate if there are systematic differences between proton events that were placed in different clusters for the clean and full data. From figure \ref{fig:mixae_confmat} we see that the MIXAE algorithm creates two proton clusters for the filtered data, and places about fifty per-cent of the proton events in a cluster with the amorphous "other" events. We extract some proton events from these clusters to inspect whether systematic differences occur. 
