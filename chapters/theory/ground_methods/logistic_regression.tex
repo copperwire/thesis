@@ -10,7 +10,7 @@ To understand classification algorithms we begin from the simplest algorithm in 
 o = \frac{p}{1-p}.
 \end{equation}
 
-\noindent Since $p$ is bounded in the unit interval unfortunately the odds are bounded in $\mathcal{R}^+$. Again the logarithm comes to the rescue as the logarithm of a positively bounded variable is unbounded, and so we define the log-odds as the output of our model given a data-point $\mathbf{x}_i$ and the model parameters $\mathbf{w}$
+\noindent Since $p$ is bounded in the unit interval unfortunately the odds are bounded in $\R^+$. Again the logarithm comes to the rescue as the logarithm of a positively bounded variable is unbounded, and so we define the log-odds as the output of our model given a data-point $\mathbf{x}_i$ and the model parameters $\mathbf{w}$
 
 \begin{equation}\label{eq:log_odds}
 \log \left(\frac{p_i}{1-p_i}\right) = \mathbf{x}_i\mathbf{w}. 
@@ -44,7 +44,7 @@ P(S|\mathbf{w}) &=  - \sum_i y_i\log q (\mathbf{x}_i\mathbf{w}) + (1-y_i)\log\le
  We can then write out the derivative of the cost as 
 
 \begin{align}
-\nabla_{\mathbf{w}} \mathcal{C} &= - \sum_i y_i (1 - q(\mathbf{x}_i \mathbf{w})) - (1-y_i) q(\mathbf{x}_i \mathbf{w})\mathbf{x}_i, \\
+\nabla_{\mathbf{w}} \mathcal{C} &= - \sum_i y_i (1 - q(\mathbf{x}_i \mathbf{w})) 1-y_i (-) q(\mathbf{x}_i \mathbf{w})\mathbf{x}_i, \\
 &= - \sum_i \left(y_i -  q(\mathbf{x}_i \mathbf{w})\right)\mathbf{x}_i.
 \end{align}
 

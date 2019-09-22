@@ -1,76 +1,27 @@
 \chapter{Experimental setup and design}
 
-The experiments were conducted using the AI-Hub computational resource at the university of Oslo.  This resource consists of three machines with four RTX $2080$ Nvidia graphics cards each. These cards have about $10$GB of memory available to allocate model weights. All experiments described in this section were all computed using this hardware. In this section we lay out the results obtained on the three segments of data: simulated, filtered, and full event-datasets. These are described in greater detail in section \ref{sec:data}. We explore the models proposed in section \ref{sec:architectures} on two disparate tasks, one of semi-supervised classification and one of clustering. For each task  we evaluate the performance on each of the aforementioned datasets using appropriate metrics. The primary objective for the  ${}^{46}Ar$ experiment was to identify resonant proton scattering events, and so the model s will be evaluated on their ability to separate proton events from the others that occur in the dataset. The broader picture for the application of these models are however applications to experiments where there might be multiple event-types of interest. And so we measure individual class performance wherever appropriate. 
+In this chapter we describe the semi-supervised classification and clustering results obtained on the three active target time projection chamber (AT-TPC) datasets described in section \ref{sec:data}. The simulated data is used to provide a benchmark for the upper bound on the performance of a given algorithm. This chapter is structured by task first, and algorithm second. As such we will begin with a consideration of the semi-supervised algorithms before continuing with the clustering task. 
+
+ We explore the models proposed in chapter \ref{ch:autoencoder} on two disparate tasks, one of semi-supervised classification and one of clustering. For each task  we evaluate the performance on each of the aforementioned datasets using appropriate metrics, which were introduced in section \ref{sec:performance_val}. 
+
+ The primary objective for the ${}^{46}Ar$ experiment was to identify resonant proton scattering events, but this thesis explores broader applications than this classification task. This broader picture is specifically geared the application of the models discussed in this thesis to other AT-TPC experiments. Following this argument we measure individual class performance wherever appropriate. 
+
+The machine learning experiments conducted in this thesis were performed using the AI-Hub computational cluster at the university of Oslo.  This resource consists of three machines with four RTX $2080$ Nvidia GPU's (graphics processing unit) each. These cards have $\sim 10$GB of memory available for the allocation of models.
 
 \subsection{Semi-supervised classification procedure}
 
+Our interest in the semi-supervised classification is three fold. Firstly, it provides a bound on the performance we can expect from the clustering algorithms, as the classifier problem is fundamentally an easier task. In addition to the bounding property the semi-supervised task proved to be a good way to explore the types of algorithms we present in this thesis. Secondly, we wish to characterize the performance as a function of the number of available labeled samples. As previously mentioned, one of the principal challenges with the AT-TPC detector is the cost of finding examples of the positive class, if at all possible. Thirdly, we wish to lay the groundwork for a transfer-learning approach to bridging AT-TPC experiments. Take for example resonant proton scattering, which could be a reaction of interest in a different experiment. Applying models trained to recognize these events in the ${}^{46}Ar$ experiment could be a feasible approach. The results from the semi-supervised classification experiments are presented in chapter \ref{chap:classification}
+
+The semi-supervised task is to train an autoencoder model on a large dataset, and evaluate the class separation of the latent space using a logistic regression classifier. We use a logistic regression classifier as we wish to measure qualities of the latent space, and not of the classification per se. To provide an additional benchmark for our algorithms we measure the performance of a logistic regression classifier using the latent space of a pre-trained image classifier model, which has shown to be effective in the classification of events from the ${}^{46}Ar$ experiment (\cite{Kuchera2019}).
+
 Intrinsic to the measurement of the semi-supervised performance is the budgeting of how many labeled samples one can feasibly extract. And the principal limitation of the semi-supervised approach is the assumption that the researchers are able to positively identify the event class(es) of interest. It is then interesting to quantify the change in model performance as a function of how many labeled samples the classification model has to train on. Bear in mind that the representation that the classification model sees is still trained on the full set of events for a given dataset. 
 
-For reference, the models are described in terms of their hyperparameters in table \ref{tab:convae_hyperparams} for the convolutional autoencoder and table \ref{tab:draw_hyperparams} for the DRAW-analogues. To determine the best hyperparameters we perform on the order of $\sim 10^2$ runs, each taking on the order of $\sim 10^1$ minutes. For each configuration of the algorithms we train a classifier trained on a subset of the labeled set, and evaluated on the remainder to estimate the OOS (out of sample) error. The best configuration is then lastly re-trained, and we evaluate the OOS error with k-fold cross validation as outlined in section \ref{sec:performance_val}.
-
-
-\begin{table}
-\centering
-\caption{Detailing the hyperparameters that need to be determined for the convolutional autoencoder. The depth and number of filters strongly influence the number of parameters in the network. For all the search-types we follow heuristics common in the field, the network starts with larger kernels and smaller numbers of filters etc.}\label{tab:convae_hyperparams}
-\setlength{\extrarowheight}{15pt}
-\hspace*{-0.5in}
-\begin{tabular}{lll}
-\toprule
-Hyperparameter & Scale & Description \\
-\midrule
-\multicolumn{3}{l}{Convolutional parameters: } \\
-\midrule
-Number of layers & Linear integer & \makecell[l]{A number describing how many \\ convolutional layers to use }\\
-Kernels & Set of linear integers & \makecell[l]{An array describing the kernel size for \\ each layer} \\
-Strides & Set of linear integers & An array describing the stride for each layer \\
-Filters & Set of logarithmic integers & \makecell[l]{An array describing the number of filters \\ for each layer} \\ 
-\midrule
-\multicolumn{3}{l}{Network parameters: } \\
-\midrule
-Activation & Multinomial & \makecell[l]{An activation function as detailed in  \\ section \ref{sec:activation}} \\
-Latent type & Multinomial & \makecell[l]{One of the latent space regularization \\techniques (KLD, MMD, clustering loss)} \\
-Latent dimension & Integer & The dimensionality of the latent space \\
-$\beta$ & Logarithmic int & Weighting parameter for the latent term \\
-Batchnorm & Binary & Whether to use batch-normalization in each layer \\
-\midrule
-\multicolumn{3}{l}{Optimizer parameters: } \\
-\midrule
-$\eta$ & Logarithmic float & Learning rate, described in \ref{sec:gd} \\
-$\beta_1$ & Linear float & Momentum parameter, described in \ref{sec:momentum_gd} \\
-$\beta_2$ & Linear float & \makecell[l]{Second moment momentum parameter. \\ Described in \ref{sec:adam}}\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}
-\centering
-\caption{Hyperparameters for the draw algorithm as outlined in section \ref{sec:draw}. The implementation of the convolutional read and write functions is a novel contribution to the DRAW algorithm. We investigate which read/write paradigm is most useful for classification and clustering. Additionally as a measure ensuring the comparability of latent sample we fix the $\delta$ parameter determining the glimpse size. The effect of $\delta$ is explored in detail in the paper by \citet{Gregor2015} and in the earlier section \ref{sec:draw}.}\label{tab:draw_hyperparams}
-\setlength{\extrarowheight}{15pt}
-\hspace*{-0.5in}
-\begin{tabular}{lll}
-\toprule
-Hyperparameter & Scale & Description \\
-\midrule
-\multicolumn{3}{l}{Recurrent parameters: } \\
-\midrule
-Read\/write functions & Binary & \makecell[l]{One of attention or convolutional describing  \\ the way draw looks and adds to the canvas.} \\
-Nodes in recurrent layer & Integer & Describing the number of cells in the LSTM cells \\
-\midrule
-\multicolumn{3}{l}{Network parameters: } \\
-\midrule
-Latent type & Multinomial & \makecell[l]{One of the latent space regularization \\techniques (KLD, MMD, clustering loss)} \\
-Latent dimension & Integer & The dimensionality of the latent space \\
-$\beta$ & Logarithmic int & Weighting parameter for the latent term \\
-\midrule
-\multicolumn{3}{l}{Optimizer parameters: } \\
-\midrule
-$\eta$ & Logarithmic float & Learning rate, described in \ref{sec:gd} \\
-$\beta_1$ & Linear float & Momentum parameter, described in \ref{sec:momentum_gd} \\
-$\beta_2$ & Linear float & \makecell[l]{Second moment momentum parameter. \\ Described in \ref{sec:adam}}\\
-\bottomrule
-\end{tabular}
-\end{table}
+For reference, the models are described in terms of their hyperparameters in table \ref{tab:convae_hyperparams} for the convolutional autoencoder and table \ref{tab:draw_hyperparams} for the DRAW-analogues. To determine the best hyperparameters we perform on the order of $\sim 10^2$ runs, each taking on the order of $\sim 10^1$ minutes on a single Nvidia $2080$ GPU. For each configuration of the algorithms we train a classifier trained on a subset of the labeled set, and evaluated on the remainder to estimate the out of sample (OOS) error. The best configuration is then lastly re-trained, and we evaluate the OOS error with k-fold cross validation as outlined in section \ref{sec:performance_val}.
 
 \subsection{Clustering procedure}
 
-The clustering task is intrinsically a harder task, and so more time was spent exploring algorithms to determine which were suitable for clustering AT-TPC data. As such the clustering procedure is also more exploratory in nature. Each of the algorithms in section \ref{sec:deep_clustering} were first configured to reproduce the results from their respective papers, and subsequently applied to the AT-TPC data. The hyperparameters for the autoencoder structure were frozen to empirically suitable values observed from the semi-supervised task to enable a focus on the clustering components of the algorithm. 
+While the semi-supervised classification task provides context and understanding to the AT-TPC experiments, the clustering procedure is a direct attempt at solving challenges associated with these experiments. First and foremost is the challenge of acquiring labeled data of the event of interest. The clustering results are presented in chapter \ref{chap:clustering} 
+
+In contrast to the semi-supervised task the clustering objective presumes that we have access to no labeled data. But since the purpose of this thesis is in large part exploratory we will measure performance on the labeled data provided. We explore performance of the deep clustering algorithms described in section \ref{sec:deep_clustering} as well as a K-means approach using the latent space of a pre-trained image classifier model. 
+
+The clustering task is intrinsically a harder task than that of semi-supervised classification, and so more time was spent exploring algorithms to determine which were suitable for clustering AT-TPC data. Before training each of the algorithms in section \ref{sec:deep_clustering} were first configured to reproduce the results from their respective papers. Subsequently they were applied to the AT-TPC data, with their autoencoder hyperparameters selected empirically from the semi-supervised task. This was done so as to enable a focus on the clustering components of the algorithm. In particular we focus on the weighting parameters of the mixture of autoencoders (MIXAE) clustering algorithm.

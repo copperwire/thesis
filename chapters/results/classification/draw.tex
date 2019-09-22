@@ -1,6 +1,6 @@
 \section{Deep Recurrent Attentive Writer }
 
-From the previous section on the convolutional autoencoder it is clear that we can encode class information latent spaces. The remaining question is then whether we can cluster these representations, or if we can improve the separation in other ways. One way of discovering the latter is with a recurrent model like DRAW (deep recurrent attentive writer) as discussed in section \ref{sec:draw}. We discuss the former in the next chapter, which focuses entirely on the clustering of AT-TPC events.
+From the previous section on the convolutional autoencoder it is clear that we can encode class information latent spaces. The remaining question is then whether we can cluster these representations, or if we can improve the separation in other ways. One way of discovering the latter is with a recurrent model like deep recurrent attentive writer (DRAW) as discussed in section \ref{sec:draw}. We discuss the former in the next chapter, which focuses entirely on the clustering of AT-TPC events.
 
 In the same manner as for the convolutional autoencoder this section begins by considering the semi-supervised classification results using a flattened representation of the sequence of latent samples. To build on those results we also investigate the performance as a function of latent samples and whether these are densely packed in class separated clusters.
 
@@ -48,7 +48,7 @@ We begin by considering the $f1$ scores of the logistic regression classifier on
 Additionally, we wish to characterize the latent space by how many latent samples it takes to achieve this optimal performance. We present these performance records in figure \ref{fig:draw_nsamples}. 
 
 \begin{figure}
-\includegraphics[width=\textwidth]{plots/ac_draw_n_samples.pdf}
+\includegraphics[width=\textwidth, height=6.5cm]{plots/ac_draw_n_samples.pdf}
 \caption[Semi supervised classification with DRAW]{Performance of the logistic regression algorithm on the three datasets as a function of number of latent samples. The latent samples are produced with the DRAW algorithm using the hyperparameters presented in table \ref{tab:best_draw_hyperparams}}\label{fig:draw_nsamples}
 \end{figure}
 
@@ -57,6 +57,6 @@ Lastly we wish to describe the latent space in some detail. Like with the VGG16 
 
 
 \begin{figure}
-\includegraphics[width=\textwidth]{plots/ac_tsne_draw.pdf}
+\includegraphics[width=\textwidth, height=7cm]{plots/ac_tsne_draw.pdf}
 \caption[t-SNE projection of the DRAW latent space]{t-SNE projection of the DRAW latent space.  The latent samples are produced with the DRAW algorithm using the hyperparameters presented in table \ref{tab:best_draw_hyperparams}}
 \end{figure}

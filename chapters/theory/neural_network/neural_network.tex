@@ -4,7 +4,7 @@
 
 While the basis for the modern neural network was laid more than a hundred years ago, modern neural networks were proposed by \citet{McCulloch1943}. They described a computational structure analogous to a set of biological neurons. The premise is that a biological neuron accepts signals from many other adjacent neurons, and if it receives a large enough signal it fires, and emits a signal to those neurons it is connected to.  
 
-Dubbed an ANN (artificial neural network) this computational analogue takes input from multiple sources, weights that input and produces an output if the signal from the weighted input is strong enough. A proper derivation will follow but for the moment we explore this simple intuition. These artificial neurons are ordered in layers, each successively passing information forward to a final output. Depending on the application, the output can be categorical or real-valued in nature. Each layer uses a matrix multiplication and a non-linear function to transform the input space in a way that condenses information, as most applications use transformations that reduce the dimensionality substantially before making a prediction.
+Dubbed an artificial neural network (ANN) this computational analogue takes input from multiple sources, weights that input and produces an output if the signal from the weighted input is strong enough. A proper derivation will follow but for the moment we explore this simple intuition. These artificial neurons are ordered in layers, each successively passing information forward to a final output. Depending on the application, the output can be categorical or real-valued in nature. Each layer uses a matrix multiplication and a non-linear function to transform the input space in a way that condenses information, as most applications use transformations that reduce the dimensionality substantially before making a prediction.
 
 A simple illustration of two neurons in one layer is provided in figure \ref{fig:ann_illustration} \todo{make proper figure for ann}
 
@@ -80,7 +80,7 @@ a_j ^{[l]} = f(z_j^{[l]})_D.
 
 We can now turn to the process of optimizing the model. In a neural network the variables that need to be fit are the elements of $\mathbf{W}^{[l]}$ that we denote $\wij^{[l]}$, and the biases which we denote with $b_j^{[l]}$. And while one can solve the linear regression optimization problem by matrix inversion, the multi-layer neural net does not have a closed form first derivative for $\wij^{[l]}$ or  $b_j^{[l]}$ because of the non-linearities between each layer. We are then forced to turn to iterative methods of the gradient, which we previously introduced in section \ref{sec:gd}
 
-Based on whether the output is described by real values or a set of probabilities the cost takes on different forms, just as for linear and logistic regression. In the real case we use the now familiar MSE (mean squared error) cost, or in the event that we want to estimate a probability of an outcome; the binary cross-entropy. We discuss these cost-functions in general and especially the MSE and BCE (binary cross-entropy) earlier on in chapter \ref{chap:fundament}. Regardless of the cost the optimization problem is solved by a gradient descent procedure discussed in section \ref{sec:gd}. We we re-introduce the update form for the parameters as 
+Based on whether the output is described by real values or a set of probabilities the cost takes on different forms, just as for linear and logistic regression. In the real case we use the now familiar mean squared error (MSE) cost, or in the event that we want to estimate a probability of an outcome; the binary cross-entropy. We discuss these cost-functions in general and especially the MSE and binary cross-entropy (BCE) earlier on in chapter \ref{chap:fundament}. Regardless of the cost the optimization problem is solved by a gradient descent procedure discussed in section \ref{sec:gd}. We we re-introduce the update form for the parameters as 
 
 \begin{equation}\label{eq:gd}
 	\wij^{[l]} \leftarrow \wij^{[l]} -\eta \frac{\partial \mathcal{C}}{\partial \wij^{[l]}} .
@@ -107,7 +107,7 @@ The sums over $n$ and $j$ enumerate the number of samples, and output dimensions
 
 \noindent We have dropped the data index, as the differentiation is independent under the choice of data. In practice the derivative of each sample in the batch is averaged together for the gradient update of each parameter. 
 
-The activation function, $f$, has classically been the logistic sigmoid function, but during the last decade the machine learning community has largely shifted to using the ReLU (rectified linear unit). This shift was especially apparent after the success of \citet{Krizhevsky2012}. In this section we then exemplify the backpropagation algorithm with a network with ReLU activation. The ReLU function is defined in such a way that it is zero for all negative inputs and the identity otherwise, i.e. 
+The activation function, $f$, has classically been the logistic sigmoid function, but during the last decade the machine learning community has largely shifted to using the Rerectified linear unit (LU). This shift was especially apparent after the success of \citet{Krizhevsky2012}. In this section we then exemplify the backpropagation algorithm with a network with ReLU activation. The ReLU function is defined in such a way that it is zero for all negative inputs and the identity otherwise, i.e. 
 
 \begin{equation}\label{eq:relu}
 	\text{ReLU} (x) = f(x) = \begin{cases}
@@ -268,7 +268,7 @@ Two sigmoid functions have been traditionally used in neural networks, while the
 
 \subsubsection{Rectifiers}
 
-On the other end of the scale rectified activations have gained traction in later years. We introduced the ReLU and it's derivative in the previous section, but we will discuss a popular cousin here. The LReLU (leaky rectified linear unit) takes the ReLU and modifies it slightly by adding a small slope to the negative part of the activation. Mathematically we define the LReLU as 
+On the other end of the scale rectified activations have gained traction in later years. We introduced the ReLU and it's derivative in the previous section, but we will discuss a popular cousin here. The LReleaky rectified linear unit (LU) takes the ReLU and modifies it slightly by adding a small slope to the negative part of the activation. Mathematically we define the LReLU as 
 
 \begin{equation}\label{eq:lrelu}
 	\text{LReLU} (x)  = \begin{cases}

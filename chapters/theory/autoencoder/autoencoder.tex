@@ -3,7 +3,7 @@
 
 \section{Introduction to autoencoders}\label{sec:intro_autoenc}
 
-The primary challenge we face with data from the AT-TPC (active target time projection chamber) is that labeling data is not always possible for a given experiment. Given that fact, and the huge amount of data available, we turn to dimensionality reduction methods to possibly express the different physics occurring in this data. One such set of methods is the autoencoder family of neural network algorithms.
+The primary challenge we face with data from the active target time projection chamber (AT-TPC) is that labeling data is not always possible for a given experiment. Given that fact, and the huge amount of data available, we turn to dimensionality reduction methods to possibly express the different physics occurring in this data. One such set of methods is the autoencoder family of neural network algorithms.
 
 An autoencoder is an attempt at learning a distribution of data by reconstruction. This means that the model encodes the data into a much lower dimensional latent space before projecting back into the original space of data. The goal, as a matter of course, is then to learn the true distribution, $P(\mathcal{X})$, over the data with some parametrized model $Q(\mathcal{X};\theta)$. The model consists of two discrete parts; an encoder and a decoder. The encoder is in general a non linear map $\psi$
 
@@ -24,7 +24,7 @@ The second part of the model is the decoder that maps back to the original space
   \mathcal{O} = \argmin_{\phi, \psi} \sum_i || \mathbf{x}_i - \phi(\psi( \mathbf{x}_i ))  ||^2
 \end{align}
 
-\noindent  As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. This objective function is optimized by a mean-squared-error cost in the event of real valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to PCA (principal component analysis)(\cite{Marsland2009}) which we introduced in chapter \ref{chap:fundament}. In practice the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. We refer to section \ref{sec:ANN} for a detailed discussion on deep learning and neural networks.
+\noindent  As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. This objective function is optimized by a mean-squared-error cost in the event of real valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to principal component analysis (PCA)(\cite{Marsland2009}) which we introduced in chapter \ref{chap:fundament}. In practice the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. We refer to section \ref{sec:ANN} for a detailed discussion on deep learning and neural networks.
 
 The autoencoder has previously been successfully implemented in de-noising tasks. \todo{Citation needed} More recently the Machine Learning community discovered that one could impose a constraining term on the latent distribution to allow for the imposition of structure in the latent space. The goal in mind was to create a generative algorithm, a class of models used to sample from the distribution $P(\mathcal{X})$.
 
@@ -56,7 +56,7 @@ p(x) = \int_z p(x|z)p(z)
 
 \noindent The integral in the denominator of equation \ref{eq:bayes} is intractable for most interesting problems, as the space over $z$ is usually combinatorially large. 
 
-This is also the same problem that MCMC (Markov chain Monte Carlo) methods are commonly applied to. In physics this family of algorithms has been applied to solve many-body problems in quantum mechanics primarily by gradient descent on variational parameters \todo{citation-Comph-phys 2 compendium}.
+This is also the same problem that Markov chain Monte Carlo (MCMC) methods are commonly applied to. In physics this family of algorithms has been applied to solve many-body problems in quantum mechanics primarily by gradient descent on variational parameters \todo{citation-Comph-phys 2 compendium}.
 
 We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive a solution we begin by introducing the KL-divergence (\cite{Kullback1951}), which is a measure of how much two distributions are alike. It is important to note that it is however not a metric. We define the KL-divergence in equation \ref{eq:kl} from a probability measure P, to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$
 
@@ -67,7 +67,7 @@ D_{KL} (P || Q) &= - \int^{\infty}_{-\infty} p(x) \log \left(\frac{p(x)}{q(x)}\r
 
 \noindent In the context of the VAE the KL-divergence is a measure of the quality of P approximating Q (\cite{Burnham2002}). The first part of deriving the cost is then to introduce an approximation of the evidence. 
 
-We also introduce the ELBO (evidence lower bound) as an approximation to the evidence following the derivation laid out by \cite{Kingma2013}. The EBLO function is defined as 
+We also introduce the evidence lower bound (ELBO) as an approximation to the evidence following the derivation laid out by \cite{Kingma2013}. The EBLO function is defined as 
 
 \begin{equation}\label{eq:elbo}
 ELBO(q) = \langle \log(p(z, x)) \rangle - \langle \log(q(z|x)) \rangle.

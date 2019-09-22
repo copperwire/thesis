@@ -4,7 +4,7 @@ As previously discussed in section \ref{sec:architectures} we use the VGG16 pre-
 
 \subsection{K-means}
 
-We begin by investigating the K-means clustering algorithm using the $10^2$ primary principal components on all datasets. As in the previous chapter the VGG16 model is pre-trained on the imagenet dataset creating a set of vectors $\mathbf{x} \in \mathcal{R}^{8192}$. To cluster we use \lstinline{scikit-learn} implementation of the K-means algorithm, with default parameters (\cite{Pedregosa2011}). The results of the clustering runs are included in table \ref{tab:clstr_vgg}. We observe  that we are able to attain near perfect clustering on simulated data, and that there is a sharp decline in performance as we add noise by moving to the filtered and full datasets. 
+We begin by investigating the K-means clustering algorithm using the $10^2$ primary principal components on all datasets. As in the previous chapter the VGG16 model is pre-trained on the imagenet dataset creating a set of vectors $\mathbf{x} \in \R^{8192}$. To cluster we use \lstinline{scikit-learn} implementation of the K-means algorithm, with default parameters (\cite{Pedregosa2011}). The results of the clustering runs are included in table \ref{tab:clstr_vgg}. We observe  that we are able to attain near perfect clustering on simulated data, and that there is a sharp decline in performance as we add noise by moving to the filtered and full datasets. 
 
 \begin{table}[H]
 \centering 
@@ -18,18 +18,18 @@ In addition to the performance measures reported in table \ref{tab:clstr_vgg} it
 \centering
 
 	\subfloat{
-	\includegraphics[width=0.35\textwidth]{./plots/Simulatedconf_mat.pdf}
+	\includegraphics[width=0.35\textwidth]{./plots/Simulatedvgg_pca_conf_mat.pdf}
 
 }
 	\hspace{-1cm}
 	\subfloat{
-	\includegraphics[width=0.35\textwidth]{plots/Filteredconf_mat.pdf}
+	\includegraphics[width=0.35\textwidth]{plots/Filteredvgg_pca_conf_mat.pdf}
 }
 	\hspace{-1cm}
 	\subfloat{
-	\includegraphics[width=0.35\textwidth]{plots/Fullconf_mat.pdf}
+	\includegraphics[width=0.35\textwidth]{plots/Fullvgg_pca_conf_mat.pdf}
 }
-\caption[Pre-trained network - confusion matrices]{Confusion matrices for the K-means clustering of simulated, filtered and full AT-TPC events. The true labels indicate samples belonging to the p (proton), C (carbon), or other classes. }\label{fig:clster_confmat}
+\caption[Pre-trained network - confusion matrices]{Confusion matrices for the K-means clustering of simulated, filtered and full AT-TPC events. The true labels indicate samples belonging to the p (proton), carbon (C), or other classes. }\label{fig:clster_confmat}
 \end{figure}
 
 We repeat this analysis using a PCA dimensionality reduction on the latent space of the VGG16 model. This is done to estimate to what degree the class separating information is encoded in the entirety of the latent space, or in some select regions. The results from the PCA analysis were virtually identical to the results sans the PCA, and so we omit them for brevity. 
@@ -38,12 +38,12 @@ Furthermore, we wish to further characterize the clusters presented in figure \r
 
 \begin{figure}
 \includegraphics[width=\textwidth]{plots/filtered_vgg_cluster_repr.pdf}
-\caption[Filtered proton samples by cluster belonging]{Illustrating a sample of proton events from different K-means clusters from the filtered dataset. Each row belongs to a single cluster corresponding to the filtered confusion matrix in figure \ref{fig:clster_confmat}}\label{fig:vgg_clster_repr}
+\caption[Filtered proton samples by cluster belonging]{Illustrating a sample of proton events from different K-means clusters from the filtered dataset. Each row belongs to a single cluster corresponding to the filtered confusion matrix in figure \ref{fig:clster_confmat}}\label{fig:filtered_vgg_clster_repr}
 \end{figure} 
 
 \begin{figure}
 \includegraphics[width=\textwidth]{plots/full_vgg_cluster_repr.pdf}
-\caption[Full proton samples by cluster belonging]{Illustrating a sample of proton events from different K-means clusters from the full dataset. Each row belongs to a single cluster corresponding to the full confusion matrix in figure \ref{fig:clster_confmat}}\label{fig:vgg_clster_repr}
+\caption[Full proton samples by cluster belonging]{Illustrating a sample of proton events from different K-means clusters from the full dataset. Each row belongs to a single cluster corresponding to the full confusion matrix in figure \ref{fig:clster_confmat}}\label{fig:full_vgg_clster_repr}
 \end{figure} 
 
 In addition to the results presented in this section we performed clustering with a number of different algorithms included in the \lstinline{scikit-learn} package. None of them provided any notable differences from the K-means results or were significantly worse. Notably, the DBSCAN algorithm failed to provide any useful clustering results. We find this important as one of the major drawbacks of K-means, and the deep clustering algorithms presented in section \ref{sec:deep_clustering}, are all dependent on pre-determining the number of clusters, while this is not the case for DBSCAN. 

@@ -53,7 +53,7 @@ g_y = \frac{H +1 }{2} (\tilde{g}_y +1 ). \\
 
 \noindent The above equations included terms to compute and scale $\delta$, which we elect to estimate as a constant hyperparameter. As the combination between the number of filters $N$ and $\delta$ determines the size of the input region passed to the encoder. Forcing these glimpses to be equally sized we hypothesize will ensure the comparability of latent samples. Setting $\delta$ as a hyper-parameter was inspired by the work of \citet{Harris2019}.
 
-Given the scaled center we can then compute the filter-banks $F_x \in \mathcal{R}^{N \times W}$ and $F_y \in \mathcal{R}^{N \times H}$
+Given the scaled center we can then compute the filter-banks $F_x \in \R^{N \times W}$ and $F_y \in \R^{N \times H}$
 
 \begin{align}
 F_x [i, w] = \frac{1}{Z_x}e^{-\frac{(w - \mu_x^i)^2}{2\sigma^2}},\label{eq:Fx} \\
@@ -68,7 +68,7 @@ Finally we define the read and write functions with attention parameters. The re
 \text{read}(\mathbf{x}, \mathbf{\hat{x}}, \mathbf{h}_{t-1}^{dec}) = \gamma[F_y \mathbf{x} F_x^T, F_y \mathbf{\hat{x}} F_x^T].
 \end{equation} 
 
-\noindent For the write function we compute a new set of attention parameters which we denote as e.g. $\hat{\gamma}$. Subsequently we compute a dense layer transform from the current decoder state to a matrix $w_t \in \mathcal{R}^{N \times N}$ to ensure the matrix multiplications are sane. The write function is then defined as
+\noindent For the write function we compute a new set of attention parameters which we denote as e.g. $\hat{\gamma}$. Subsequently we compute a dense layer transform from the current decoder state to a matrix $w_t \in \R^{N \times N}$ to ensure the matrix multiplications are sane. The write function is then defined as
 
 \begin{equation}\label{eq:write}
 \text{write}(w_t)  = \hat{\gamma} \hat{F}^T_y w_t \hat{F}_x.

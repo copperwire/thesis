@@ -4,7 +4,6 @@ To test the hypothesis that classification can be improved by using unsupervised
 \begin{enumerate}[start=0, label={(\bfseries Ar\arabic*):}, ref={(Ar\arabic*)}]
 	\item \label{item:clf_no_vgg} End-to-end training on data using kernel and filter architectures in a naive manner with decreasing kernel sizes, increasing filter sizes and a mirrored encoder-decoder structure
 	\item \label{item:clf_freeze_vgg} Using the VGG16 network to compute a representation of the data which is compressed by one or more dense layers and finally reconstructed to the original image by a naively constructed decoder. 
-	\item  \label{item:clf_tuning_vgg} Using the VGG16 network as the encoder, adjusting it's weights by the reconstruction loss with a naively constructed decoder. 
 \end{enumerate}
 
 \noindent Choosing an architecture for the convolutional autoencoder is the principal challenge to solve. We want to estimate if the reconstruction and optional latent losses relate to the classification accuracy achieved by the logistic regression classifier. \todo{add plot with reconst/loss vs f1 scores}
@@ -57,7 +56,7 @@ For the best models found by random search we re-compute the performance with $K
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{plots/ac_n_samples.pdf}
+\includegraphics[width=\textwidth, height=6.5cm]{plots/ac_n_samples.pdf}
 \caption[Autoencoder performance on labeled subsets]{Latent space classification performance with a logistic regression classifier on a \ref{item:clf_no_vgg} representation of each dataset. For each dataset a random subsample is drawn and iteratively added to in increments of $n=100$ data-points. To estimate the variance of this procedure we repeat the procedure $N=10$ times.}\label{fig:ac_n_labeled}
 \end{figure}
 
@@ -65,7 +64,7 @@ For the best models found by random search we re-compute the performance with $K
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{plots/ac_tsne.pdf}
+\includegraphics[width=\textwidth, height=7cm]{plots/ac_tsne.pdf}
 \caption[autoencoder latent space visualization]{Visualizing the latent space of an \ref{item:clf_no_vgg} trained autoencoder. The mapping is a t-SNE projection of the latent space to two dimensions. We re-iterate that the axes have non-informative units.}\label{fig:ac_tnse}
 \end{figure}
 
@@ -83,7 +82,7 @@ Each of the configurations found by the random search was then evaluated with $K
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{plots/vgg_ac_n_samples.pdf}
+\includegraphics[width=\textwidth, height=6.5cm]{plots/vgg_ac_n_samples.pdf}
 \caption[Autoencoder performance on labeled subsets]{Latent space classification performance with a logistic regression classifier on a \ref{item:clf_freeze_vgg} representation of each dataset. For each dataset a random subsample is drawn and iteratively added to in increments of $n=100$ data-points. To estimate the variance of this procedure we repeat the procedure $N=10$ times.}\label{fig:vgg_ac_n_labeled}
 \end{figure}
 
@@ -91,7 +90,7 @@ Lastly for the architecture we project the latent space for comparison with the 
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{plots/vgg_ac_tsne.pdf}
+\includegraphics[width=\textwidth, height=7cm]{plots/vgg_ac_tsne.pdf}
 \caption[VGG16-autoencoder latent space visualization]{Visualizing the latent space of an \ref{item:clf_freeze_vgg} trained autoencoder. The mapping is a t-SNE projection of the latent space to two dimensions.}\label{fig:ac_tnse}
 \end{figure}
 
