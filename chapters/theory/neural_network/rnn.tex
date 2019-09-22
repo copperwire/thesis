@@ -42,7 +42,24 @@ $\mathbf{h}_{t+1}$ $\gets$ \KwSty{matmul}($\mathbf{F}$, $\mathbf{W}$) + b\;
 
 \subsection{Long short-term memory cells}\label{sec:lstm}
 
-\begin{itemize}
-\item natural extension of RNN, where RNN carries the entire long-term dependency LSTMs introduce forgetting parts of the history
-\item implements gates in the architecture using sigmoid activations 
-\end{itemize}
+One of the principal challenges for the RNN cell is in the handling of the state of the cell. The state acts as a sort of memory, but without moderation it tries to recall the entire history of the sequence. A solution to this problem was proposed by \cite{Hochreiter1997} in their description of the long short-term memory (LSTM) network. The LSTM network introduced the ability for the network to selectively forget part of its memory. This was a boon to the language processing community, as they regularly tackle problems with both long and short term relationships. 
+
+The LSTM network implements a series of layers inside each cell. By combining sigmoid, $\sigma{\cdot}$, and the hyperbolic tangent function, $\tau(\cdot)$, they compute point-wise manipulations of the state $\mathbf{h}_t$, previous output $\mathbf{c}_t$ and input $\mathbf{x}_t$. Lastly, we define the input gate $\mathbf{i}_t$, output gate $\mathbf{o}_t$ and forget gate $\mathbf{f}_t$, each with their own weight matrices $\mathbf{W}_{\{i, f, o, c\}}$. The gates are then computed as
+
+\begin{align}
+\mathbf{i_t} = \sigma(\mathbf{W}_i[\mathbf{h}_{t-1}, \mathbf{x}_t]),\\
+\mathbf{f_t} = \sigma(\mathbf{W}_f[\mathbf{h}_{t-1}, \mathbf{x}_t]),\\
+\mathbf{o_t} = \sigma(\mathbf{W}_o[\mathbf{h}_{t-1}, \mathbf{x}_t]).
+\end{align}
+
+\noindent Following from these definitions, we can compute the new state and cell outputs
+
+\begin{align}
+\hat{\mathbf{c}}_t &= \tau (\mathbf{W}_o[\mathbf{h}_{t-1}, \mathbf{x}_t]), \\
+\mathbf{c}_t &= \mathbf{i}_t \circ \hat{\mathbf{c}}_t + \mathbf{f}_t \circ \mathbf{c}_{t-1}, \\ 
+\mathbf{h}_t &= \mathbf{o}_t \circ \tau (\mathbf{c}_t).
+\end{align}
+
+\noindent Recall the Hadamard product denoted by $\circ$, and the concatenation of two vectors denoted by square brackets. In the equations above we have also followed the convention of including a column of ones in the data, which bakes the biases into the weight matrices. 
+
+The LSTM network was designed to allow for the network to forget parts of the input. However, it also solves a vanishing gradient problem as the gradient flows through the network by the cell outputs.
