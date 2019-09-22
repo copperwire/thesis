@@ -23,7 +23,7 @@ E_{out} = \langle C(\mathbf{\hat{y}}^t, f(\mathbf{x}^t; \theta^*_S))\rangle_{S,\
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{../figures/bias_var_degree.pdf}
+\includegraphics[width=0.55\textwidth, height=6.5cm]{../figures/bias_var_degree.pdf}
 \caption[Bias-variance decomposition ]{Decomposition of the bias and variance from the overall test-set error $E_{out}$. A set of polynomials of varying degrees are fit to a known function using randomly selected training samples. The polynomial degree is denoted by the x-axis label. With the set of polynomials we evaluate the bias and variance terms shown in equation \ref{eq:bias} and \ref{eq:variance}. In the figure we observe the characteristic relationship where the out of sample error decreases steadily with complexity until the models start to over-fit as measured by the variance, and the $E_{out}$ increases as a consequence.}\label{fig:bv}
 \end{figure}
 

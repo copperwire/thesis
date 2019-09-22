@@ -1,9 +1,9 @@
 \chapter{Fundamental Machine Learning Concepts}\label{chap:fundament}
 \section{Introduction}\label{sec:fundament_intro}
 
-In this thesis we explore the application of advanced machine learning methods to experimental nuclear physics data. To properly understand the framework of optimization, validation, and challenges we, face we'll introduce these in turn using two models: linear and logistic regression. Before those discussions we, briefly outline the process of model fitting and introduce the difference in models where there is a known versus an unknown outcome.
+In this thesis, we explore the application of advanced machine learning methods to experimental nuclear physics data. To properly understand the framework of optimization, validation, and challenges we face, we will introduce these using two models: linear and logistic regression. Before those discussions, we briefly outline the process of model fitting and introduce the difference in models where there is a known versus an unknown outcome.
 
-Fitting models to data is the formal framework by which much of modern science is underpinned. In most scientific research the researcher has a need to formulate some model that represents a given theory. In physics we construct models to describe complex natural phenomena which we use to make predictions or infer inherent properties about the natural world. These models vary from estimating the Hamiltonian of a simple binary spin system like the Ising model, to more complex methods like variational Markov chain Monte Carlo which is used for many-body quantum mechanics.
+Fitting models to data is the formal framework by which much of modern science is underpinned. In most scientific research, the researcher needs to formulate some model that represents a given theory. In physics, we construct models to describe complex natural phenomena which we use to make predictions or infer inherent properties about the natural world. These models vary from estimating the Hamiltonian of a simple binary spin system like the Ising model, to more sophisticated methods like variational Markov chain Monte Carlo models, which are used in many-body quantum mechanics.
 
 We view this process as approximating an unknown function $\hat{f}$ which takes a state $\mathbf{X}$ as input and gives some output $\mathbf{\hat{y}}$,  
  
@@ -11,9 +11,9 @@ We view this process as approximating an unknown function $\hat{f}$ which takes 
  \hat{f}(\mathbf{X}) = \mathbf{\hat{y}}.
  \end{align}
 
-\noindent To approximate this function we use an instance of a model: $f(\mathbf{X}; \theta) = \mathbf{y}$, where we don't necessarily have a good ansatz for the form of $f$ or the parameters $\theta$. The model can take on different forms depending on the purpose, but the parameters $\theta$ can be thought of as a set of matrices that are used to transform the input to the output dimension. Additionally the output of the function can be multi-variate, discrete or continuous which informs the choice of model for a particular problem. In this first part of the chapter we consider a single real valued outcome. Additionally we note  that in this thesis we use a notation on the form $f(y | x; \theta )$ which reads as the function $f$ with output $y$ given $x$ and the parameters $\theta$, and is equivalent to the notation $y = f(x; \theta)$. In the event that $f$ is a probability density the aforementioned reads as the probability of $y$ given $x$ and parameters $\theta$, the former is a more common notation for probabilities and the latter more common for continuous real-valued outcomes. 
+\noindent To approximate this function we use an instance of a model: $f(\mathbf{X}; \theta) = \mathbf{y}$, where we don't necessarily have a good ansatz for the form of $f$ or the parameters $\theta$. The model can take on different forms depending on the purpose, but the parameters $\theta$ can be thought of as a set of matrices that transform the input into the output. Additionally, the output of the function can be multi-variate, discrete, or continuous, which informs the choice of model for a particular problem. In this first part of this chapter, we consider a single real-valued outcome. Additionally we note  that in this thesis we use a notation on the form $f(y | x; \theta )$ which reads as the function $f$ with output $y$ given $x$ and the parameters $\theta$, and is equivalent to the notation $y = f(x; \theta)$. If $f$ is a probability density the relationship above reads as the probability of $y$ given $x$ and parameters $\theta$, the former is a more common notation for probabilities and the latter more common for continuous real-valued outcomes. 
 
-There is also manipulation of expectation values in both this chapter and the following, and so we introduce the notation used throughout the thesis here. Let $p(x)$ be a normalized probability density function, i.e.
+The theory we present in this thesis is built on the understanding of expectation values, and how how they behave.  Here we define some key properties of expectation values in general. Let $p(x)$ be a normalized probability density function, i.e.
 
 \begin{equation}
 1 = \int_{-\infty}^\infty p(x) dx.
@@ -25,17 +25,17 @@ There is also manipulation of expectation values in both this chapter and the fo
 \langle f(x) \rangle_p :=\int_{-\infty}^\infty f(x) p(x) dx.
 \end{equation}
 
-\noindent Some special expectations are notable because of their wide applicability, we concern ourselves primarily with the mean and variance of a distribution. Those expectations are also known as the first and second moment of a distribution are defined as
+\noindent Some particular expectations are notable because of their ubiquitousness. Here we concern ourselves primarily with the mean and variance of a distribution. These expectations are also known as the first and second moment of a distribution and are defined as
 
 \begin{align}
 \mu &:= \langle x \rangle_p, \\
 \sigma^2 &:= \langle x^2 \rangle_p  - \langle x\rangle_p^2.
 \end{align}
 
-\noindent Returning to the question of approximating $\hat{f}$ we begin with the objective of the model: to minimize the discrepancy, $g(|\hat{y} - y|)$, between our approximation and the true target values. An  example of the function $g$ is the mean squared error function used in many modeling applications, notably in linear regression which we explore in section \ref{sec:LinReg}.
+\noindent Returning to the question of approximating $\hat{f}$ we begin with the objective of the model: to minimize the discrepancy, $g(|\hat{y} - y|)$, between our approximation and the true target values. An example of the function $g$ is the mean squared error function used in many modeling applications, notably in linear regression which we explore in section \ref{sec:LinReg}.
 
-In this paradigm we have access to the outcomes of our process, $\hat{y}$, and the states, $\mathbf{X}$. In machine learning parlance this is known as supervised learning. 
+In this paradigm, we have access to the outcomes of our process, $\hat{y}$, and the states, $\mathbf{X}$. In machine learning parlance, this is known as supervised learning. 
 
-However, this thesis deals largely with the problem of modeling when one only has access to the system states. These modeling tasks are know as unsupervised learning tasks. As the models are often similar in supervised and unsupervised learning the concepts, terminology and challenges inherent to the former are also ones we have to be mindful of in the latter.
+However, this thesis deals mainly with the problem of modeling when one only has access to the system states. These modeling tasks are known as unsupervised learning tasks. As the models are often similar in supervised and unsupervised learning the concepts, terminology, and challenges inherent to the former are also ones we have to be mindful of in the latter.
 
-Approximating functions with access to process outcomes starts with the separation of our data into two sets with zero intersection. This is done so that we are able to estimate the performance of our model in the real world. To elaborate the need for this separation we explore the concepts of over-fitting and under-fitting to the data later in this chapter.
+Approximating functions with access to process outcomes starts with the separation of our data into two sets with zero intersection. This is done so that we can estimate the performance of our model in the real world. To elaborate on the need for this separation, we explore the concepts of over-fitting and under-fitting to data later in this chapter.

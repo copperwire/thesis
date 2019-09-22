@@ -109,8 +109,37 @@ As with the computational graph most of the details about the implementation tra
 
 \subsection{Applying the framework}
 
-As we did for the convolutional autoencoder we walk through the configuration and fitting of the DRAW model to simulated AT-TPC data to illustrate its usage. This tutorial is also available in notebook form and can be retrieved  from our \href{https://github.com/ATTPC/VAE-event-classification/blob/master/notebooks/simulated_draw_tutorial.ipynb}{repository} and hosted locally.
+As we did for the convolutional autoencoder we walk through the configuration and fitting of the DRAW model to simulated AT-TPC data to illustrate its usage. This tutorial is also available in notebook form and can be retrieved  from our \href{https://github.com/AkTTPC/VAE-event-classification/blob/master/notebooks/simulated_draw_tutorial.ipynb}{repository} and hosted locally.
 
-We begin by considering the semi-supervised case to explore the latent configurations that yield high quality latent spaces. 
+The code which loads the data is identical to that of the convolutional autoencoder, and so we omit this part for brevity. We then begin by considering the attention hyperparameters. Recall from section \ref{sec:draw} the number of filters $N$ and the size of the glimpse $\delta$. The combination of these parameters determine the size and zoom of the event 
 
-\subsubsection{Semi-supervised classification }
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+ref_event = og_events[3]
+gx = (128 + 1)/2 * 1.2
+gy = (128 + 1)/2 * 1
+sigma = 0.2
+delta = 0.8
+gamma = 1
+N = 40
+fb = filterbank(*x_full.shape[1:-1])
+Fx, Fy = fb.filters(gx, gy, sigma, delta, gamma, N)
+filtered = np.einsum("ijk, kl, lm->jm", Fy, ref_event, np.squeeze(np.transpose(Fx, [0, 2, 1])))
+
+fig, ax = plt.subplots(ncols=2, figsize=(12, 10))
+fig.suptitle("Feature extraction by filters", fontsize=25)
+ax[0].imshow(np.squeeze(filtered), cmap="Greys")
+ax[0].set_title("Extracted segment", fontsize=20)
+
+ax[1].imshow(ref_event,  cmap="Greys")
+ax[1].set_title("Original event", fontsize=20)
+plt.tight_layout()
+\end{lstlisting}
+\end{minipage}
+
+
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+\end{lstlisting}
+\end{minipage}

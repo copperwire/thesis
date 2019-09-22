@@ -7,7 +7,7 @@ The graph is constructed with specifications from configuration dictionaries pas
 
 \subsection{Computational graph}
 
-The private\footnote{The term private is used loosely in the context of python programs, as the language does not actually maintain private methods. However, methods that are prefixed with an underscore are to be treated as private and are not exposed with public apis and in documentation by convention.} function which enacts the computational graph is \lstinline{_ModelGraph}. It accepts arguments for the strength and type of regularization on the kernel and bias parameters as well as the activation function to be used for the internal representations, and the projection to output space. 
+The private\footnote{The term private is used loosely in the context of python programs, as the language does not actually maintain private methods. However, methods that are prefixed with an underscore are to be treated as private and are not exposed with public APIs and in documentation by convention.} function which enacts the computational graph is \lstinline{_ModelGraph}. It accepts arguments for the strength and type of regularization on the kernel and bias parameters as well as the activation function to be used for the internal representations, and the projection to output space. 
 
 The encoder is constructed with a for loop over the number of layers, using a 2D convolutional layer and best practices for the application of batch-normalization. Wherein the normalization is applied after the activation for exploding-gradient susceptible functions and before for functions with a vanishing gradient problem. In TensorFlow the construction of the encoder is coded as 
 
@@ -150,15 +150,15 @@ def kl_loss(self, args):
 \end{lstlisting}
 \end{minipage}
 
-Alternatively to a KL-divergence the latent space may be regularized in the style proposed by \citet{Zhao}. In this paradigm we compute a loss over the entire latent sample, and not component wise as the KL-divergence does. We use the radial basis function kernel to compute the maximum mean discrepancy divergence term introduced in equation \ref{eq:mmd} \todo{include implement of MMD?}
+Alternatively to a KL-divergence the latent space may be regularized in the style proposed by \citet{Zhao}. In this paradigm we compute a loss over the entire latent sample, and not component wise as the KL-divergence does. We use the radial basis function kernel to compute the maximum mean discrepancy divergence term introduced in equation \ref{eq:mmd}, and use the implementation provided by \cite{Zhao} on their \href{http://szhao.me/2017/06/10/a-tutorial-on-mmd-variational-autoencoders.html}{website}. We choose the prior distribution fore MMD divergence to be a Gaussian mixture of two normal distributions with unit variance and means with a distance $\geq 3\sigma$ from each other. 
 
 \subsection{Applying the framework}
 
-To illustrate the use and functionality of the model we'll demonstrate the pipeline for constructing a semi-supervised and clustering version of the architecture using the code written for this thesis. Beginning with the semi-supervised use-case. These tutorials are also available in the github repository for the thesis. They are provided as \lstinline{jupyter-notebooks} and can be viewed in browser, or hosted locally. The example takes the reader through the entirety of the analysis pipeline as presented in section \ref{sec:architectures} and shows how the model was fit to data as well as post-analysis steps. 
+To illustrate the use and functionality of the model we'll demonstrate the pipeline for constructing a semi-supervised and clustering version of the architecture using the code written for this thesis. Beginning with the semi-supervised use-case. These tutorials are also available in the Github repository for the thesis. They are provided as \lstinline{jupyter-notebooks} and can be viewed in browser, or hosted locally. The example takes the reader through the entirety of the analysis pipeline as presented in section \ref{sec:architectures} and shows how the model was fit to data as well as post-analysis steps. 
 
 The goal of this example is to introduce the reader to the analysis framework used in this thesis. We will go through defining a model with convolutional parameters and fit this model to simulated AT-TPC events. With a 2D latent space this allows us to explore the latent configuration directly, but yields worse reconstructions. The \href{https://github.com/ATTPC/VAE-event-classification/blob/master/notebooks/simulated_tutorial.ipynb}{notebook-tutorial} walks through the example and is entirely analogous to this section.
 
-We begin by loading the data files. The repository comes equipped with a small data-set of simulated data that can be analyzed. To achieve reasonable run-times a gpu enabled TensorFlow distribution is encouraged\footnote{If the run-time is too slow the data can be replaced with the MNIST data, which is much smaller in terms of size per data-point}\todo{add sim-data to some file hosting}. We assume that the script as we walk through it is located in the \lstinline{notebooks/} directory of the repository. We begin by making the necessary imports for the analysis. The packages \lstinline{TensorFlow} and \lstinline{matplotlib} have to be installed on the system for the tools to work, along with \lstinline{Numpy} and \lstinline{pandas}. The \lstinline{data_loader} module contains functions to load files to \lstinline{numpy} arrays, while the module \lstinline{convolutional_VAE} contains the model class itself.
+We begin by loading the data files. The repository comes equipped with a small data-set of simulated data that can be analyzed. To achieve reasonable run-times a GPU enabled TensorFlow distribution is encouraged\footnote{If the run-time is too slow the data can be replaced with the MNIST data, which is much smaller in terms of size per data-point}\todo{add sim-data to some file hosting}. We assume that the script as we walk through it is located in the \lstinline{notebooks/} directory of the repository. We begin by making the necessary imports for the analysis. The packages \lstinline{TensorFlow} and \lstinline{matplotlib} have to be installed on the system for the tools to work, along with \lstinline{Numpy} and \lstinline{pandas}. The \lstinline{data_loader} module contains functions to load files to \lstinline{numpy} arrays, while the module \lstinline{convolutional_VAE} contains the model class itself.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
@@ -339,14 +339,5 @@ ax.legend(loc="best", fontsize=20)
 \caption[2D latent space for simulated data]{2D latent space representation of the simulated AT-TPC data.}\label{fig:latent_sim}
 \end{figure}
 
-\noindent Now that we have prepared a latent space we can do some analysis. The semi-supervised pipeline is aimed at investigating the quality of the  latent space and so we begin by
-\todo{add classifier stuff} 
-
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[language=iPython]
-
-\end{lstlisting}
-
-\end{minipage}
-
+\noindent The resulting latent space shown in figure \ref{fig:latent_sim} is obviously linearly separable.
 

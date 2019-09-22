@@ -38,7 +38,7 @@ Training the DCEC algorithm is split in two phases. First, the convolutional aut
 
 The fundamental challenge that DCEC faces is that it is dependent on a K-means solution that is good enough after the pre-training of the convolutional autoencoder. As the K-means algorithm is susceptible to outliers, scale differences in the latent axes,  and assumes that the clusters are isotropic Gaussians. 
 
-\subsection{Mixture of autoencoders}
+\subsection{Mixture of autoencoders}\label{sec:mixae}
 
 Another way of representing the clusters is by having multiple latent spaces representing the underlying manifolds that describe each class. This is the central idea in the Mixture of autoencoders (MIXAE) algorithm, introduced by  \cite{Zhang}. To ensure that each autoencoder represents a cluster a soft-max classifier is coupled with the set of latent samples. The soft-max classifier is trained to output cluster probabilities, and penalized for collapsing to assigning one cluster only. To connect the cluster probabilities to the reconstruction a multiplier by the cluster confidence is attached to the reconstruction error of each autoencoder.
 
@@ -69,7 +69,7 @@ S(\{\mathbf{p}^{(i)}\}_i)_{\text{batch}}&= \left(-\sum_j \bar{p}_j \log \bar{p}_
 
 From equations \ref{eq:mixae_reconst}, \ref{eq:mixae_sample}, and \ref{eq:mixae_batch} we can then compose the full loss for the MIXAE model. \cite{Zhang} note that the optimization depends heavily on the weighting of the different terms and so we introduce the weighting hyperparameters $\alpha$, $\gamma$ and $\theta$, and write the total loss over a mini-batch as 
 
-\begin{equation}
+\begin{equation}\label{eq:mixae_loss}
 \begin{split}
 \mathcal{L}_{\text{total}}(\{\hat{\mathbf{x}}^{(i)}\}^\beta_i) = \frac{1}{\beta}\sum_i \Big( &\frac{t\cdot v}{\theta} \mathcal{L}_x(\mathbf{p}^{(i)},\,\mathbf{x}^{(i)},\, \hat{\mathbf{x}}^{(i)} ) \\
 &+ \alpha S(\mathbf{p}^{(i)})_{\text{sample}} \Big) \\
