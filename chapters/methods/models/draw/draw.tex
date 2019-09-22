@@ -111,7 +111,7 @@ As with the computational graph most of the details about the implementation tra
 
 As we did for the convolutional autoencoder we walk through the configuration and fitting of the DRAW model to simulated AT-TPC data to illustrate its usage. This tutorial is also available in notebook form and can be retrieved  from our \href{https://github.com/AkTTPC/VAE-event-classification/blob/master/notebooks/simulated_draw_tutorial.ipynb}{repository} and hosted locally.
 
-The code which loads the data is identical to that of the convolutional autoencoder, and so we omit this part for brevity. We then begin by considering the attention hyperparameters. Recall from section \ref{sec:draw} the number of filters $N$ and the size of the glimpse $\delta$. The combination of these parameters determine the size and zoom of the event 
+The code which loads the data is identical to that of the convolutional autoencoder, and so we omit this part for brevity. We then begin by considering the attention hyperparameters. Recall from section \ref{sec:draw} the number of filters $N$ and the size of the glimpse $\delta$. The combination of these parameters determine the size and zoom of the event, we illustrate the application of these filters in the notebook 
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
@@ -136,10 +136,112 @@ ax[1].set_title("Original event", fontsize=20)
 plt.tight_layout()
 \end{lstlisting}
 \end{minipage}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth, height=8cm]{filtered.pdf}
+	\caption[DRAW filters applied to simulated event]{DRAW filters applied to a simulated event. Original on the right, and the extracted segment on the left}
+	\label{fig:draw_filter}
+\end{figure}
 
-
+\noindent We can now determine the model with its hyperparameters. The syntax is very similar to the convolutional autoencoder, with the exception that that the user supplies parameters for a convolutional or attention based feature extraction.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
+T = 3
+enc_size = 256
+dec_size = 256
+latent_dim = 3
+use_attn = False
+if use_attn:
+    delta_write = delta
+    delta_read = delta
+    read_N = N
+    write_N = N
+    attn_config = {
+        "read_N": read_N,
+        "write_N": write_N,
+        "write_N_sq": write_N ** 2,
+        "delta_w": delta_write,
+        "delta_r": delta_read,
+    }
+    conv_config = None
+    use_conv = None
+else:
+    n_layers = 4
+    kernel_architecture = [5, 5, 3, 3]
+    filter_architecture = [32, 16, 8, 4]
+    strides_architecture = [2, 2, 2, 2]
+    pool_architecture = [0, 0, 0, 0]
+    conv_config = {
+        "n_layers":n_layers,
+        "kernel_size":kernel_architecture,
+        "filters":filter_architecture,
+        "strides":strides_architecture,
+        "pool":pool_architecture,
+    }
+    attn_config = None
+    use_conv = True
+    
+mode_config = {
+    "simulated_mode":False, #deprecated, to be removed
+    "restore_mode":False, #indicates whether to load weights 
+    "include_KL":False, #whether to compute the KL loss over the latent space
+    "include_MMD":False, #same as above, but MMD 
+    "include_KM":False, #same as above, but K-means. See thesis for a more in-depth treatment of these
+    "batchnorm":False, #whether to include batch-normalization between layers
+    "use_vgg":False, #whether the input data is from a pre-trained model 
+    "use_dd":False, #whether to use the dueling-decoder objective 
+}
+
+model = DRAW(
+    T,
+    dec_size,
+    enc_size,
+    latent_dim,
+    x_full.shape,
+    beta=1,
+    use_attention=use_attn,
+    attn_config=attn_config,
+    use_conv=use_conv,
+
 \end{lstlisting}
 \end{minipage}
+
+\noindent The compilation and training code is identical to the convolutional autoencoder, and so we omit it for brevity. Upon completion of the training we can inspect the reconstruction to get an indication of whether the model has converged to satisfaction. The reconstructions are shown in figure \ref{fig:draw_reconst}. We observe in the reconstruction that the DRAW algorithm is picking up the hexagonal pad of higher sensor-pad density in the center of the image. Additionally, the model seems to be picking  up on the artifacts introduced by the simulation.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth, height=10cm]{reconst.pdf}
+	\caption[DRAW reconstructions on simulated data]{DRAW reconstructions on simulated data. Each column is the reconstruction of one event, with the original on the last row. The two first rows are then the canvass as it gets updated, and the second to last row is the finished reconstructions.}
+	\label{fig:draw_reconst}
+\end{figure}
+
+It is additionally interesting to inspect the latent space. We chose the latent space to be three dimensional to be able to easily visualize the space. We illustrate the latent space in figure \ref{fig:draw_latent_demo}. In the figure we do not observe the clear linear separability as in figure \ref{fig:latent_sim}, and so we demonstrate the application of a linear regression classifier to the latent space.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+lr_train, lr_test, y_train, y_test = train_test_split(latent_labeled, y)
+lr_model = LogisticRegression(
+	solver="lbfgs",
+	class_weight="balanced",
+	max_iter=1000,
+)
+lr_model.fit(lr_train, y_train)
+print("Model accuracy: ", lr_model.score(lr_test, y_test))
+
+$ Model accuracy: 0.94
+\end{lstlisting}
+\end{minipage}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth, width=11cm]{latent.pdf}
+	\caption{DRAW latent space for simulated data, with three time-steps and a three dimensional latent-space. The colors in the scatter-plot indicate the value in the third dimension. We observe some linear separability, but how well the classes separate is not clear.}
+	\label{fig:draw_latent_demo}
+\end{figure}
+
+
+

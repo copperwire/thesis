@@ -34,8 +34,8 @@ O = \frac{W - K + 2P}{S} + 1.
 
 \begin{figure}
 \centering
-\subfloat[{}]{{\includegraphics[width=0.5\textwidth]{../figures/conv_illustration}}}
-\subfloat[{}]{{\includegraphics[width=0.5\textwidth]{../figures/conv_zeropad_illustration}}}
+\subfloat[{}]{{\includegraphics[width=0.4\textwidth, height=5cm]{../figures/conv_illustration}}}
+\subfloat[{}]{{\includegraphics[width=0.4\textwidth, height=5cm]{../figures/conv_zeropad_illustration}}}
 \caption[Convolutional layer illustration]{Two examples of a convolutional layers forward pass, which is entirely analogous to equation \ref{eq:fwd_multi} for fully connected layers. The convolutional layer maintains a $N$ kernels, or filters, that slides over the input taking the dot product for each step, this is the convolution of the kernel with the input. In \textbf{(a)} a $3\times3$ kernel is at the first position of the input and produces one floating point output for the $9$ pixels it sees. The kernel is a matrix of weights that are updated with backpropagation of errors. An obvious problem with \textbf{(a)} is that the kernel center cannot be placed at the edges of the image, we solve this by padding the image with zeros along the outer edges. This zero-padding is illustrated in \textbf{b} where zeros are illustrated by the dashed lines surrounding the image. The kernel then convolves over the whole image including the zeroed regions thus loosing less information. Figure copied from \citet{Dumoulin2016}}\label{fig:conv_aritmetic} 
 \end{figure}
 
