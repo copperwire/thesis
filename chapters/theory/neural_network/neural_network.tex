@@ -126,7 +126,7 @@ H(x) = f'(x) = 	\begin{cases}1, & \text{if } x > 0 \\
 
 \noindent Common to most neural network activations the computation of the derivative is very light-weight. In the case of the $ReLU$ function the computation of the derivative uses the mask needed to compute the activation itself, requiring no extra computing resources. 
 
-It is important to note that the cost and activation as introduced in equations \ref{eq:tot_err}, \ref{eq:relu} and \ref{eq:heaviside} is not a be-all-end-all solution, but chosen for their ubiquitous nature in modern machine learning. Some forays have even been made into non-linear activations or composite interactions that mimic arithmetic operation. \todo{add citations}
+It is important to note that the cost and activation as introduced in equations \ref{eq:tot_err}, \ref{eq:relu} and \ref{eq:heaviside} is not a be-all-end-all solution, but chosen for their ubiquitous nature in modern machine learning.
 
 Returning to the optimization problem we start to unravel the backpropagation algorithm. We use equation \ref{eq:err_grad} to find the derivatives in terms of the last parameters, i.e. $\wij^{[n]}$ and $b_j^{[n]}$
 
@@ -226,15 +226,15 @@ The backward propagation framework is highly generalizable to variations of acti
 
 \subsection{Neural network architectures}
 
-When creating a neural network on a computer with finite resources, a principled consideration must be made on the width and depth of the network. These terms are common in machine learning literature and describes how many nodes per layer, and how many layers a network consists of respectively. A discussion of this consideration is neatly summarized in the work of \citet{Lin2017}. The authors provide strong reasoning for prioritizing deep networks over wide ones. They show that one can view many physical systems that generate the data a causal hierarchy (see figure 3 in \citet{Lin2017} for an illustration). This representation of stepwise transformations intuitively lends itself well to representation by a sequence of layers. This intuition builds on the fact that each layer contains a transformed, compressed, representation of the data. It is this bottleneck property of information compression that motivates the use of autoencoders, neural networks that compress and reconstruct the input, when unlabeled data is plentiful and labeled data is scarce.
+When creating a neural network on a computer with finite resources, a principled consideration must be made on the width and depth of the network. These terms are standard in machine learning literature and describe how many nodes per layer, and how many layers a network consists of respectively. A discussion of this consideration is neatly summarized in the work of \citet{Lin2017}. The authors provide strong reasoning for prioritizing deep networks over wide ones. They show that one can view many physical systems that generate the data a causal hierarchy (see figure 3 in \citet{Lin2017} for an illustration). This representation of stepwise transformations intuitively lends itself well to representation by a sequence of layers. This intuition builds on the fact that each layer contains a transformed, compressed, representation of the data. It is this bottleneck property of information compression that motivates the use of autoencoders, neural networks that compress and reconstruct the input when unlabeled data is plentiful and labeled data is scarce.
 
 \subsection{Activation functions}\label{sec:activation}
 
-Building neural networks depend in a large part on the choice of the non-linearity that acts on the output from each layer. They are intrinsically tied to the attributes of the optimization scheme, gradients have to pass backwards through all the layers to adjust the weights to make better predictions in the next iterations. In this section we'll discuss the attributes, strengths and weaknesses of the four principal functions used as activations in neural networks. 
+Building neural networks depend in large part on the choice of the non-linearity that acts on the output from each layer. They are intrinsically tied to the attributes of the optimization scheme. Gradients have to pass backwards through all the layers to adjust the weights to make better predictions in the next iterations. In this section, we will discuss the attributes, strengths, and weaknesses of the four principal functions used as activations in neural networks. 
 
 \subsubsection{Sigmoid activation functions}
 
-Two sigmoid functions have been traditionally used in neural networks, while they are now mostly of interest for educational purposes they still see some use in some niche models. Through logistic regression we've already been introduced to the logistic sigmoid function, used in early classifying neural networks. Mathematically it has the form 
+Two sigmoid functions have been traditionally used in neural networks, and while they are now mostly of interest for educational purposes, they still see some use in niche models. Through logistic regression, we have already been introduced to the logistic sigmoid function. The logistic sigmoid was for the same reasons used in early classifying neural networks. Mathematically it has the form 
 
 \begin{equation}
 \sigma(x) = \frac{1}{1-e^{-x}}.
@@ -246,47 +246,47 @@ Two sigmoid functions have been traditionally used in neural networks, while the
 \frac{d\sigma}{dx} = \sigma(x)(1 - \sigma(x))
 \end{equation}
 
-\noindent The second sigmoid activation is the hyperbolic tangent function. It saw wide-spread use in the start of the 2000's, especially in recurrent neural networks which we'll discuss in greater detail later in this chapter. It is defined as 
+\noindent The second sigmoid activation is the hyperbolic tangent function. It saw widespread use at the start of the 2000s, especially in recurrent neural networks which we will discuss in greater detail later in this chapter. It is defined as 
 
 \begin{equation}
 \tanh x = \frac{e^x - e^{-x}}{e^x + e^{-x}}
 \end{equation}
 
-\noindent We observe that the hyperbolic tangent is simply a shifted and scaled version of the logistic sigmoid. It's derivative is slightly more expensive than for the logistic sigmoid, it is given as 
+\noindent We observe that the hyperbolic tangent is simply a shifted and scaled version of the logistic sigmoid. Its derivative is slightly more expensive than for the logistic sigmoid, and it is given as 
 
 \begin{equation}
 \frac{d \tanh x}{d x}  = 1-\tanh^2 x
 \end{equation}
 
-\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure we observe that for relatively small values the gradient goes to zero, which makes optimization hard. Additionally we note one of the convenient properties of the sigmoid functions; their values are capped. This prohibits the gradient from exploding but also causes problems in the gradient. We also note that the logistic sigmoid is capped at zero, like the ReLU function, while the hyperbolic tangent is bonded at $-1$. The hyperbolic tangent then has the option to emit a bounded anti-signal.
+\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure, we observe that for relatively small values the gradient goes to zero, which makes optimization hard. Additionally, we note one of the convenient properties of the sigmoid functions; their values are capped. This prohibits the gradient from exploding but also causes problems in the gradient. We also note that the logistic sigmoid is capped at zero, like the ReLU function, while the hyperbolic tangent is bonded at $-1$. The hyperbolic tangent then has the option to emit a bounded anti-signal.
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{../figures/activationssigmoids.pdf}
-\caption[Sigmoid activation functions]{Sigmoid activation functions and their derivatives. The colorization indicates the value of the multiplicative weight $w$ in addition to the function argument $x$, which we differentiate with respect to. We observe that the derivative deteriorates to zero as the function moves away from zero. The derivative going to zero means that a network using sigmoid activations generally struggle with saturated gradients which slows down training dramatically.}\label{fig:sigmoid}
+\caption[Sigmoid activation functions]{Sigmoid activation functions and their derivatives. The colorization indicates the value of the multiplicative weight $w$. The weight is multiplied with function argument $x$, which is what we differentiate with respect to.  We observe that the derivative deteriorates to zero as the function moves away from zero. The derivative going to zero means that a network using sigmoid activations generally struggle with saturated gradients which slows down training dramatically.}\label{fig:sigmoid}
 \end{figure}
 
 \subsubsection{Rectifiers}
 
-On the other end of the scale rectified activations have gained traction in later years. We introduced the ReLU and it's derivative in the previous section, but we will discuss a popular cousin here. The LReleaky rectified linear unit (LU) takes the ReLU and modifies it slightly by adding a small slope to the negative part of the activation. Mathematically we define the LReLU as 
+On the other end of the scale rectified activations have gained traction in later years. We introduced the ReLU and its derivative in the previous section, but we will discuss a popular cousin here. The LReleaky rectified linear unit (LU) takes the ReLU and modifies it slightly by adding a small slope to the negative part of the activation. Mathematically we define the LReLU as 
 
 \begin{equation}\label{eq:lrelu}
-	\text{LReLU} (x)  = \begin{cases}
-	x & \text{if } x > 0 \\
-	\alpha\cdot x  & \text{otherwise},
-	\end{cases}
+    \text{LReLU} (x)  = \begin{cases}
+    x & \text{if } x > 0 \\
+    \alpha\cdot x  & \text{otherwise},
+    \end{cases}
 \end{equation}
 
 \noindent where $\alpha$ is a small positive real number. The differentiation of the LReLU is then 
 
 \begin{equation}\label{eq:lrelu}
-	\frac{d}{dx}\text{LReLU} (x) = \begin{cases}
-	1 & \text{if } x > 0 \\
-	\alpha & \text{otherwise}.
-	\end{cases}
+    \frac{d}{dx}\text{LReLU} (x) = \begin{cases}
+    1 & \text{if } x > 0 \\
+    \alpha & \text{otherwise}.
+    \end{cases}
 \end{equation}
 
-\noindent Immediately it becomes clear that for the rectifier functions we have the opposite problem from what we encountered for the sigmoid activations. As the derivative is non-zero for a large range of values we no longer have a concern for vanishing gradients, but the activation is not positively bounded. This leads to a problem where the gradient might explode, leading to an unstable optimization that fails to find a minimum of the cost. We illustrate the defining features of the rectifiers in figure \ref{fig:elu}
+\noindent Immediately it becomes clear that for the rectifier functions we have the opposite problem from what we encountered for the sigmoid activations. As the derivative is non-zero for a large range of values, we no longer have a concern for vanishing gradients, but the activation is not positively bounded. This leads to a problem where the gradient might explode, leading to an unstable optimization that fails to find a minimum of the cost. We illustrate the defining features of the rectifiers in figure \ref{fig:elu}
 
 \begin{figure}
 \centering
@@ -294,14 +294,14 @@ On the other end of the scale rectified activations have gained traction in late
 \caption[Rectifier activation functions]{Rectifier activation functions and their derivatives, the colorization indicates that the function is multiplied with a second variable. In contrast with the sigmoid activations the derivative is non-zereo in $\R^+$ for the ReLU and non-zero on the entirety of $\R$ for the LReLU.}\label{fig:elu}
 \end{figure}
 
-One heuristic method of handling exploding gradients that has seen wide applications is gradient capping. When computing the gradients one chooses a maximum value for e.g. the norm of a layers gradient and shrink any update that crosses that threshold. The downside of this is that it can slow down training substantially. More elegant solutions are usually employed in conjunction with a capped gradient which we'll discuss in the next section on the regularization of neural networks. 
+One heuristic method of handling exploding gradients that has seen wide applications is gradient capping. When computing the gradients, one chooses a maximum value for e.g., the norm of the gradient of a layer and shrink any update that crosses that threshold. The downside of this is that it can slow down training substantially. More elegant solutions are usually employed in conjunction with a capped gradient which we will discuss in the next section on the regularization of neural networks. 
 
 
 \section{Deep learning regularization}
 
-As neural networks can be made arbitrarily complex reducing the degree of over-fitting is an important concern. Regularization of deep learning use both tried and true algorithms as we discussed in chapter \ref{chap:fundament} and some specialized tools developed for use with neural networks specifically. 
+As neural networks can be made arbitrarily complex, reducing the degree of over-fitting is an important concern. Regularization of deep learning uses both tried and true algorithms, as we discussed in chapter \ref{chap:fundament}, and some specialized tools developed for use with neural networks specifically. 
 
-Traditional measures of regularization like using cross validation and weight constraints are both important features of reducing over-fitting in deep learning algorithms. We introduced cross validation in section \ref{sec:cv} as a way to estimate appropriate model complexities. Cross validation is model agnostic and can be applied to estimate an appropriate complexity for a network modeling a given process, or the optimal values for the gradient descent hyperparameters etc. 
+Traditional measures of regularization like using cross-validation and weight constraints are both important features of reducing overfitting in deep learning algorithms. We introduced cross-validation in section \ref{sec:cv} as a way to estimate appropriate model complexities. Cross-validation is model agnostic and can be applied to estimate an appropriate complexity for an arbitrary model or the optimal values for the gradient descent hyperparameters. 
 
 Weight constraints are similarly convenient additions to the cost function. The only modification required from equation \ref{eq:mse_ridge} is adding a summation term over the layers. For a $L_2$ regularized neural net the cost function can then be written as 
 
@@ -309,17 +309,17 @@ Weight constraints are similarly convenient additions to the cost function. The 
 C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum_{lij}||w_{ij}^{[l]}||^2_2.
 \end{equation}
 
-\noindent More specific tools for neural networks have been developed in later years, we will discuss two of these that have seen wide use in recent works. 
+\noindent More specific tools for neural networks have been developed in later years, and we will discuss two of these that has seen extensive application in recent works. 
 
 \subsubsection{Dropout}\label{sec:dropout}
 
-Armed with the knowledge that neural networks are usually more complex than the problem at hand warrants, \citet{Srivastava2014} propose a wonderfully simple remedy; dropout. The premise is simply: after the activation of a layer, randomly set $d$ of these activations to zero. The fraction of the activations that $d$ represents is called the dropout-rate, and is typically chosen to be some few tenths. Dropout adds a regularizing effect by having the network increase the redundancy of its prediction and thus forcibly reducing the complexity of the network. 
+Armed with the knowledge that neural networks are usually more complex than the problem at hand warrants, \citet{Srivastava2014} proposes a wonderfully simple remedy: dropout. The premise is simple: after the activation of a layer, randomly set $d$ of these activations to zero. The fraction of the activations that $d$ represents is called the dropout-rate and is typically chosen to be a few tenths. Dropout adds a regularizing effect by having the network increase the redundancy of its prediction and thus forcibly reducing the complexity of the network. 
 
 \subsubsection{Batch Normalization}\label{sec:batchnorm}
 
-The second addition we discuss more directly addresses a problem in the optimization, and adds a regularizing effect only as a bi-product of the intended purpose. Batch normalization was introduced by \citet{Ioffe2015} as a means to address internal covariance shift in neural networks. 
+The second addition we discuss more directly addresses a problem in the optimization, and adds a regularizing effect only as a bi-product of the intended purpose. Batch normalization was introduced by \citet{Ioffe2015} as a means to address the internal covariance shift in neural networks. 
 
-Conceptually one can think of the challenge presented by an internal covariance shift as an unintended consequence of the gradient descent procedure. When adjusting the gradients we do not do it with respect to how much the weights in the preceding layer changes. This slows down training substantially and is what \citet{Ioffe2015} describe as the internal covariance shift. To reduce the effects of this problem the authors propose to scale and center the outputs of each layer before feeding it to the next in line. The normalization happens over each batch of training data and consists of two steps. Let the output from a layer be given as $a_k^{[l]}$ in keeping with previous notation. Furthermore, let the samples in a batch be indicated by the index $i$. Thus the activations can be denoted as a matrix $a_{ik}^{[l]}$. The batch normalization procedure then begins by computing the batch-wise mean, $\mu_k$, per feature $k$ for a batch of size $n$ 
+Conceptually one can think of the challenge presented by an internal covariance shift as an unintended consequence of the gradient descent procedure. When adjusting weights in a layer its gradients, we do adjust them with respect to the change in the weights of the preceding layers. This slows down training substantially and is what \citet{Ioffe2015} describes as the internal covariance shift. To reduce the effects of this problem the authors propose to scale and center the outputs of each layer, before feeding it to the next in line. The normalization happens over each batch of training data and consists of two steps. Let the output from a layer be given as $a_k^{[l]}$ in keeping with previous notation. Furthermore, let the samples in a batch be indicated by the index $i$. Thus the activations can be denoted as a matrix $a_{ik}^{[l]}$. The batch normalization procedure then begins by computing the batch-wise mean, $\mu_k$, per feature $k$ for a batch of size $n$ 
 
 \begin{equation}
 \mu_k = \frac{1}{n} \sum_i^n a_{ik}^{[l]}.
@@ -343,8 +343,8 @@ Conceptually one can think of the challenge presented by an internal covariance 
 \text{BN}_{\gamma, \beta}(a_{ik}^{[l]}) = \gamma  \hat{a}_{ik}^{[l]} + \beta.
 \end{equation} 
 
-\noindent The primary effect of batch normalization is then to speed up training. \cite{Ioffe2015} show that orders of magnitude larger learning rates may be used in experiments. Additionally there is a contribution to the regularization by providing non-deterministic outputs as the normalization parameters are dependent on the other samples in a batch. 
+\noindent The primary effect of batch normalization is then to speed up training. \cite{Ioffe2015} shows that orders of magnitude larger learning rates may be used in experiments. Additionally, there is a contribution to the regularization by providing non-deterministic outputs as the normalization parameters are dependent on the other samples in a batch. 
 
-As a bonus effect the procedure lessens the potential problems with exploding and vanishing gradients. By placing the normalization layer before a sigmoid layer the probability of the activations being in the active region of the functions increases. Conversely, for the rectifier units placing the normalization after the activation lessens the chance for an exploding value in the gradient.
+As a bonus effect, the procedure lessens the potential problems with exploding and vanishing gradients: By placing the normalization layer before a sigmoid layer the probability of the activations being in the active region of the functions increases. Conversely, for the rectifier units placing the normalization after the activation lessens the chance for an exploding value in the gradient.
 
-For all the merits of batch normalization a fundamental challenge still remains. Since the normalization is over the feature axis it adds a substantial number of parameters. For models who heavily use normalization the scale and shift parameters can add up to $20\%-30\%$ of the weights in a model. Additionally we observe that the computation involves a square root and a squaring operation which principally necessitates a full $64$ bit precision in the floating point computation. 
+For all the merits of batch normalization, a fundamental challenge still remains. Since the normalization is over the feature axis, it adds a substantial number of parameters. For models who heavily use normalization, the scale and shift parameters can add up to $20\%-30\%$ of the weights in a model. Additionally, we observe that the computation involves a square root and a squaring operation which principally necessitates a full $64$ bit precision in the floating-point computation. 

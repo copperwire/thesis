@@ -1,14 +1,14 @@
 \section{Gradient Descent}\label{sec:gd}
 
-The process of finding minima or maxima of a function is well trodden ground for physicists. These points along a function are collectively known as extrema, and with Newton and Leibniz's formulation of calculus we were given analytical procedures for finding extrema by the derivative of functions. The power of these methods are shown by the sheer volume of problems we cast as minimization or maximization objectives. From first year calculus we know that a function has an extremum where the derivative is equal to zero, and for many functions and functionals this has a closed form solution. For functionals of complicated functions, like neural networks, this becomes impractical or impossible. 
+The process of finding minima or maxima of a function is well-trodden ground for physicists. These points along a function are collectively known as extrema, and with Newton and Leibniz's formulation of calculus, we were given analytical procedures for finding extrema by the derivative of functions. The power of these methods is demonstrated by the sheer volume of problems we cast as minimization or maximization objectives. From first-year calculus, we know that a function has an extremum where the derivative is equal to zero. Moreover, for many functions and functionals this has a closed-form solution. For functionals of complicated functions this becomes impractical or impossible. 
 
-We showed in section \ref{sec:LogReg} that even a relatively simple model like logistic regression is transcendental in the first derivative of the cost. For both too-complex or analytically unsolvable first derivatives we then turn to iterative methods of the gradient. In this thesis we will restrict discussions to gradient descent, which is a iterative method of the first order for used for finding function minima. All the optimization problems are thus cast as minimization problems to fit in this framework. We begin by considering the simplest form of gradient descent of a function, $f$, of many variables $\mathbf{x}$ and an update weight $\eta$
+We showed in section \ref{sec:LogReg} that even a relatively simple model like logistic regression is transcendental in the first derivative of the cost. For both too-complex or analytically unsolvable first derivatives, we then turn to iterative methods of the gradient. In this thesis, we will restrict discussions to gradient descent, which is an iterative method of the first order for used for finding function minima. All the optimization problems are thus cast as minimization problems to fit in this framework. We begin by considering the simplest form of gradient descent of a function, $f$, of many variables $\mathbf{x}$ and a weighting term for the update, $\eta$
 
 \begin{equation}\label{eq:gd}
 \mathbf{x}_{n+1} = \mathbf{x}_{n} - \eta \nabla_\mathbf{x} f(\mathbf{x}_{n}). 
 \end{equation} 
 
-\noindent We known that the gradient vector is in the direction of the steepest ascent for the function, moving towards a minimum then simply requires going exactly the opposite way. The parameter controlling the size of this variable step is  $\eta \in \R_+$. This parameter is dubbed the learning rate in machine learning which is the term we will be using. Choosing $\eta$ is extremely important for the optimization as too low values slow down convergence to a crawl, and can even stall completely with the introduction of value decay to the learning rate. While too large a learning rate jostles the parameter values around in such a way that we might miss the minimum entirely. Figure \ref{fig:badgd} shows the effects of choosing the values for the learning rate poorly, while figure \ref{fig:goodgd} shows the effect of a well chosen eta which finds the minimum in just a few steps. Additionally since the learning rate exists outside the gradient it's a hyper-parameter as discussed in section \ref{sec:hyperparams}. 
+\noindent We know that the gradient vector is in the direction of the steepest ascent for the function, moving towards a minimum then requires going exactly the opposite way. The parameter controlling the size of this variable step is  $\eta \in \R_+$. This parameter is dubbed the learning rate in machine learning and is the term we will be using. Choosing $\eta$ is extremely important for the optimization as too low values slow down convergence to a crawl, and can even stall the optimization entirely with the introduction of value decay to the learning rate. Conversely, too high a value for the learning rate jostles the parameter values around in such a way that we might miss the minimum entirely. Figure \ref{fig:badgd} shows the effects of choosing the values for the learning rate poorly, while figure \ref{fig:goodgd} shows the effect of a well-chosen eta which finds the minimum in just a few steps. We note that the learning rate is a hyper-parameter, as discussed in section \ref{sec:hyperparams}. 
 
 
 \begin{figure}
@@ -21,16 +21,16 @@ We showed in section \ref{sec:LogReg} that even a relatively simple model like l
 \caption[Optimal gradient descent]{Complement to figure \ref{fig:badgd} where we show the effect of a good learning rate on a gradient descent procedure. The gradient descent procedure is performed on a quadratic function.}\label{fig:goodgd}
 \end{figure}
 
-Directly inspecting the progress is not feasible for the high-dimensional updates required for a neural network, or a multivariate logistic regression. However as suggested by \citet{Karpathy} we can indirectly observe the impact of the choice of learning rate from the shape of the loss as a function of the epoch. In machine learning an entire gradient update using all the available training data is called an epoch. This impact is shown in figure \ref{fig:lrloss} which we'll use as a reference when training the models used in this thesis. 
+Directly inspecting the progress is not feasible for the high-dimensional updates required for a neural network, or even a multivariate logistic regression. However, as suggested by \citet{Karpathy}, we can indirectly observe the impact of the choice of learning rate. We infer the impact from the shape of the loss as a function of the epoch. In machine learning, an entire gradient update using all the available training data is called an epoch. This impact is shown in figure \ref{fig:lrloss}, which we will use as a reference when training the models used in this thesis. 
 
 \begin{figure}
 \centering
 \includegraphics[width=0.56\textwidth, height=4.4cm]{../figures/lr_loss.png}
-\caption[The impact of $\eta$ on performance]{A hand-drawn figure showing the impact of the choice of the learning rate parameter on the shape of the loss function. The optimal choice has a nice slowly decaying shape that we will use as a benchmark when tuning the learning rate in our applications. Copied from the cs231 course material from Stanford authored by \citet{Karpathy}.}\label{fig:lrloss}
+\caption[The impact of $\eta$ on performance]{A hand-drawn figure which shows the impact of the choice of the learning rate parameter on the shape of the loss function. The optimal choice slowly decays, and we will use that shape as a benchmark when tuning the learning rate in our applications. Copied from the cs231 course material from Stanford authored by \citet{Karpathy}.}\label{fig:lrloss}
 
 \end{figure} 
 
-Despite its simplicity gradient descent and it's cousins have shown to solve remarkably complex problems despite its obvious flaw: convergence is only guaranteed to a local minimum. While much more computationally efficient than higher order methods using a first order method brings with them some problems of their own. In particular there are two problems that need to be solved and we'll discus some modifications to the gradient descent procedure proposed to remedy them both. 
+Despite its simplicity gradient descent and its cousins have shown to solve remarkably complex problems despite one obvious flaw: convergence is only guaranteed to a local minimum. While first-order methods are much more computationally efficient than higher-order methods, their use brings with them some problems of their own. In particular, there are two problems that need to be solved:
 
 
 \begin{enumerate}[start=0, label={(\bfseries C\arabic*):}]
@@ -38,11 +38,11 @@ Despite its simplicity gradient descent and it's cousins have shown to solve rem
 \item Converging to a minimum  can be slow or miss entirely depending on the configuration of the method 
 \end{enumerate}
 
-\noindent The importance of the methods we discuss in the coming sections are also covered in some detail in a paper by \citet{Sutskever2013}. A longer and more in depth overview of the methods themselves can be found in \citet{Ruder}
+\noindent In this section, we will discuss some modifications to the gradient descent procedure proposed to remedy them both.  The importance of the methods we discuss in the following sections is also covered in detail by \citet{Sutskever2013}. A more extensive and in-depth overview of the methods themselves can be found in \citet{Ruder}.
 
 \subsection{Momentum Gradient Descent}\label{sec:momentum_gd}
 
-The first problem of multiple local minima has a proposed solution that to physicists is intuitive and simple: add momentum. For an object in a gravity potential with kinetic energy to not get stuck in a local minima of the potential it has to have enough momentum, while also not having so much that it overshoots the global minimum entirely. It is with a certain familiarity then that we introduce the momentum update which replaces the ordinary gradient with an exponential average over the previous steps controlled by the parameter $\beta$
+The first problem of multiple local minima has a proposed solution that to physicists is intuitive and straightforward: add momentum. For an object in a gravity potential with kinetic energy to not get stuck in local minima of the potential, it has to have enough momentum. While at the same time not having so much that it overshoots the global minimum entirely. It is then with a certain familiarity that we introduce the momentum update which replaces the ordinary gradient with an exponential average over the previous steps controlled by a parameter $\beta$
 
 \begin{equation}\label{eq:momentum}
 \begin{split}
@@ -61,7 +61,7 @@ The first problem of multiple local minima has a proposed solution that to physi
 & \hspace{0.5in}+ (1-\beta)\nabla f(\mathbf{x}_{n}).
 \end{align*}
 
-\noindent Each $\mathbf{v}_t$ is then an exponentially weighted average over all the previous gradients. This representation indicates that the factor $1-\beta$ controls how much of a view there is backwards in the iteration. Leading to the conclusion that $\beta$ must be reasonably restricted to $\beta \in [0, 1]$ to avoid overpowering the new gradient. How many steps in the past sequence that this average "sees" we illustrate in figure \ref{fig:beta}. Adding momentum is then a partial answer to the challenge of how to overcome both local minima and saddle regions in the loss function curvature. To summarize we list the parameters that need tuning for a gradient descent with momentum in table \ref{tab:momentum}
+\noindent Each $\mathbf{v}_t$ is then an exponentially weighted average over all the previous gradients. This representation indicates that the factor $1-\beta$ controls how much of a view we have of the history of the iteration. Leading to the conclusion that $\beta$ must be reasonably restricted to $\beta \in [0, 1]$ to avoid overpowering the new gradient. How many steps in the past sequence that this average "sees" we illustrate in figure \ref{fig:beta}. Adding momentum is then a partial answer to the challenge of how to overcome both local minima and saddle regions in the loss function curvature. To summarize we list the parameters that need tuning for a gradient descent with momentum in table \ref{tab:momentum}
 
 \begin{table}
 \centering
@@ -80,11 +80,14 @@ $\eta$  & $10^{-3}$ & Linear & Weight of the momentum update \\
 \begin{figure}
 \centering
 \includegraphics[width=0.65\textwidth, height=5.5cm]{../figures/beta_decay.pdf}
-\caption[Exponential decay in momentum gradient descent]{A figure illustrating the decay rate of different choices of $\beta$. The lines go as $\beta^n$ and shows that one can quite easily infer how many last steps is included for each choice. A good starting value for the parameter has been empirically found to be $\beta=0.9$ for many applications. In this thesis we'll use a gaussian distribution around this value as a basis for a random search.}\label{fig:beta}
+\caption[Exponential decay in momentum gradient descent]{A figure illustrating the decay rate of different choices of $\beta$. The lines go as $\beta^n$ and show that one can quite easily infer how many of the previous steps is included for each choice. A good starting value for the parameter has been empirically found to be $\beta=0.9$. In this thesis we will use a Gaussian distribution around this value as a basis for a random search.}\label{fig:beta}
 \end{figure}
 
 \subsection{Stochastic \& Batched Gradient Descent}
-In the preceding sections we discussed gradient descent as an update we do over the entire data-set. This procedure creates a gradient with minimal noise pointing directly to the nearest minimum. For most complex models that bee-lining behavior is something to avoid. One of the most powerful tools to avoid this behavior is batching which involves taking the gradient with only a limited partition of the data and updating the parameters. This creates noise in the gradient which encourages exploration of the loss-surface rather than strong convergence to the nearest minimum. If we set the batch size $N=1$ we arrive at a special case of batched gradient descent known in statistics and machine learning nomenclature as stochastic gradient descent (SGD). As the naming implies SGD aims to include the noisiness we wish to introduce to the optimization procedure. Both batched gradient descent and SGD show marked improvements on performing full-set gradient updates (\cite{Keskar2016}). This effect is illustrated in figure \ref{fig:batch_size}. 
+In the preceding sections, we discussed gradient descent as an update we do over the entire data-set. This procedure creates a gradient with minimal noise, pointing directly to the nearest minimum. For most complex models that bee-lining behavior is something to avoid. 
+
+One of the most powerful tools to avoid this behavior is batching, which involves taking the gradient with only a limited partition of the data and updating the parameters. This creates noise in the gradient, which encourages exploration of the loss-surface rather than strong convergence to the nearest minimum. If we set the batch size to $N=1$ we arrive at a special case of batched gradient descent known in statistics and machine learning nomenclature as stochastic gradient descent (SGD). As the naming implies, SGD aims to include the noisiness we wish to introduce to the optimization procedure. Both batched gradient descent and SGD show marked improvements compared to performing full-set gradient updates (\cite{Keskar2016}). 
+Batches larger than one are usually employed when the computational cost of SGD becomes prohibitive. We show the effect of batch sizes on performance in figure \ref{fig:batch_size}. 
 
 \begin{figure}[H]
 \centering
@@ -93,14 +96,14 @@ In the preceding sections we discussed gradient descent as an update we do over 
 \end{figure}
 
 \subsection{adam}\label{sec:adam}
-One of the major breakthroughs in modern machine learning is the improvements made to gradient descent from the most simple version introduced in equation \ref{eq:gd} to the adam paradigm introduced by \citet{Kingma2015}. Since it's conception adam has become the de facto solver for most ML applications. Conceptually adam ties together stochastic optimization in the form of batched data, momentum and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, of the magnitude of the derivative, or both. Adding to the momentum part adam maintains a exponentially decaying average over previous first and second moments of the derivative. Physically this is akin to maintaining a velocity and momentum for an inertial system. Mathematically we describe these decaying moments as functions of the first and second  moments of the gradient 
+One of the breakthroughs in modern machine learning is the improvements made to gradient descent from the most simple version introduced in equation \ref{eq:gd} to the adam paradigm introduced by \citet{Kingma2015}. Since its conception adam has become the de facto solver for many ML applications. Conceptually, adam ties together stochastic optimization in the form of batched data, momentum, and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, of the magnitude of the derivative, or both. Adding to the momentum part adam maintains an exponentially decaying average over the previous first and second moments of the derivative. Physically this is akin to maintaining velocity and momentum for an inertial system. Mathematically we describe these decaying moments as functions of the first and second  moments of the gradient 
 
 \begin{align}
 m_t &= \beta_1 m_{t-1} +(1-\beta_1)\nabla f(\mathbf{x}_{t, i}), \\
 v_t &= \beta_2 v_{t-1} +(1-\beta_2)\nabla f(\mathbf{x}_{t, i})^2.
 \end{align}
 
-\noindent The update now maintains two $\beta$ parameters analogous to the simple momentum update rule. In the paper \citet{Kingma2015} describe an issue where zero-initialized $m_t$ and $v_t$ are biased towards zero, especially when the decay is small. To solve this problem they introduce bias-corrected versions of the moments 
+\noindent The update now maintains two $\beta$ parameters analogous to the simple momentum update rule. In the paper \citet{Kingma2015} describe an issue where zero-initialized $m_t$ and $v_t$ are biased towards zero, especially when the decay is small. To solve this problem, they introduce bias-corrected versions of the moments 
 
 \begin{align}
 \hat{m}_t &= \frac{m_t}{1 - \beta_1^t}, \\
@@ -114,7 +117,7 @@ v_t &= \beta_2 v_{t-1} +(1-\beta_2)\nabla f(\mathbf{x}_{t, i})^2.
 
 \noindent The authors provide suggested values for $\beta_1 =0.9 $, $\beta_2 =0.999$ and $\epsilon = \num{1e-8}$. They also recommend that one constricts the values for such that $\beta_2 > \beta_1$. 
 
-To summarize we consider the hyperparameters required for the usage of adam. Both $\beta_1$ and $\beta_2$ are in principle needed to be tuned, but we restrict the tuning to $\beta_1$ in this thesis and freeze the value of $\beta_2$ to retain some semblance manageability in the hyperparameter space. The parameters and their scales are listed for convenience in table \ref{tab:adam}.
+To summarize, we consider the hyperparameters required for the usage of adam. Both $\beta_1$ and $\beta_2$ are in principle needed to be tuned, but we restrict the tuning to $\beta_1$ in this thesis and freeze the value of $\beta_2$ to retain some semblance manageability in the hyperparameter space. The parameters and their scales are listed for convenience in table \ref{tab:adam}.
 
 \begin{table}
 \begin{tabular}{cccl}
@@ -128,5 +131,4 @@ $\eta$  & $10^{-3}$ & Linear & Weight of the momentum update \\
 \end{tabular}
 \caption{Hyperparameter table for adam. These parameters have to be tuned without gradient information, we discuss ways to achieve this in section \ref{sec:hyperparams}}\label{tab:adam}
 \end{table}
-
 
