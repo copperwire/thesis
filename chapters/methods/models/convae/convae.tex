@@ -174,7 +174,7 @@ from convolutional_VAE import ConVae
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
-x_full, x_labeled, y = dl.load_simulated("128")
+x_full, x_labelled, y = dl.load_simulated("128")
 
 fig, axs = plt.subplots(ncols=4, figsize=(14, 5))
 [axs[i].imshow(x_full[i].reshape((128, 128)), cmap="Greys") for i in range(4)]
@@ -207,7 +207,7 @@ mode_config = {
     "include_KM":False, #same as above, but K-means. See thesis for a more in-depth treatment of these
     "batchnorm":True, #whether to include batch-normalization between layers
     "use_vgg":False, #whether the input data is from a pre-trained model 
-    "use_dd":False, #whether to use the dueling-decoder objective 
+    "use_dd":False, #whether to use the duelling-decoder objective 
 }
 
 model = ConVae(
@@ -299,13 +299,13 @@ plt.show()
 \end{figure}
 \end{minipage}
 
-From figure \ref{fig:reconst_sim} we that while the reconstructions are fuzzy they capture the important parts of the input, notably  the curvature of the proton. What remains now is the exploration and fitting of the latent space. We begin by computing the latent representation of the labeled subset of the data. This is done with the \lstinline{run_large} method which does a computation a few elements at a time as the memory requirements of the computations scale very poorly. The method accept an argument for the session with which to run the required output, what output we wish to retrieve and the input needed to compute that output. In this case we wish to compute the latent representation and so our output is \lstinline{mpdel.z_seq[0]}. To preserve homogeneity with the DRAW implementation the latent sample is stored as an iterable. 
+From figure \ref{fig:reconst_sim} we that while the reconstructions are fuzzy they capture the important parts of the input, notably  the curvature of the proton. What remains now is the exploration and fitting of the latent space. We begin by computing the latent representation of the labelled subset of the data. This is done with the \lstinline{run_large} method which does a computation a few elements at a time as the memory requirements of the computations scale very poorly. The method accept an argument for the session with which to run the required output, what output we wish to retrieve and the input needed to compute that output. In this case we wish to compute the latent representation and so our output is \lstinline{mpdel.z_seq[0]}. To preserve homogeneity with the DRAW implementation the latent sample is stored as an iterable. 
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
 
-all_labeled = x_labeled.reshape((x_labeled.shape[0], -1))
-latent_labeled = model.run_large(sess, model.z_seq[0], all_labeled)
+all_labelled = x_labelled.reshape((x_labelled.shape[0], -1))
+latent_labelled = model.run_large(sess, model.z_seq[0], all_labelled)
 fig, ax = plt.subplots(figsize=(14, 8))
 classes = ["Proton", "Carbon"]
 cm = matplotlib.cm.get_cmap("magma")
@@ -313,7 +313,7 @@ colors = [cm(0.3), cm(0.6), cm(0.85)]
 
 
 for i in range(len(np.unique(y.argmax(1)))):
-    class_samples = latent_labeled[y.argmax(1) == i]
+    class_samples = latent_labelled[y.argmax(1) == i]
     mag = np.sqrt((class_samples**2).sum(1))
     marker = "^" if i == 0 else "."
     c = "r" if i == 0 else "b"

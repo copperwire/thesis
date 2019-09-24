@@ -190,7 +190,7 @@ mode_config = {
     "include_KM":False, #same as above, but K-means. See thesis for a more in-depth treatment of these
     "batchnorm":False, #whether to include batch-normalization between layers
     "use_vgg":False, #whether the input data is from a pre-trained model 
-    "use_dd":False, #whether to use the dueling-decoder objective 
+    "use_dd":False, #whether to use the duelling-decoder objective 
 }
 
 model = DRAW(
@@ -223,7 +223,7 @@ It is additionally interesting to inspect the latent space. We chose the latent 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
-lr_train, lr_test, y_train, y_test = train_test_split(latent_labeled, y)
+lr_train, lr_test, y_train, y_test = train_test_split(latent_labelled, y)
 lr_model = LogisticRegression(
 	solver="lbfgs",
 	class_weight="balanced",

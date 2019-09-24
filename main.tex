@@ -33,16 +33,11 @@
 %\usepackage{natbib}
 %\usepackage[super]{cite}
 
-
-
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 \newcommand\MyHead[2]{\multicolumn{1}{l}{\parbox{#1}{\centering #2}}}
 % set python environment 
-
-
-%\addbibresource{link.bib}
 
 \usepackage{xcolor}
 \definecolor{maroon}{cmyk}{0, 0.87, 0.68, 0.32}
@@ -190,10 +185,10 @@ Sanity: Maiken \\
 
 \subimport*{chapters/abstract/}{abstract.tex}
 \subimport*{chapters/introduction/}{introduction.tex}
-\todo{Need to add abbreviations to list}
+%\todo{Need to add abbreviations to list}
 
 % Theory part and experimental context 
-\part{Theory and Experimental Background}
+\part{Theory and Experimental Background}\label{part:theory_experiment}
 
 % Machine learning theory
 \subimport*{chapters/theory/}{background_theory.tex}
@@ -214,14 +209,13 @@ Sanity: Maiken \\
 \subimport*{chapters/theory/neural_network/}{neural_network.tex}
 \subimport*{chapters/theory/neural_network/}{convolution.tex}
 \subimport*{chapters/theory/neural_network/}{rnn.tex}
-\subimport*{chapters/theory/}{model_architecture}
 
 \subimport*{chapters/theory/autoencoder/}{intro_autoenc.tex}
 \subimport*{chapters/theory/autoencoder/}{autoencoder.tex}
 \subimport*{chapters/theory/autoencoder/}{regularizing_latent.tex}
 \subimport*{chapters/theory/autoencoder/}{draw.tex}
 \subimport*{chapters/theory/autoencoder/}{deep_clustering.tex}
-
+\subimport*{chapters/theory/}{model_architecture}
 
 % \subimport*{chapters/theory/}{todo.tex}
 
@@ -233,16 +227,17 @@ Sanity: Maiken \\
 
 % Methods chapter
 
-\part{Implementation}
+\part{Implementation}\label{part:implement}
 
 \subimport*{chapters/methods/}{methods.tex}
 \subimport*{chapters/methods/tensorflow/}{tensorflow.tex}
 \subimport*{chapters/methods/models/}{architecture.tex}
 \subimport*{chapters/methods/models/convae/}{convae.tex}
 \subimport*{chapters/methods/models/draw/}{draw.tex}
+\subimport*{chapters/methods/models/mixae/}{mixae.tex}
 \subimport*{chapters/methods/randomsearch/}{randomsearch.tex}
 
-\part{Results}
+\part{Results}\label{part:results}
 \subimport*{chapters/results/}{results.tex}
 \subimport*{chapters/results/classification/}{classification}
 \subimport*{chapters/results/classification/}{vgg}
@@ -254,7 +249,7 @@ Sanity: Maiken \\
 \subimport*{chapters/results/clustering/}{draw.tex}
 
 
-\part{Discussion and Conclusion}
+\part{Discussion and Conclusion}\label{part:discuss_concludee}
 \subimport*{chapters/discussion/}{discussion.tex}
 \subimport*{chapters/discussion/classification/}{classification.tex}
 \subimport*{chapters/discussion/clustering/}{clustering.tex}
@@ -265,8 +260,6 @@ Sanity: Maiken \\
 \subimport{chapters/appendix/hyperparameters/}{hyperparams}
 %\subimport{chapters/appendix/clf_tables/}{convae_simulated}
 \end{appendices}
-
-\subimport*{chapters/notes/}{notes.tex}
 
 
 % \bibliographystyle{te}

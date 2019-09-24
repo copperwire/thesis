@@ -8,10 +8,10 @@ To test the hypothesis that classification can be improved by using unsupervised
 
 \noindent Choosing an architecture for the convolutional autoencoder is the principal challenge to solve. We want to estimate if the reconstruction and optional latent losses relate to the classification accuracy achieved by the logistic regression classifier. \todo{add plot with reconst/loss vs f1 scores}
 
-To aid in the understanding of the choice of architecture we compare the similarities between the optimal architectures for each of the data-sets. In the event that one dataset finds a configuration of lesser complexity that was not present in the others a verification run was computed with that configuration to ensure the validity of the performance measurement. \todo{add architecture tables, note on latent divergence?}
+To aid in the understanding of the choice of architecture, we compare the optimal architectures given a dataset. In the event that one dataset finds a configuration of lesser complexity that was not present in the others, a verification run was computed with that configuration to ensure the validity of the performance measurement.
 
-
-\begin{table}
+\begin{table}[ht]
+\renewcommand*{\arraystretch}{0.7}
 \centering
 \caption{Hyperparameters that gives the strongest classifier performance on the three simulated, filtered and full datasets.}\label{tab:best_params_clf_convae}
 \setlength{\extrarowheight}{15pt}
@@ -52,19 +52,19 @@ For the best models found by random search we re-compute the performance with $K
 \caption{Logistic regression classification $f1$ scores using the \ref{item:clf_no_vgg} architecture. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:clf_no_vgg}
 \end{table}
 
-\noindent Furthermore we estimate the performance of the best models as a function of the number of labeled samples it sees. We select a random subsample from the labeled dataset and iteratively add to that dataset in increments of $n=100$ samples. This procedure is repeated a total of $N=10$ times to estimate the variability as a function of the selection process. The resulting runs are shown in figure \ref{fig:ac_n_labeled}
+\noindent Furthermore, we estimate the performance of the best models as a function of the number of labelled samples it sees. We select a random subsample from the labelled dataset and iteratively add to that dataset in increments of $n=100$ samples. This procedure is repeated a total of $N=10$ times to estimate the variability as a function of the selection process. The resulting runs are shown in figure \ref{fig:ac_n_labelled}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth, height=6.5cm]{plots/ac_n_samples.pdf}
-\caption[Autoencoder performance on labeled subsets]{Latent space classification performance with a logistic regression classifier on a \ref{item:clf_no_vgg} representation of each dataset. For each dataset a random subsample is drawn and iteratively added to in increments of $n=100$ data-points. To estimate the variance of this procedure we repeat the procedure $N=10$ times.}\label{fig:ac_n_labeled}
+\includegraphics[width=0.8\textwidth, height=6.5cm]{plots/ac_n_samples.pdf}
+\caption[Autoencoder performance on labelled subsets]{Latent space classification performance with a logistic regression classifier on a \ref{item:clf_no_vgg} representation of each dataset. For each dataset a random subsample is drawn and iteratively added to in increments of $n=100$ data-points. To estimate the variance of this procedure we repeat the procedure $N=10$ times.}\label{fig:ac_n_labelled}
 \end{figure}
 
 \noindent Lastly we wish to qualitatively inspect the latent space with a 2D visualization of the latent space. We firstly process the latent space with a $D=50$ dimensional PCA and subsequently project to two dimensions with a t-SNE mapping of the data. This visualization is shown in figure \ref{fig:ac_tnse} and illustrates a good separation between the proton classes in general. 
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth, height=7cm]{plots/ac_tsne.pdf}
+\includegraphics[width=0.85\textwidth, height=7cm]{plots/ac_tsne.pdf}
 \caption[autoencoder latent space visualization]{Visualizing the latent space of an \ref{item:clf_no_vgg} trained autoencoder. The mapping is a t-SNE projection of the latent space to two dimensions. We re-iterate that the axes have non-informative units.}\label{fig:ac_tnse}
 \end{figure}
 
@@ -78,15 +78,15 @@ Each of the configurations found by the random search was then evaluated with $K
 \caption{Logistic regression classification $f1$ scores using the \ref{item:clf_freeze_vgg} architecture. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:clf_freeze_vgg}
 \end{table}
 
-\noindent Furthermore we estimate the performance of the model as a function of the number of latent samples it is shown. In exactly the same manner as we did for the \ref{item:clf_no_vgg} architecture. The results of this search is shown in figure \ref{fig:vgg_ac_n_labeled}
+\noindent Furthermore, we estimate the performance of the model as a function of the number of latent samples it is shown. In exactly the same manner as we did for the \ref{item:clf_no_vgg} architecture. The results of this search is shown in figure \ref{fig:vgg_ac_n_labelled}
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth, height=6.5cm]{plots/vgg_ac_n_samples.pdf}
-\caption[Autoencoder performance on labeled subsets]{Latent space classification performance with a logistic regression classifier on a \ref{item:clf_freeze_vgg} representation of each dataset. For each dataset a random subsample is drawn and iteratively added to in increments of $n=100$ data-points. To estimate the variance of this procedure we repeat the procedure $N=10$ times.}\label{fig:vgg_ac_n_labeled}
+\includegraphics[width=0.8\textwidth, height=6.5cm]{plots/vgg_ac_n_samples.pdf}
+\caption[Autoencoder performance on labelled subsets]{Latent space classification performance with a logistic regression classifier on a \ref{item:clf_freeze_vgg} representation of each dataset. For each dataset a random subsample is drawn and iteratively added to in increments of $n=100$ data-points. To estimate the variance of this procedure we repeat the procedure $N=10$ times.}\label{fig:vgg_ac_n_labelled}
 \end{figure}
 
-Lastly for the architecture we project the latent space for comparison with the non-tuned VGG16 representation. 
+Lastly, for the architecture we project the latent space for comparison with the non-tuned VGG16 representation. 
 
 \begin{figure}
 \centering
@@ -94,12 +94,12 @@ Lastly for the architecture we project the latent space for comparison with the 
 \caption[VGG16-autoencoder latent space visualization]{Visualizing the latent space of an \ref{item:clf_freeze_vgg} trained autoencoder. The mapping is a t-SNE projection of the latent space to two dimensions.}\label{fig:ac_tnse}
 \end{figure}
 
-\noindent Lastly we investigate the effect of adding a dueling decoder to the objective. We provided two distinct auxiliary representations to reconstruct, grounded in the physics of the experiment. The chosen representations were the charge distribution heuristically chosen to be at the high end of the distribution and the net charge deposited during the event. We perform the analysis on the full events, and use their original representation. 
+\noindent In addition to the architectures explored above, we investigate the effect of adding a duelling decoder to the objective. We provided two distinct auxiliary representations to reconstruct, grounded in the physics of the experiment. The chosen representations were the charge distribution heuristically chosen to be at the high end of the distribution and the net charge deposited during the event. We perform the analysis on the full events and use their original representation. 
 
-The results of those experiments are included in table \ref{tab:dd_clf_no_vgg}. We immediately observe that the addition of the dueling decoder to the objective has a non-zero impact on the performance of the linear classifier on the latent space.
+The results of those experiments are included in table \ref{tab:dd_clf_no_vgg}. We immediately observe that the addition of the duelling decoder to the objective has a non-zero impact on the performance of the linear classifier on the latent space.
 
 \begin{table}
 \centering
 \subimport{plots/}{dd_convae_clf_table}
-\caption{Logistic regression classification $f1$ scores using the \ref{item:clf_no_vgg} architecture, with a dueling decoder addition to the objective. This analysis was performed on full events, and not using a VGG representation. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:dd_clf_no_vgg}
+\caption{Logistic regression classification $f1$ scores using the \ref{item:clf_no_vgg} architecture, with a duelling decoder addition to the objective. This analysis was performed on full events, and not using a VGG representation. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:dd_clf_no_vgg}
 \end{table}

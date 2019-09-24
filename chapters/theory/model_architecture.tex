@@ -1,16 +1,16 @@
 \chapter{Neural architectures}\label{ch:architectures}
 
-The research question explored in this thesis necessitates two separate architectures. In the case where we have access to some labeled data the goal is to learn as much as possible from the event distribution and create an informative representation which is used to train a classifier on the labeled data. Learning the data distribution is done with an autoencoder network, then the informative representation ins the compressed latent space of the model This regime is semi-supervised as most of the training time is spent trying to learn an informative compression over the data-distribution. Additionally this approach seeks to lessen the probability of overfitting by using a very simple model as the classifier on the compressed representation. This is the \textit{classification} scheme.
+The research question explored in this thesis necessitates two separate architectures. In the case where we have access to some labelled data the goal is to learn as much as possible from the event distribution and create an informative representation which is used to train a classifier on the labelled data. Learning the data distribution is done with an autoencoder network, then the informative representation ins the compressed latent space of the model This regime is semi-supervised as most of the training time is spent trying to learn an informative compression over the data-distribution. Additionally this approach seeks to lessen the probability of overfitting by using a very simple model as the classifier on the compressed representation. This is the \textit{classification} scheme.
 
- Access to labeled data is not guaranteed, however. Labeling data requires a very well determined system with very disparate reaction events. In the ${}^{46}$Ar AT-TPC experiment the proton and carbon products are different enough to produce visually distinct tracks, but this is not generally the case. Having access to a fully unsupervised method of separating classes of events can then be hugely beneficial to researchers. In the event where we don't have access to labeled data we have to discover emergent clusterings in the data without knowledge about the class  distribution. In this case we still use an autoencoder model, but different demands have to be made of the latent space. This is the \textit{clustering} scheme. 
+ Access to labelled data is not guaranteed, however. Labeling data requires a very well determined system with very disparate reaction events. In the ${}^{46}$Ar AT-TPC experiment the proton and carbon products are different enough to produce visually distinct tracks, but this is not generally the case. Having access to a fully unsupervised method of separating classes of events can then be hugely beneficial to researchers. In the event where we don't have access to labelled data we have to discover emergent clusterings in the data without knowledge about the class  distribution. In this case we still use an autoencoder model, but different demands have to be made of the latent space. This is the \textit{clustering} scheme. 
 
 \subsection{Classification}
 We will leverage  the autoencoder to gain information about the event distribution from the volume of unsupervised data. The modeling pipeline for the classification task is then concisely summarized with: 
 
 \begin{enumerate}
 \item Train Autoencoder end-to-end on full data with a select regularization on the latent space until converged or it starts to overfit. 
-\item Use the encoder to produce latent representations of the labeled data 
-\item Train a logistic regression model using the latent representations of the labeled data 
+\item Use the encoder to produce latent representations of the labelled data 
+\item Train a logistic regression model using the latent representations of the labelled data 
 \end{enumerate}
 
 We will determine the best autoencoder architecture for each dataset listed in section \ref{sec:data}. The best autoencoder is measured by performance in identifying separate classes by the logistic regression model on a test-set of data. 
@@ -26,7 +26,7 @@ To attempt clustering of event data we will follow the pipeline as outlined in \
 \item Train the autoencoder end-to-end on the full dataset with an added regularization of the soft cluster assignments to the target distribution of pseudo labels.
 \end{enumerate}
 
-In the same manner as for the clasification task we will search over autoencoder architectures and will select the highest performing model by it's performance on the subset of labeled data.
+In the same manner as for the clasification task we will search over autoencoder architectures and will select the highest performing model by it's performance on the subset of labelled data.
 
 \subsection{Pre-trained networks}
 
