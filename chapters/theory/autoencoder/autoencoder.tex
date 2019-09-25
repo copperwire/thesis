@@ -14,11 +14,21 @@ An autoencoder is an attempt at learning a distribution of data by reconstructio
 \noindent where $\mathcal{X} $ and $\mathcal{Z}$ are spaces with $\text{dim}(\mathcal{X}) > \text{dim}(\mathcal{Z})$.
 The second part of the model is the decoder that maps back to the original space
 
+
 \begin{align}
   \phi: \mathcal{Z} \rightarrow \mathcal{X}.
 \end{align}
 
-\noindent The objective is then to find the configuration of the two maps $\phi$ and $\psi$ which gives the best possible reconstruction. That is the objective $\mathcal{O}$ for the model is given as
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{plots/autoencoder.pdf}
+	\caption[Autoencoder schematic]{Schematic of an autoencoder model. A sample $\hat{\mathbf{x}}$ is compressed to a lower-dimensional representation $\mathbf{z}$, which is subsequently reconstructed to the original space by the decoder.}
+	\label{fig:autoencoder}
+\end{figure}
+
+\noindent An illustration of a general autoencoder architecture is included in figure \ref{fig:autoencoder}.
+
+The objective is then to find the configuration of the two maps $\phi$ and $\psi$ which gives the best possible reconstruction. That is the objective $\mathcal{O}$ for the model is given as
 
 \begin{align}\label{eq:objective_autoenc}
   \mathcal{O} = \argmin_{\phi, \psi} \sum_i || \mathbf{x}_i - \phi(\psi( \mathbf{x}_i ))  ||^2
@@ -156,8 +166,24 @@ D_{KL}(q||p) &= \frac{1}{2} \left( - \log {|\Sigma_1|} -n + tr(I \Sigma_1) + \mu
 D_{KL}(q||p) = \frac{1}{2} \sum_i -\log \sigma_i^2 - 1 + \sigma^2_i + \mu_i^2 .
 \end{equation}
 
+\noindent We note that equation \ref{eq:kl_opt} satisfies the equality that the divergence is zero when the target and model distributions are equal. The VAE model can then be enacted with a pair of neural networks acting as an encoder and decoder. To parametrize the sample, we compute a mean vector $\mu$ and a variance vector $\sigma^2$ from the encoded representation. The latent sample is then given as 
 
-\noindent We note that equation \ref{eq:kl_opt} satisfies the equality that the divergence is zero when the target and model distributions are equal. An important feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. This was the point of contention in the paper by \citet{Zhao}. In the paper, the authors propose alternate measures for regularizing the latent space. The intuitive alternative to a point-wise measurement is comparing the moments of the distribution and minimize their difference. 
+\begin{equation}
+\mathbf{z} = \mathbf{\mu} + \mathbf{\sigma}^2 \cdot \epsilon,
+\end{equation} 
+
+\noindent where $\epsilon$ is a stochastic vector drawn from $\mathcal{N}(\mathbf{0}, \mathbf{1})$. A schematic of a VAE model is shown in figure \ref{fig:var_autoencoder}.
+
+An important feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. This was the point of contention in the paper by \citet{Zhao}. In the paper, the authors propose alternate measures for regularizing the latent space. The intuitive alternative to a point-wise measurement is comparing the moments of the distribution and minimize their difference. 
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{plots/variational_autoenc.pdf}
+	\caption[Variational autoencoder schematic]{Schematic of a variational autoencoder model. A sample $\hat{\mathbf{x}}$ is compressed to a lower-dimensional representation $\mathbf{z}$, which is parametrized by a mean vector, $\mathbf{\mu}$, and a variance vector $\mathbf{\sigma}^2$. Subsequently, we reconstruct the original input with the decoder.}
+	\label{fig:var_autoencoder}
+\end{figure}
+
 
 \subsection{Mode collapse}\label{sec:mode_collapse}
 

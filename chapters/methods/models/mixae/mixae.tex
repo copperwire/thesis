@@ -1,0 +1,46 @@
+\section{Mixture of autoencoders}
+
+The last implementation we'll consider is the mixture of autoencoders (MIXAE) algorithm, which we introduced in section \ref{sec:mixae}. We implement the model in the \lstinline{mixae_model} class found in our \href{https://github.com/ATTPC/VAE-event-classification/blob/master/src/mixae.py}{repository}. Recall that the MIXAE model consists of a set of autoencoders and a predictor network that assign the autoencoders to a cluster. The most interesting part of this architecture is the objective formulation. It consists of the three terms in equation \ref{eq:mixae_loss}. To reiterate the components of the loss we haave the ordinary autoencoder reconstruction loss coupled with predicted cluster belongings $p_j^{(i)}$. The clustering assignments are made by an auxiliary network from the concatenated latent vectors $\mathbf{Z} = [\mathbf{z}_1,\, \mathbf{z}_2,\, \dots,\, \mathbf{z}_n]$. 
+
+The implementation of this algorithm is different from the previous discussions of the convolutional autoencoder, and the DRAW network. It is built with the high level \lstinline{Keras} library, which builds on TensorFlow and other deep learning back-ends to provide quicker prototyping of deep learning models. However, the convolutional autoencoders used in the algorithm are \lstinline{ConVae} instances. Therefore the usage deviates somewhat from the previous section. 
+
+We begin by considering the loss functions for the sample and batch entropies. They are both relatively straight-forward implementations, the sample entropy is implemented as  
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+def classification_entropy(y_true, y_pred):
+    clipped_pred = tf.clip_by_value(y_pred, 1e-10, 1.0)
+    log_pred = tf.math.log(clipped_pred)
+    entropy = tf.keras.layers.multiply(
+        [
+            log_pred,
+            y_pred,
+        ]
+    )
+    entropy = - tf.reduce_sum(entropy, axis=0)
+    return tf.reduce_mean(entropy)
+\end{lstlisting}
+\end{minipage}
+
+and the batch entropy is coded as 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=iPython]
+def batch_entropy(y_true, y_pred):
+    batch_pred_sum = tf.reduce_mean(y_pred, axis=0)
+    log_pred_sum = tf.clip_by_value(batch_pred_sum, 1e-10, 1.0)
+    log_pred_sum = tf.math.log(log_pred_sum)
+    entropy_contents = tf.keras.layers.multiply(
+        [
+            batch_pred_sum,
+            log_pred_sum
+        ]
+    )
+    entropy_contents = tf.reduce_sum(entropy_contents)
+    entropy_contents = entropy_contents - 0.9 
+    batch_ent = - tf.math.divide(1, entropy_contents)
+    return batch_ent
+\end{lstlisting}
+\end{minipage}
+
+\noindent As with the two previous sections we have written an accompanying \href{https://github.com/ATTPC/VAE-event-classification/blob/master/notebooks/mixae_tutorial.ipynb}{notebook} that uses and explains the model. We omit it from this section for brevity.

@@ -14,7 +14,9 @@ To describe the DCEC we begin by letting the convolutional autoencoder be given 
 q_{ij} = \frac{(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}{\sum_j(1 + ||\mathbf{z}_i - \mathbf{\mu}_j||^2_2)^{-1}}.
 \end{equation}
 
-\noindent The matrix elements $q_{ij}$ are then the probability of the latent sample $\mathbf{z}_i$ belonging to cluster $j$. To define the corresponding clustering loss, we first compute a target distribution $p_{ij}$, which represents the confidence of the mapping $q_{ij}$. We then define the target distribution as 
+\noindent The matrix elements $q_{ij}$ are then the probability of the latent sample $\mathbf{z}_i$ belonging to cluster $j$. A schematic of the model is shown in figure \ref{fig:dcec} to illustrate the structure of the DCEC model. 
+
+To define the clustering loss over the soft assignments, we must first compute a target distribution $p_{ij}$. This distribution represents the confidence of the assignment $q_{ij}$. We define the 'target distribution as 
 
 \begin{equation}
 p_{ij} = \frac{q_{ij}^2/\sum_i q_{ij}}{\sum_j q_{ij}^2/\sum_i q_{ij}}.
@@ -27,6 +29,13 @@ p_{ij} = \frac{q_{ij}^2/\sum_i q_{ij}}{\sum_j q_{ij}^2/\sum_i q_{ij}}.
 \end{equation} 
 
 \noindent \citet{Guo2017} show that the target distribution should not be updated with each epoch. Instead, it needs to be changed on a regular schedule. They found that for the handwritten digits dataset MNIST a suitable update was once every $T=140$ epochs. 
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{plots/dcec.pdf}
+	\caption[Deep convolutional embedded clustering schematic]{Schematic of a DCEC model. A sample $\hat{\mathbf{x}}$ is compressed to a lower-dimensional representation $\mathbf{z}$. The latent sample is then fed both to a decoder which reconstructs the input, but also to a clustering layer which computes the soft assignments $\mathbf{q}$. See the text for further details. Figure adapted from \citet{Guo2017}}
+	\label{fig:dcec}
+\end{figure}
 
 Training the DCEC algorithm is split into two phases. First, the convolutional autoencoder is trained until convergence with no regularization on the latent space. Secondly, the cluster centres are initialized using a k-means algorithm and which is then used to compute the target distribution for the first $T$ epochs. Lastly, the algorithm is trained with the KL-divergence loss and the original reconstruction term. We can then write the total cost as the sum of the reconstruction, $\mathcal{L}_x$, and clustering-loss, $\mathcal{L}_z$ as 
 
@@ -41,6 +50,14 @@ The fundamental challenge that DCEC faces is that it is dependent on a K-means s
 \subsection{Mixture of autoencoders}\label{sec:mixae}
 
 Another way of representing the clusters is by having multiple latent spaces representing the underlying manifolds that describe each class. This is the central idea in the Mixture of autoencoders (MIXAE) algorithm, introduced by  \cite{Zhang}. To ensure that each autoencoder represents a cluster, we attach a soft-max classifier to the set of latent samples. This classifier assigns a cluster to each autoencoder, coupling the latent space and the reconstructions. The soft-max classifier is trained to output cluster probabilities and penalized for collapsing to assigning one cluster only. The remaining task is then to connect the cluster assignments to the autoencoder reconstructions. This is achieved by multiplying by the cluster confidence with the reconstruction error of each autoencoder.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\textwidth]{plots/mixae.pdf}
+	\caption[Deep convolutional embedded clustering schematic]{Schematic of a DCEC model. A sample $\hat{\mathbf{x}}$ is compressed to set of lower-dimensional representations $\{\mathbf{z}^{(i)}\}$ by $N$ autoencoders. These samples are concatenated and passed through an auxiliary assignment network that predicts a confidence of cluster belonging for each autoencoder. For further details see the text. Figure adapted from \citet{Zhang}}
+	\label{fig:mixae}
+\end{figure}
+
 
 More formally let $\{\mathbf{z}_j^{(i)}\}^N$ be the set of $N$ latent samples from each of the $N$ auto-encoders from a single sample image $\hat{\mathbf{x}}^{(i)} \in \R ^{t\times v}$ with height $t$ and width $v$. Furthermore, let the soft cluster assignments be given as $\{p_j^{(i)}\}^N$ and the reconstructed samples be given as $\{\mathbf{x}_j^{(i)}\}$. The reconstruction loss is then the sum over each autoencoder multiplied with each cluster assignment, i.e.
 
