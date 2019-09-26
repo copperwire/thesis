@@ -1,15 +1,19 @@
 \chapter{Conclusions and Future Work}
 
+
 In the present work, we wanted to explore the segmentation of active target time-projection chamber (AT-TPC) events in neural network latent spaces. This exploration is necessary because traditional methods are both computationally prohibitively expensive and can not be applied to events with broken tracks. Specifically, the goal was to implement autoencoder based models for semi-supervised classification and clustering. These models were to be compared with pre-trained models on image classification data from the machine learning community.
 
 Two tasks were proposed to contribute to the exploration of  AT-TPC events: a semi-supervised objective which describes the necessary volume of labelled data, and a clustering objective which measures the quality of segmentation without labelled data. 
 
-To solve the semi-supervised problem, we implemented two autoencoder-based algorithms: a convolutional autoencoder model with the capacity for two different latent space regularization, and the sequential deep recurrent attentive writer (DRAW) model. We trained these models on three different sets of AT-TPC data and found the following:
+To solve the semi-supervised problem, we implemented two autoencoder-based algorithms: a convolutional autoencoder model with the capacity for two different latent space regularisation, and the sequential deep recurrent attentive writer (DRAW) model. We trained these models on three different sets of AT-TPC data and found the following:
 
 \begin{itemize}
 \item A convolutional autoencoder can linearly segment its latent space by event type when trained on the ${}^{46}Ar$ data.  
-\item Good segmentation can be achieved both with and without latent regularization.  However, we found better segmentation in models trained with a Gaussian mixture maximum mean discrepancy loss, than those trained with a variational autoencoder loss. 
-\item The recurrent DRAW  model does not offer meaningful improvements on the convolutional autoencoder performance on the semi-supervised task. 
+\item Good segmentation can be achieved both with and without latent regularisation.  Moreover, we found better segmentation in models trained with a Gaussian mixture maximum mean discrepancy loss, than those trained with a variational autoencoder loss. 
+\item The recurrent DRAW  model does not offer meaningful improvements to the convolutional autoencoder performance on the semi-supervised task. 
 \end{itemize}
 
-Furthermore, we showed that while the autoencoder models can achieve good segmentation, some challenges remain. Firstly, we found no direct relationship between the 
+Both DRAW and the convolutional autoencoder 
+However, neither the DRAW algorithm nor the convolutional autoencoder outperformed the pre-trained VGG16 performance as a function of the available labelled data. This discrepancy indicates that while the reconstruction objective encourages segmentation in the latent space, it does not do so to the degree that a classification objective does even when the classification objective is over a different dataset. Further research is needed to understand this discrepancy. Other avenues of academic interest include the construction of new representations for the duelling decoder objective, as well as models that combine autoencoders with generative adversarial networks.  Lastly, we analysed two-dimensional projections of AT-TPC events in this work, expanding to include the full three-dimensional might give additional insight.
+
+To address the clustering task, we implemented two algorithms: the deep convolutional embedded clustering (DCEC) algorithm and the mixture of autoencoders algorithm. Equivalently to the semi-supervised objective, we compared these algorithms with the performance of a pre-trained VGG16 network. We showed that the pre-trained network latent space could be combined with a simple k-means algorithm for clustering of AT-TPC events. With the VGG16+K-means algorithm, we achieved convincing results on simulated data, as well as promising segmentation of the full and filtered data. Especially notable was the consistent purity of the proton event cluster. 
