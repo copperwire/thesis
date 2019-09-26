@@ -1,0 +1,15 @@
+\chapter{Conclusions and Future Work}
+
+In the present work, we wanted to explore the segmentation of active target time-projection chamber (AT-TPC) events in neural network latent spaces. This exploration is necessary because traditional methods are both computationally prohibitively expensive and can not be applied to events with broken tracks. Specifically, the goal was to implement autoencoder based models for semi-supervised classification and clustering. These models were to be compared with pre-trained models on image classification data from the machine learning community.
+
+Two tasks were proposed to contribute to the exploration of  AT-TPC events: a semi-supervised objective which describes the necessary volume of labelled data, and a clustering objective which measures the quality of segmentation without labelled data. 
+
+To solve the semi-supervised problem, we implemented two autoencoder-based algorithms: a convolutional autoencoder model with the capacity for two different latent space regularization, and the sequential deep recurrent attentive writer (DRAW) model. We trained these models on three different sets of AT-TPC data and found the following:
+
+\begin{itemize}
+\item A convolutional autoencoder can linearly segment its latent space by event type when trained on the ${}^{46}Ar$ data.  
+\item Good segmentation can be achieved both with and without latent regularization.  However, we found better segmentation in models trained with a Gaussian mixture maximum mean discrepancy loss, than those trained with a variational autoencoder loss. 
+\item The recurrent DRAW  model does not offer meaningful improvements on the convolutional autoencoder performance on the semi-supervised task. 
+\end{itemize}
+
+Furthermore, we showed that while the autoencoder models can achieve good segmentation, some challenges remain. Firstly, we found no direct relationship between the 
