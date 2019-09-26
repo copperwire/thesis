@@ -1,6 +1,6 @@
 \section{Deep Recurrent Attentive Writer}\label{sec:draw}
 
-One of the central challenges of the ELBO as presented in equation \ref{eq:elbo} is that the probability of a pixel in the output being activated is not conditional on whether the pixels surrounding it has is activated. The deep recurrent attentive writer (DRAW) aims to solve this problem by creating an iterative algorithm which updates the canvass multiple times (\cite{Gregor2015}). In this thesis, we make three central modifications to the algorithm. 
+One of the central challenges of the ELBO as presented in equation \ref{eq:elbo} is that the probability of a pixel in the output being activated is not conditional on whether the pixels surrounding it has is activated. The deep recurrent attentive writer (DRAW) aims to solve this problem by creating an iterative algorithm which updates the canvass multiple times \cite{Gregor2015}. In this thesis, we make three central modifications to the algorithm. 
 
 \begin{itemize}
 \item Originally DRAW views parts of the input conditioning the latent sample $\mathbf{z_t}$ on differently sized patches of the input image. We modify the model such that the model gets glimpses of the same size at each time step. This is done to make samples comparable between time steps in line with the work of \citet{Harris2019}
@@ -31,7 +31,7 @@ One of the central challenges of the ELBO as presented in equation \ref{eq:elbo}
 
  The read/write functions are paired processing functions that create a sub-sampled representation of the input. The trivial read function is a concatenation of the error image with the input. In a similar vein, the trivial write function is a weight transformation from the decoder output to the input dimension. This pair of functions were not considered for this work, outside testing of the algorithm.  
 
- Instead of the trivial implementations, the DRAW authors implement grids of Gaussian filters to extract patches of smoothly varying location and size (\cite{Gregor2015}). To control the patch the authors compute centres, $g_X$ and $g_Y$, and stride, which controls the size, of a $N \times N$ patch of Gaussian filters over the $H \times W$ input image.  These filters are collected in matrices $F_x$ and $F_y$ that we use to extract a part of the image with the read function and project to the input space with the write function. The mean location of those filters are computed from the centres, $g_X$ and $g_Y$, and the stride $\delta$. From \citet{Gregor2015} the means at row $i$ and column $j$ are defined as 
+ Instead of the trivial implementations, the DRAW authors implement grids of Gaussian filters to extract patches of smoothly varying location and size \cite{Gregor2015}. To control the patch the authors compute centres, $g_X$ and $g_Y$, and stride, which controls the size, of a $N \times N$ patch of Gaussian filters over the $H \times W$ input image.  These filters are collected in matrices $F_x$ and $F_y$ that we use to extract a part of the image with the read function and project to the input space with the write function. The mean location of those filters are computed from the centres, $g_X$ and $g_Y$, and the stride $\delta$. From \citet{Gregor2015} the means at row $i$ and column $j$ are defined as 
 
  \begin{align}
  \mu_X^i &= g_X + (i - N/2-0.5)\delta, \\

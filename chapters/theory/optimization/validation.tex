@@ -1,3 +1,5 @@
+% !TEX spellckeck=en_GB
+
 \section{Performance validation}\label{sec:performance_val}
 
 The threat of overfitting hangs as a specter over most machine learning applications. Regularization, as discussed in section \ref{sec:regularization}, outlines the tools researchers use to minimize the risk of overfitting. What remains then is the measurement of the performance of the model, and our confidence in that performance. We've already outlined the most simple tool to achieve this in section \ref{sec:fitting}; simply split the data in disjoint sets and train on one, measure on the other. As a tool this works best when there is lots of data from which to sample or the purpose of the algorithm is predictive in nature. In this thesis however the purpose is exploratory and labelled data is scarce. Before delving into how to estimate the out-of-sample error we first have to discuss the performance metrics we will use to measure error. 

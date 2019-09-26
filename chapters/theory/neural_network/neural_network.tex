@@ -82,13 +82,13 @@ We can now turn to the process of optimizing the model. In a neural network the 
 
 Based on whether the output is described by real values or a set of probabilities the cost takes on different forms, just as for linear and logistic regression. In the real case we use the now familiar mean squared error (MSE) cost, or in the event that we want to estimate a probability of an outcome; the binary cross-entropy. We discuss these cost-functions in general and especially the MSE and binary cross-entropy (BCE) earlier on in chapter \ref{chap:fundament}. Regardless of the cost the optimization problem is solved by a gradient descent procedure discussed in section \ref{sec:gd}. We we re-introduce the update form for the parameters as 
 
-\begin{equation}\label{eq:gd}
+\begin{equation}\label{eq:nn_gd}
 	\wij^{[l]} \leftarrow \wij^{[l]} -\eta \frac{\partial \mathcal{C}}{\partial \wij^{[l]}} .
 \end{equation}
 
 \subsection{Backpropagation}\label{sec:backpropagation}
 
-In the vernacular of the machine learning literature the aim of the optimization procedure is to train the model to perform optimally on the regression, reconstruction or classification task at hand. Training the model requires the computation of the total derivative in equation \ref{eq:gd}. This is also where the biological metaphor breaks down, as the brain is probably not employing gradient descent.
+In the vernacular of the machine learning literature the aim of the optimization procedure is to train the model to perform optimally on the regression, reconstruction or classification task at hand. Training the model requires the computation of the total derivative in equation \ref{eq:nn_gd}. This is also where the biological metaphor breaks down, as the brain is probably not employing gradient descent.
 
 Backpropagation of errors by automatic differentiation, first described by \citet{Linnainmaa1976}, is a method of computing the partial derivatives required to go from the gradient of the loss to individual parameter derivatives. Conceptually we wish to describe the slope of the error in terms of our model parameters, but having multiple layers complicate this somewhat. 
 
@@ -107,7 +107,7 @@ The sums over $n$ and $j$ enumerate the number of samples, and output dimensions
 
 \noindent We have dropped the data index, as the differentiation is independent under the choice of data. In practice the derivative of each sample in the batch is averaged together for the gradient update of each parameter. 
 
-The activation function, $f$, has classically been the logistic sigmoid function, but during the last decade the machine learning community has largely shifted to using the Rerectified linear unit (LU). This shift was especially apparent after the success of \citet{Krizhevsky2012}. In this section we then exemplify the backpropagation algorithm with a network with ReLU activation. The ReLU function is defined in such a way that it is zero for all negative inputs and the identity otherwise, i.e. 
+The activation function, $f$, has classically been the logistic sigmoid function, but during the last decade the machine learning community has largely shifted to using the Rectified linear unit (ReLU). This shift was especially apparent after the success of \citet{Krizhevsky2012}. In this section we then exemplify the backpropagation algorithm with a network with ReLU activation. The ReLU function is defined in such a way that it is zero for all negative inputs and the identity otherwise, i.e. 
 
 \begin{equation}\label{eq:relu}
 	\text{ReLU} (x) = f(x) = \begin{cases}
@@ -202,7 +202,7 @@ The element-wise product of two matrices or vectors is denoted as
 \noindent To finalize the discussion on the algorithm we illustrate how backpropagation might be implemented in algorithm \ref{algo:backprop}.
 
 \begin{algorithm}
-\caption{Backpropagation of errors in a fully connected neural network for a single sample $\mathbf{x}$.}\label{algo:backprop}\label{algo:backprop}
+\caption{Backpropagation of errors in a fully connected neural network for a single sample $\mathbf{x}$.}\label{algo:backprop}
 \KwData{Iterables 
  $\mathbf{a}^{[l]} $
  $\mathbf{z}^{[l]}$

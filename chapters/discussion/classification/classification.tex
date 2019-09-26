@@ -1,5 +1,5 @@
 \section{Semi-supervised classification of AT-TPC events}
-Recall that the first question we wish to explore in this thesis is whether training an autoencoder encodes class-information in the latent space. As a benchmark, we trained a linear model on the data-representations from a pre-trained VGG16 network. This high-performing model from the image analysis community has seen successful applications to the same experimental data; it then follows that it is also a reasonable comparison for our methods (\cite{Kuchera2019}). 
+Recall that the first question we wish to explore in this thesis is whether training an autoencoder encodes class-information in the latent space. As a benchmark, we trained a linear model on the data-representations from a pre-trained VGG16 network. This high-performing model from the image analysis community has seen successful applications to the same experimental data; it then follows that it is also a reasonable comparison for our methods \cite{Kuchera2019}. 
 
 \subsection{Convolutional autoencoder}
 Using the \lstinline{RandomSearch} framework, we were able to find a network configuration for the convolutional autoencoder that shows very strong performance on the simulated data. With a total $f1$ score of $>0.96$, the simulated data provide another benchmark for the results in this section.

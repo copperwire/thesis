@@ -1,3 +1,5 @@
+% !TEX spellckeck=en_GB
+
 \chapter{Classification results}\label{chap:classification}
 
 To prime our discussion on clustering algorithms for AT-TPC data, we first consider the easier problem of semi-supervised classification. The goal of this analysis is to determine whether we can construct latent spaces that separate the known event-types from the ${}^{46}Ar$ experiment. We investigate the latent space of a pre-trained model and two different autoencoder structures. Subsequently, we evaluate each of these models on three datasets: simulated, filtered, and full AT-TPC events. The evaluation is performed by training a logistic regression classifier on the latent samples, and we measure performance by the $f1$ score. 

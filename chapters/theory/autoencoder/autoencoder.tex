@@ -34,7 +34,7 @@ The objective is then to find the configuration of the two maps $\phi$ and $\psi
   \mathcal{O} = \argmin_{\phi, \psi} \sum_i || \mathbf{x}_i - \phi(\psi( \mathbf{x}_i ))  ||^2
 \end{align}
 
-\noindent  As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. A mean-squared-error cost optimizes this objective function in the event of real-valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to principal component analysis (PCA)(\cite{Marsland2009}) which we introduced in chapter \ref{chap:fundament}. In practice, the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. We refer to section \ref{sec:ANN} for a detailed discussion on deep learning and neural networks.
+\noindent  As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. A mean-squared-error cost optimizes this objective function in the event of real-valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to principal component analysis (PCA)\cite{Marsland2009} which we introduced in chapter \ref{chap:fundament}. In practice, the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. We refer to section \ref{sec:ANN} for a detailed discussion on deep learning and neural networks.
 
 The autoencoder has previously been successfully implemented in de-noising tasks. More recently, the Machine Learning community discovered that one could impose a constraining term on the latent distribution to allow for the imposition of structure in the latent space. The goal in mind was to create a generative algorithm, a class of models used to sample from the distribution $P(\mathcal{X})$. For example, to generate bespoke images of houses. 
 
@@ -68,14 +68,14 @@ p(x) = \int_z p(x|z)p(z)
 
 Another standard tool for solving this problem is Markov chain Monte Carlo (MCMC) methods. In physics, this family of algorithms has been applied to solve many-body problems in quantum mechanics primarily by gradient descent on variational parameters \cite{Hjorth-Jensen}.
 
-We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive a solution, we begin by introducing the KL-divergence (\cite{Kullback1951}), which is a measure of how much two distributions are alike. It is important to note that it is, however, not a metric. We define the KL-divergence in equation \ref{eq:kl} from a probability measure P to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$
+We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive a solution, we begin by introducing the KL-divergence \cite{Kullback1951}, which is a measure of how much two distributions are alike. It is important to note that it is, however, not a metric. We define the KL-divergence in equation \ref{eq:kl} from a probability measure P to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$
 
 \begin{align}\label{eq:kl}
 D_{KL} (P || Q) &= - \int^{\infty}_{-\infty} p(x) \log \left(\frac{p(x)}{q(x)}\right) dx, \\
 &= \langle \log \left(\frac{p(x)}{q(x)} \right)\rangle_{p}.
 \end{align}
 
-\noindent In the context of the VAE, the KL-divergence is a measure of the quality of P approximating Q (\cite{Burnham2002}). The first part of deriving the cost is then to introduce an approximation of the evidence. 
+\noindent In the context of the VAE, the KL-divergence is a measure of the quality of P approximating Q \cite{Burnham2002}. The first part of deriving the cost is then to introduce an approximation of the evidence. 
 
 We introduce the evidence lower bound (ELBO) as an approximation to the evidence following the derivation laid out by \cite{Kingma2013}. The EBLO function is defined as 
 
