@@ -3,6 +3,8 @@
 
 Like the convolutional autoencoder discussed in the previous section, the deep recurrent attentive writer (DRAW) is implemented as a subclass of \lstinline{LatentModel}. Consequently it follows the same formula and implements the  \lstinline{_ModelGraph} and \lstinline{_ModelLoss} methods. We re-iterate from section \ref{sec:draw} that the  DRAW algorithm wraps the autoencoder structure in a recurrent framework, which means that it constructs a set of latent samples and iteratively builds a reconstruction of the input. Each new iteration is fed with an error image from the previous $n$ iterations, making the reconstruction a conditional pixel distribution instead of an independent one which is the case for the ordinary convolutional autoencoder. 
 
+Our implementation is inspired by Eric Jang's \href{https://blog.evjang.com/2016/06/understanding-and-implementing.html}{explanation} and \href{https://github.com/ericjang/draw}{implementation} of the DRAW algorithm.
+
 \subsection{Computational graph}
 
 The construction of the model is analogous to the \lstinline{ConVae} case. We supply configuration dictionaries when initializing the model. However, for the DRAW algorithm, we have to specify the read/write paradigm in addition to the number of pseudo timesteps, \lstinline{T}, and the dimensions of the LSTM cells.  Our implementation notably includes the option for an increased number of  Long Term Short Term (LSTM) cells, but most important is the extension of the paired read and write functions to include the option for a paired set of convolutional networks. This contrasts with the original implementation from \citet{Gregor2015} which uses a more traditional overlay of Gaussian filters on the image as a feature extraction tool. 
@@ -138,14 +140,13 @@ plt.tight_layout()
 \end{minipage}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\textwidth, height=8cm]{filtered.pdf}
+	\includegraphics[width=0.5\textwidth, height=6cm]{filtered.pdf}
 	\caption[DRAW filters applied to simulated event]{DRAW filters applied to a simulated event. Original on the right, and the extracted segment on the left}
 	\label{fig:draw_filter}
 \end{figure}
 
 \noindent We can now determine the model with its hyperparameters. The syntax is very similar to the convolutional autoencoder, with the exception that that the user supplies parameters for a convolutional or attention based feature extraction.
 
-\begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
 T = 3
 enc_size = 256
@@ -205,7 +206,6 @@ model = DRAW(
     use_conv=use_conv,
 
 \end{lstlisting}
-\end{minipage}
 
 \noindent The compilation and training code is identical to the convolutional autoencoder, and so we omit it for brevity. Upon completion of the training we can inspect the reconstruction to get an indication of whether the model has converged to satisfaction. The reconstructions are shown in figure \ref{fig:draw_reconst}. We observe in the reconstruction that the DRAW algorithm is picking up the hexagonal pad of higher sensor-pad density in the center of the image. Additionally, the model seems to be picking  up on the artifacts introduced by the simulation.
 

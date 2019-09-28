@@ -110,7 +110,9 @@ After a sample \lstinline{z} is drawn, the decoder computes the reconstruction f
 
 To compute the loss(es) the \lstinline{ConVae} implements the second of \lstinline{LatentModel}s abstract methods; \lstinline{_ModelLoss}. Like the graph construction, this method is never called directly but through the interface of the parent class in the \lstinline{LatentModel.compile_model} method.  In a similar vein, losses are configured using a supplied dictionary.
 
-The reconstruction loss is specified in the configuration dictionary, and the model accepts either a mean squared error or binary cross-entropy loss with cross-entropy as the default. Each of these losses acts pixel-wise on the output and target images. When computed, the construction loss is stored as a class attribute, \lstinline{ConVae.Lx}, which is logged to a \lstinline{TensorBoard}\footnote{This is a module for tracking the progress of a model during training. It supports visualizations as well as automatically plotting the model graph, etc.} instance. The reconstruction loss is then implemented as 
+The reconstruction loss is specified in the configuration dictionary, and the model accepts either a mean squared error or binary cross-entropy loss with cross-entropy as the default. Each of these losses acts pixel-wise on the output and target images. When computed, the construction loss is stored as a class attribute, \lstinline{ConVae.Lx}, which is logged to a \lstinline{TensorBoard}\footnote{This is a module for tracking the progress of a model during training. It supports visualizations as well as automatically plotting the model graph, etc.} instance. The reconstruction loss is then implemented as
+
+
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
 # excerpt from convolutional_VAE.py
@@ -294,7 +296,7 @@ plt.show()
 \end{lstlisting}
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{reconst_sim_events.pdf}
+\includegraphics[width=0.8\textwidth, height=8cm]{reconst_sim_events.pdf}
 \caption[Simulated events and reconstructions]{Showing four events and their corresponding reconstructions. The reconstructions faithfully reconstruct the artifacts from the simulation procedure but has a fuzzy quality common to the ELBO approximation.}\label{fig:reconst_sim}
 \end{figure}
 \end{minipage}
@@ -334,9 +336,9 @@ ax.legend(loc="best", fontsize=20)
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{latent_sim.pdf}
+\includegraphics[width=0.7\textwidth, height=7cm]{latent_sim.pdf}
 \caption[2D latent space for simulated data]{2D latent space representation of the simulated AT-TPC data.}\label{fig:latent_sim}
 \end{figure}
 
-\noindent The resulting latent space shown in figure \ref{fig:latent_sim} is obviously linearly separable.
+\noindent We visually confirm that the resulting latent space shown in figure \ref{fig:latent_sim} is clearly linearly separable.
 

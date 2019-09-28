@@ -19,7 +19,11 @@ We will determine the best autoencoder architecture for each dataset listed in s
 
 \subsection{Clustering}
 
-To attempt clustering of event data we will follow the pipeline as outlined in \citet{Guo2017}. The modeling has two distinct steps, pre-training of the convolutional autoencoder and training with regularization towards the pseudo-labels. 
+In the case where labelled data is not available, we must turn to unsupervised methods. For the present work, we implemented two clustering algorithms based on autoencoding neural networks: the deep convolutional embedded clustering (DCEC) and the mixture of autoencoders (MIXAE) algorithm. 
+
+The MIXAE is trained end-to-end on the individual AT-TPC datasets and subsequently evaluated by the clustering metrics presented in section \ref{sec:unsupervised_perf}.
+
+The DCEC modelling pipeline has two distinct steps: first, we pre-train the convolutional autoencoder and subsequently we apply the clustering layer loss which trains the clustering part of the algorithm. Training the DCEC algorithm then follows following pipeline: 
 
 \begin{enumerate}
 \item Train autoencoder end-to-end on the full dataset without regularizing the latent space. 
@@ -28,7 +32,7 @@ To attempt clustering of event data we will follow the pipeline as outlined in \
 \item Train the autoencoder end-to-end on the full dataset with an added regularization of the soft cluster assignments to the target distribution of pseudo labels.
 \end{enumerate}
 
-In the same manner as for the clasification task we will search over autoencoder architectures and will select the highest performing model by it's performance on the subset of labelled data.
+In the same manner as for the clasification task we will search over autoencoder architectures and will select the highest performing model by it's performance on the labelled subset of the datasets.
 
 \subsection{Pre-trained networks}
 
