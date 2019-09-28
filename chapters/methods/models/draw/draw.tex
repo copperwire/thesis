@@ -138,14 +138,14 @@ ax[1].set_title("Original event", fontsize=20)
 plt.tight_layout()
 \end{lstlisting}
 \end{minipage}
-\begin{figure}[H]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.5\textwidth, height=6cm]{filtered.pdf}
 	\caption[DRAW filters applied to simulated event]{DRAW filters applied to a simulated event. Original on the right, and the extracted segment on the left}
 	\label{fig:draw_filter}
 \end{figure}
 
-\noindent We can now determine the model with its hyperparameters. The syntax is very similar to the convolutional autoencoder, with the exception that that the user supplies parameters for a convolutional or attention based feature extraction.
+\noindent We can now determine the model with its hyperparameters. The syntax is very similar to the convolutional autoencoder, with the exception that that the user supplies parameters for a convolutional or attention based feature extraction. In code this is represented as: 
 
 \begin{lstlisting}[language=iPython]
 T = 3
@@ -193,7 +193,9 @@ mode_config = {
     "use_vgg":False, #whether the input data is from a pre-trained model 
     "use_dd":False, #whether to use the duelling-decoder objective 
 }
-
+\end{lstlisting}
+The model is then instantiated with the following snippet of code:
+\begin{lstlisting}[language=iPython]
 model = DRAW(
     T,
     dec_size,
@@ -209,7 +211,7 @@ model = DRAW(
 
 \noindent The compilation and training code is identical to the convolutional autoencoder, and so we omit it for brevity. Upon completion of the training we can inspect the reconstruction to get an indication of whether the model has converged to satisfaction. The reconstructions are shown in figure \ref{fig:draw_reconst}. We observe in the reconstruction that the DRAW algorithm is picking up the hexagonal pad of higher sensor-pad density in the center of the image. Additionally, the model seems to be picking  up on the artifacts introduced by the simulation.
 
-\begin{figure}
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.7\textwidth, height=10cm]{reconst.pdf}
 	\caption[DRAW reconstructions on simulated data]{DRAW reconstructions on simulated data. Each column is the reconstruction of one event, with the original on the last row. The two first rows are then the canvass as it gets updated, and the second to last row is the finished reconstructions.}
