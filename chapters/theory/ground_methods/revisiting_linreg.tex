@@ -27,21 +27,21 @@ y_i = \mathbf{x}_i\mathbf{w}.
 \noindent We use $\mathcal{N}(\mu, \sigma^2)$ to denote a Gaussian normal distribution with mean $\mu$ and variance $\sigma^2$ which has a probability density function defined as 
 
 \begin{align}
-p(x | \mu, \sigma) := \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x - \mu)^2}{\sigma^2}}.
+p(x ; \mu, \sigma) := \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x - \mu)^2}{\sigma^2}}.
 \end{align}
 
 \noindent This allows us to consider the real outcomes $y_i$ as a set of normally distributed variables as well. By the linearity of the expectation operator we can then compute the expectation of the outcome 
 
 \begin{align}
-\langle \hat{y} \rangle &= \langle y + \epsilon \rangle,  \\
-\langle \hat{y} \rangle &= \langle y \rangle + \langle \epsilon \rangle, \\
-\langle \hat{y} \rangle &= \mathbf{x}_i^T\mathbf{w}.
+\langle \hat{y}_i \rangle &= \langle y_i + \epsilon \rangle,  \\
+\langle \hat{y}_i\rangle &= \langle y_i \rangle + \langle \epsilon \rangle, \\
+\langle \hat{y}_i \rangle &= \mathbf{x}_i\mathbf{w}.
 \end{align}
 
 \noindent The expectation of the error term is zero following the definitions of the expectation we presented in section \ref{sec:fundament_intro}. Following the exact same properties we have that the variance of the prediction is the variance of the error term $\sigma^2$, i.e. 
 
 \begin{align}
-\langle \hat{y}\rangle^2 + \langle \hat{y}^2\rangle = \sigma^2.
+\langle \hat{y_i}\rangle^2 + \langle \hat{y_i}^2\rangle = \sigma^2.
 \end{align}
 
 \noindent In concise terms we simply consider our outcome as a set of IID normal variables on the form $y_i \sim \mathcal{N}(\mathbf{x}_i^T\mathbf{w}, \sigma^2)$. The likelihood of the linear regression can then be written using the same tuple notation as for equation \ref{eq:likelihood}
