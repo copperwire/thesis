@@ -21,7 +21,7 @@ o = \frac{p}{1-p}.
 We can then transform the log-odds back to a model for the probability which gives us the formulation for logistic regression 
 
 \begin{equation}
-q(y=1 | \mathbf{x}_i; \mathbf{w})= q(\mathbf{x}_i\mathbf{w}) = \frac{1}{1 + e^{-\mathbf{x}_i \mathbf{w}}}.
+q(y_i=1 | \mathbf{x}_i; \mathbf{w})= q(\mathbf{x}_i\mathbf{w}) = \frac{1}{1 + e^{-\mathbf{x}_i \mathbf{w}}}.
 \end{equation} 
 
 \noindent The term on the right-hand side is the logistic sigmoid function, which has the notable properties one needs from a function that models probabilities e.g. $f(x) = 1-f(1-x)$. With a binary outcome we can plug this model directly into the MLE cost defined in equation \ref{eq:mle}, i.e. 
