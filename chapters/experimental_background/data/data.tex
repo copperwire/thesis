@@ -2,7 +2,7 @@
 
 In this thesis, we will work with data from the ${}^{46}Ar(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. We principally work with two different data sources: data from AT-TPC simulation tools, and data recorded in the AT-TPC experiment proper. The experimental data were recorded from a single run of the experiment, which yields on the order of $\sim 10^4$ events.    For the simulated data, we construct two datasets on the order of $\sim10^3$ and $\sim10^4$ events, respectively. In this section we give a brief overview of the data, for a more in-depth consideration we refer to \cite{Mittig2015}, \cite{Suzuki2012} and  \cite{Bradt2017a}. 
 
-In this thesis we will explore the machine learning algorithms described in chapters \ref{ch:ml} and \ref{ch:autoencoder} on three datasets from the AT-TPC, listed in table \ref{tab:datasets}. The simulated data will serve as a baseline for performance, while the filtered and full data are real records from the ${}^{46}Ar$ experiment. The former of which has some post-processing applied to remove noise, and the latter having no such processing applied. The details of the post-processing are given in later sections. First, we consider the pipeline from raw data to images that the algorithms described in chapter \ref{ch:autoencoder} can process. 
+In this thesis we will explore the machine learning algorithms described in chapters \ref{ch:ml} and \ref{ch:autoencoder} on three datasets from the AT-TPC, listed in table \ref{tab:datasets}. The simulated data will serve as a baseline for performance, while the filtered and full data are real records from the ${}^{46}Ar$ experiment. Each of these datasets have different distributions of the constituent classes, which we list in table \ref{tab:class_distr}. The filtered data differs from the full dataset as it has some post-processing applied to remove noise, which is not the case for the full data. The details of the post-processing are given in later sections. First, we consider the pipeline from raw data to images that the algorithms described in chapter \ref{ch:autoencoder} can process. 
 
 \begin{table}[H]
 \centering
@@ -16,6 +16,21 @@ labelled & $2400$ & $1774$ &  $1582$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+
+\begin{table}
+\centering
+\caption{Event class percentages for each of the datasets used in the analysis conducted in this thesis. The decrease in the "other" class of events from full to filtered data owes to the thresholding of events. If an event contains fewer than $20$ data-points it is discarded}\label{tab:class_distr}
+\begin{tabular}{lccc}
+\toprule
+{} & Simulated & Full & Filtered \\
+\midrule
+$\%$ Proton & $50$ & $25.3$ & $27.6$ \\ 
+$\%$ Carbon & $50$ & $12.0$ & $11.9$ \\
+$\%$ Other & $0$ & $62.8$ & $60.1$ \\
+\end{tabular}
+\end{table}
+
 
 \subsection{Data processing}
 
