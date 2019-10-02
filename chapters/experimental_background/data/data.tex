@@ -4,7 +4,7 @@ In this thesis, we will work with data from the ${}^{46}Ar(p, p')$ experiment co
 
 In this thesis we will explore the machine learning algorithms described in chapters \ref{ch:ml} and \ref{ch:autoencoder} on three datasets from the AT-TPC, listed in table \ref{tab:datasets}. The simulated data will serve as a baseline for performance, while the filtered and full data are real records from the ${}^{46}Ar$ experiment. Each of these datasets have different distributions of the constituent classes, which we list in table \ref{tab:class_distr}. The filtered data differs from the full dataset as it has some post-processing applied to remove noise, which is not the case for the full data. The details of the post-processing are given in later sections. First, we consider the pipeline from raw data to images that the algorithms described in chapter \ref{ch:autoencoder} can process. 
 
-\begin{table}[H]
+\begin{table}
 \centering
 \caption{Descriptions of number of events in the data used for analysis in this thesis. In principle we can simulated infinite data, but it is both quite simple and not very interesting outside a case for a proof-of-concept}\label{tab:datasets}
 \begin{tabular}{lccc}
@@ -48,7 +48,7 @@ To emulate the real-data case, we set a subset of the simulated data to be label
 
 We display two simulated events in figure \ref{fig:sim_samples}. The top row illustrates a proton-event, and the bottom a carbon-event. 
 
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{../plots/display_eventssimulated.pdf}
 \caption[Displaying simulated events in 2D and 3D]{Two- and three-dimensional representations of two events from a simulated ${}^{46}Ar$ experiment. Each row is one event in two projections, where the lightness of each point indicates higher charge values.}\label{fig:sim_samples}
@@ -63,7 +63,7 @@ The sensor plane in the AT-TPC is very sensitive, as such there is substantial n
 
 We display two different events from the ${}^{46}Ar$ experiment in figure \ref{fig:samples}. The top row illustrates an event with a large fraction of noise, while the bottom row shows an event nearly devoid of noise. The very clear spiral structure of the bottom row indicates that this is a proton-event.
 
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{../plots/display_eventsfull_.pdf}
 \caption[Displaying un-filtered events in 2D and 3D]{Two- and three-dimensional representations of two events from the ${}^{46}Ar$ experiment. Each row is one event in two projections, where the lightness of each point indicates higher charge values.}\label{fig:samples}
@@ -75,8 +75,9 @@ As we saw in the previous section, the detector picks up a significant amount of
 
 We illustrate two filtered events in figure \ref{fig:samples_filtered}. These are the same events as shown in figure \ref{fig:samples}, but with the Houghes' and nearest neighbours filtering applied. 
 
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../plots/display_eventsclean_.pdf}
+\includegraphics[width=0.9\textwidth, height=9cm]{../plots/display_eventsclean_.pdf}
 \caption[Displaying filtered events in 2D and 3D]{Two- and three-dimensional representations of two events from the ${}^{46}Ar$ experiment. Each row is one event in two projections, where the lightness of each point indicates higher charge values. These events have been filtered with a nearest neighbors algorithm and a Houghes' transform, described in section \ref{sec:filtered}}\label{fig:samples_filtered}
 \end{figure}
+\todo{pick out some samples from each class in appendix?}
