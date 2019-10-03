@@ -32,6 +32,7 @@
 %\usepackage[backend=biber]{biblatex}
 %\usepackage{natbib}
 %\usepackage[super]{cite}
+\interfootnotelinepenalty=10000
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -163,7 +164,7 @@
 
 
 % \usepackage{biblatex}
-\usepackage{natbib}
+\usepackage[numbers]{natbib}
 
 \author{Robert Solli}
 \title{Modern Machine Learning Algorithms: Applications in Nuclear Physics}
@@ -249,21 +250,23 @@ Sanity: Maiken \\
 \subimport*{chapters/results/clustering/}{draw.tex}
 
 
-\part{Discussion and Conclusion}\label{part:discuss_concludee}
+\part{Discussion, Conclusion and Future Prospects}\label{part:discuss_concludee}
 \subimport*{chapters/discussion/}{discussion.tex}
 \subimport*{chapters/discussion/classification/}{classification.tex}
 \subimport*{chapters/discussion/clustering/}{clustering.tex}
+\subimport*{chapters/conclusion/}{conclusion.tex}
+
 \part{Appendices}
-\begin{appendices}
+\appendix
 \subimport{chapters/appendix/maths/}{kl_divergence}
+\subimport{chapters/appendix/maths/}{bias_variance}
 \subimport{chapters/appendix/architectures/}{vgg}
 \subimport{chapters/appendix/hyperparameters/}{hyperparams}
 %\subimport{chapters/appendix/clf_tables/}{convae_simulated}
-\end{appendices}
-
 
 % \bibliographystyle{te}
-\bibliographystyle{plainnat}
+%\bibliographystyle{plainnat}
+\bibliographystyle{mybibstyle}
 \bibliography{link.bib}
 %\printbibliography
 
