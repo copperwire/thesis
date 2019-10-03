@@ -1,18 +1,19 @@
 \chapter{Kullback-Leibler divergence of of Gaussian distributions}\label{appendix:kl_gauss}
 
-A multivariate Gaussian distribution in $\R^n$ is defined in terms of its probability density, which is a complete analogue to its univariate formulation, 
+A multivariate Gaussian distribution in $\R^n$ is defined in terms of its probability density,  
 \begin{equation}\label{eq:multi_gauss}
-p(x) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(x- \mu)^T\Sigma^{-1}(x-\mu)).
+p(x) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(x- \mu)^T\Sigma^{-1}(x-\mu)),
 \end{equation}
 
-\noindent And described in full by the mean vector $\mu$ and covariance matrix $\Sigma$. The  Kullback-Leibler divergence between two multivariate Gaussians is then given as 
+\noindent which is defined in an analogous way to its univariate formulation. The probability density is described in full by the mean vector $\mu$ and covariance matrix $\Sigma$.
+The Kullback-Leibler divergence between two multivariate Gaussians is defined as 
 
 \begin{align*}
 D_{KL}(p_1|| p_2 ) &= \langle \log p_1 - \log p_2 \rangle_{p_1} \\
 &= \langle \frac{1}{2}\log \frac{|\Sigma_2|}{|\Sigma_1|} + \frac{1}{2} (-(x- \mu_1)^T\Sigma_1^{-1}(x-\mu_1) + (x- \mu_2)^T\Sigma_2^{-1}(x-\mu_2))   \rangle.
 \end{align*}
 
-\noindent We abuse the fact that the exponential factors represent an inner-product to apply a trace operator to manipulate the sequence of operations given the trace operators invariance under cyclical permutations i.e. $tr(X^TBX) = tr(BX^TX)$. Furthermore we use the fact that the trace is a linear operator and so commutes with the expectation i.e. $E(tr(BX^TX)) = tr(B\, E(X^TX))$. We also move the logarithm of the covariance determinants outside of the expectations, 
+\noindent We use the fact that the exponential factors represent an inner-product to apply a trace operator to manipulate the sequence of operations given the trace operators invariance under cyclical permutations i.e. $tr(X^TBX) = tr(BX^TX)$. Furthermore we use the fact that the trace is a linear operator and so commutes with the expectation i.e. $\langle(tr(BX^TX)\rangle = tr(B\, \langle(X^TX)\rangle)$. We also move the logarithm of the covariance determinants outside of the expectations, 
 
 \begin{align*}
 D_{KL}(p_1|| p_2 ) &= \frac{1}{2}\log \frac{|\Sigma_2|}{|\Sigma_1|} + \frac{1}{2} \langle - tr(\Sigma^{-1}_1(x-\mu_1)^T(x-\mu_1)) + tr(\Sigma^{-1}_2(x-\mu_2)^T(x-\mu_2))\rangle \\
