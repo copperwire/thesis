@@ -6,15 +6,12 @@ While the basis for the modern neural network was laid more than a hundred years
 
 Dubbed an artificial neural network (ANN) this computational analogue takes input from multiple sources, weights that input and produces an output if the signal from the weighted input is strong enough. A proper derivation will follow but for the moment we explore this simple intuition. These artificial neurons are ordered in layers, each successively passing information forward to a final output. Depending on the application, the output can be categorical or real-valued in nature. Each layer uses a matrix multiplication and a non-linear function to transform the input space in a way that condenses information, as most applications use transformations that reduce the dimensionality substantially before making a prediction.
 
-A simple illustration of two neurons in one layer is provided in figure \ref{fig:ann_illustration} \todo{make proper figure for ann}
-
-\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-
+A simple illustration of two neurons in one layer is provided in figure \ref{fig:ann_illustration}.
 
 \begin{figure}[h]
 \centering
-\input{ann.tikz}
-\caption[Fully connected neural network illustration]{An illustration of the graph constructed by two artificial neurons with three input nodes. Colored lines illustrate that  each of the input nodes are connected to each of the neurons in a manner we denote as fully-connected.}\label{fig:ann_illustration}
+\includegraphics{../figures/ann.pdf}
+\caption[Fully connected neural network illustration]{An illustration of the graph constructed by two artificial neurons with three input nodes. Colored lines show the flow of information from input to the predicted value. For details on notation see the text.}\label{fig:ann_illustration}
 \end{figure}
 
 
@@ -258,11 +255,11 @@ Two sigmoid functions have been traditionally used in neural networks, and while
 \frac{d \tanh x}{d x}  = 1-\tanh^2 x
 \end{equation}
 
-\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure, we observe that for relatively small values the gradient goes to zero, which makes optimization hard. Additionally, we note one of the convenient properties of the sigmoid functions; their values are capped. This prohibits the gradient from exploding but also causes problems in the gradient. We also note that the logistic sigmoid is capped at zero, like the ReLU function, while the hyperbolic tangent is bonded at $-1$. The hyperbolic tangent then has the option to emit a bounded anti-signal.
+\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure, we observe that for relatively small values the gradient goes to zero, which makes optimization hard. Additionally, we note one of the convenient properties of the sigmoid functions; their values are capped. This prohibits the gradient from exploding but also causes problems in the gradient. We also note that the logistic sigmoid is capped at zero, like the ReLU function, while the hyperbolic tangent is bounded at $-1$. The hyperbolic tangent then has the option to emit a bounded anti-signal.
 
-\begin{figure}
+\begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../figures/activationssigmoids.pdf}
+\includegraphics[width=0.8\textwidth, height=8cm]{../figures/activationssigmoids.pdf}
 \caption[Sigmoid activation functions]{Sigmoid activation functions and their derivatives. The colorization indicates the value of the multiplicative weight $w$. The weight is multiplied with function argument $x$, which is what we differentiate with respect to.  We observe that the derivative deteriorates to zero as the function moves away from zero. The derivative going to zero means that a network using sigmoid activations generally struggle with saturated gradients which slows down training dramatically.}\label{fig:sigmoid}
 \end{figure}
 
@@ -288,9 +285,9 @@ On the other end of the scale rectified activations have gained traction in late
 
 \noindent Immediately it becomes clear that for the rectifier functions we have the opposite problem from what we encountered for the sigmoid activations. As the derivative is non-zero for a large range of values, we no longer have a concern for vanishing gradients, but the activation is not positively bounded. This leads to a problem where the gradient might explode, leading to an unstable optimization that fails to find a minimum of the cost. We illustrate the defining features of the rectifiers in figure \ref{fig:elu}
 
-\begin{figure}
+\begin{figure}[ht]
 \centering
-\includegraphics[width=\textwidth]{../figures/activationselus.pdf}
+\includegraphics[width=0.8\textwidth, height=8cm]{../figures/activationselus.pdf}
 \caption[Rectifier activation functions]{Rectifier activation functions and their derivatives, the colorization indicates that the function is multiplied with a second variable. In contrast with the sigmoid activations the derivative is non-zereo in $\R^+$ for the ReLU and non-zero on the entirety of $\R$ for the LReLU.}\label{fig:elu}
 \end{figure}
 
