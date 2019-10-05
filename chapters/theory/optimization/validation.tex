@@ -6,7 +6,7 @@ The threat of overfitting hangs as a specter over most machine learning applicat
 
 \subsection{Supervised performance metrics}\label{sec:supervised_perf}
 
-In this thesis we measure the performance of a classifier with the $f1$ score. However it is helpful to first discuss a simpler metric of performance; the accuracy. Intuitively the accuracy is very satisfying as it is simply the percentage of correct classifications made. The accuracy is then computed from the True Positive (TP) predictions and the True Negatives (TN) divided by the total number of samples. We will use the False Positives (FP) and False Negatives (FN) later and so introduce their abbreviation here.
+In this thesis we measure the performance of a classifier with the $f1$ score. However it is helpful to first discuss a simpler metric of performance; the accuracy. Intuitively the accuracy is very satisfying as it is simply the percentage of correct classifications made. The accuracy is then computed from the True Positive (TP) predictions and the True Negatives (TN) divided by the total number of samples. We will use the False Positives (FP) and False Negatives (FN) later and so we introduce their abbreviation here.
 
 We note that the accuracy is related to the rand index which we will use to measure unsupervised performance, with the distinction that for accuracy we know the ground truth during training. The accuracy is then defined as 
 
@@ -14,35 +14,37 @@ We note that the accuracy is related to the rand index which we will use to meas
 \text{accuracy} := \frac{TP + TN}{FN+ TN + TP+FP}.
 \end{equation}
 
-\noindent One of the principal failings of accuracy as presented in equation \ref{eq:accuracy} is that it does not account for class imbalance. Consider a problem where one class occurs as $99\%$ of the sample, a trivial classifier predicting only that class will achieve an accuracy of $\text{acc}=0.99$. This is for obvious reasons a problematic aspect of accuracy. Though a simple remedy is to measure multiple metrics of performance, or to change measurements altogether. We chose the $f1$ score per-class and total $f1$ score, as it allows for comparisons with earlier work on the same data from \citet{Kuchera2019}. The $f1$ score is defined in terms of the precision and recall of the prediction. Which are simply defined as true positives weighted by the false positives and negatives. We define recall and precision in equations \ref{eq:recall} and \ref{eq:precision} respectively.
+\noindent One of the principal failings of accuracy as presented in equation \ref{eq:accuracy} is that it does not account for class imbalance. Consider a problem where one class occurs as $99\%$ of the sample, a trivial classifier predicting only that class will achieve an accuracy of $\text{acc}=0.99$. This is for obvious reasons a problematic aspect of accuracy. To avoid this problematic aspect we chose to measure classification performance with the $f1$ score per-class, and total $f1$ score. We chose the $f1$ score as it allows for comparisons with earlier work on the same data from \citet{Kuchera2019}. The $f1$ score is defined in terms of the precision and recall of the prediction. Which are simply defined as true positives weighted by the false positives and negatives. The recall is defined as
 
 \begin{equation}\label{eq:recall}
-\text{recall}= \frac{TP}{TP + FP}
+\text{recall}= \frac{TP}{TP + FP},
 \end{equation}
+
+\noindent and the precision is defined as
 
 \begin{equation}\label{eq:precision}
-\text{precision} = \frac{TP}{TP + FN}
+\text{precision} = \frac{TP}{TP + FN}.
 \end{equation}
 
-\noindent The $f1$ score is then defined as the harmonic mean of precision and recall for each class. Formally it is given as shown in equation \ref{eq:f1}.
+\noindent The $f1$ score is then defined as the harmonic mean of precision and recall for each class. Formally we define it as
 
 \begin{equation}\label{eq:f1}
-f1 = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}
+f1 = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}.
 \end{equation}
 
-\noindent Note that the $f1$ score does not take into account the FN predictions. But in nuclear event detection the now flourishing amount of data weights the problem heavily in favor of optimizing for TP and FP predictions, and so the $f1$ score is a well suited performance measure for this problem. 
+\noindent Note that the $f1$ score does not take into account the FN predictions. In this thesis we primarily concern ourselves with the purity of our classification results, and in that regard the $f1$ score is well suited. 
 
-\subsection{labelled samples}
+\subsection{A digression on labelled samples}
 
-One of the principal challenges with the experimental data discussed in this thesis is that labelled data is challenging to acquire, if not impossible to acquire. In the best case scenario it's still computationally intensive to label individual events and in the worst case scenario the current Monte Carlo based fitting methods might not be able to separate event types of interest from background noise and unknown reactions.
+One of the principal challenges with the experimental data discussed in this thesis is that labelled data is challenging to acquire, if not outright impossible. In the best case scenario it is still computationally intensive to label individual events and in the worst case scenario the current Monte Carlo based fitting methods might not be able to separate event types of interest from background noise and unknown reactions.
 
 It is then interesting to quantify the effect of the amount of accessible labelled data on a semi-supervised approach as listed in chapter \ref{ch:architectures}. Starting from a random, small, sample of the labelled data we train a classifier on a subset of the labelled data iteratively adding to that subset. 
 
 
 \subsection{Cross validation}\label{sec:cv}
 
-To estimate the out-of-sample error as discussed in section \ref{sec:bv} one can use simple statistical tools. The premise is that by iteratively selecting what data the model gets to train on and what it doesn't we can compute a less biased estimate of the out of sample error, compared to simply taking the training performance. The division in sub-sets mimics the expectation computed in equation \ref{eq:bv_decomp} over the data-selection sensitive model parameters $\theta_S^*$. 
+To estimate the out-of-sample error, as discussed in section \ref{sec:bv} we use cross validation. A well known statistical technique, cross validation describes the separation of data in disjoint sets, iteratively training on some and testing on others. The premise is that by iteratively selecting what data the model gets to train on and what it does not we can compute an estimate of the mean and variance of out-of-sample error, compared to simply taking evaluating on one hold-out set. The division in sub-sets mimics the expectation computed in equation \ref{eq:bv_decomp} over the data-selection sensitive model parameters $\theta_{S_t}$. 
 
-This idea of iterative sampling is known collectively as cross validation, and the manner in which the sampling is conducted specifies the type of cross validation performed. In this thesis we use the technique called $k$-fold cross-validation. 
+In this thesis we use the technique called $k$-fold cross-validation. The $k$-fold algorithm is of the non-exhaustive variants of this type of algorithm. It is so named because it does not test for all possible combinations of hold-out and training data. 
 
-The algorithm consists of separating the data in $k$ equally sized folds. A fold is a a tuple of a corresponding target and data sub-set. If the data is very biased or $k$ is high it might be useful to ensure that each fold roughly follows the global class distribution. A model is then trained on all but one of the folds, and the out of sample error is estimated on the last fold. This is repeated such that all folds are left out exactly once, creating a $k$-long vector with performance estimates. The average of which then represents our estimation of the true performance of the model.
+The $k$-fold algorithm consists of separating the data in $k$ equally sized folds. A fold is a a tuple of a corresponding target and data sub-sets. A model is then trained on all but one of the folds, and the out of sample error is estimated on the last fold. This is repeated such that all folds are left out exactly once, creating a $k$-long vector with performance estimates. The average of which then represents our estimation of the true performance of the model. If the data is very biased or $k$ is high it might be useful to ensure that each fold roughly follows the global class distribution. 

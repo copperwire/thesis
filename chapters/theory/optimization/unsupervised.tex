@@ -18,7 +18,7 @@ In this thesis, we will use autoencoder models to explore the semantic informati
 
 \section{Unsupervised performance metrics}\label{sec:unsupervised_perf}
 
-When performing clustering and other unsupervised methods, the goal is to estimate some class belonging without the model having knowledge of this correspondence between class and data. This disconnect makes measuring performance a little more abstract. In general, there is a separation between performance metrics that assumes that one has access to ground-truth labels and those that do not. We will principally use the adjusted rand score (ARS) which formally defines the agreement between two separate clusterings adjusted for random chance. To compute the ARS, we first need to define the contingency table, similar to the confusion matrix from classification, which lists the coinciding elements of one clustering with another. A general representation of this is shown in table \ref{tab:contingency}. 
+When performing clustering and other unsupervised methods, the goal is to estimate some class belonging without the model having knowledge of this correspondence between class and data. This disconnect makes measuring performance a little more abstract. In general, there is a separation between performance metrics that assumes that one has access to ground-truth labels and those that do not. We will principally use the adjusted rand index (ARI) which formally defines the agreement between two separate clusterings adjusted for random chance. To compute the ARI, we first need to define the contingency table, similar to the confusion matrix from classification, which lists the coinciding elements of one clustering with another. A general representation of this is shown in table \ref{tab:contingency}. 
 
 \begin{table}
 \centering
@@ -32,12 +32,12 @@ $\vdots$ & $\vdots$ & \vdots & $\ddots$ \\
 \end{tabular}
 \end{table}
 
-Introduced by \cite{Hubert1985} the ARS computes the agreement between the two clusterings $d_i$ and $c_j$. As with the supervised metrics we use the \lstinline{scikit-learn} implementation of the ARS \cite{Pedregosa2011}. The computation is performed as shown in equation \ref{eq:ars}:
+Introduced by \cite{Hubert1985} the ARI computes the agreement between the two clusterings $d_i$ and $c_j$. As with the supervised metrics we use the \lstinline{scikit-learn} implementation of the ARI \cite{Pedregosa2011}. The computation is performed as shown in equation \ref{eq:ars}:
 
 \begin{equation}\label{eq:ars}
-\text{ARS} = \frac{\sum  \binom{n_{ij}}{2} - \left[\sum  \binom{x_{i}}{2} \sum  \binom{y_{j}}{2}  \right]/\binom{n}{2}}{\frac{1}{2}\left[\sum  \binom{x_{i}}{2} + \sum  \binom{y_{j}}{2}  \right]- \left[\sum  \binom{x_{i}}{2} \sum  \binom{y_{j}}{2}  \right]/\binom{n}{2}}.
+\text{ARI} = \frac{\sum  \binom{n_{ij}}{2} - \left[\sum  \binom{x_{i}}{2} \sum  \binom{y_{j}}{2}  \right]/\binom{n}{2}}{\frac{1}{2}\left[\sum  \binom{x_{i}}{2} + \sum  \binom{y_{j}}{2}  \right]- \left[\sum  \binom{x_{i}}{2} \sum  \binom{y_{j}}{2}  \right]/\binom{n}{2}}.
 \end{equation}
 
 \noindent In equation \ref{eq:ars} we introduce the terms $x_i$ and $y_i$ which are just the row-wise and column-wise sums of the contingency table, respectively.
 
-If we take one of the clusterings to be a ground-truth measurement, the ARS becomes a clear measure of performance. 
+If we take one of the clusterings to be a ground-truth measurement, the ARI becomes a clear measure of performance. 

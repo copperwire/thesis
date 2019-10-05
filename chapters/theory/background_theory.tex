@@ -3,7 +3,7 @@
 
 In this thesis, we explore the application of advanced machine learning methods to experimental nuclear physics data. To properly understand the framework of optimization, validation, and challenges we face, we will introduce these using two models: linear and logistic regression. Before those discussions, we briefly outline the process of model fitting and introduce the difference in models where there is a known versus an unknown outcome.
 
-Fitting models to data is the formal framework by which much of modern science is underpinned. In most scientific research, the researcher needs to formulate some model that represents a given theory. In physics, we construct models to describe complex natural phenomena which we use to make predictions or infer inherent properties about the natural world. These models vary from estimating the Hamiltonian of a simple binary spin system like the Ising model, to more sophisticated methods like variational Markov chain Monte Carlo models, which are used in many-body quantum mechanics.
+Fitting models to data is the formal framework which underpins much of modern science. In most scientific research, the researcher needs to formulate some model that represents a given theory. In physics, we construct models to describe complex natural phenomena which we use to make predictions or infer inherent properties about the natural world. These models vary from estimating the Hamiltonian of a simple binary spin system like the Ising model, to more sophisticated methods like variational Markov chain Monte Carlo models, which are used in many-body quantum mechanics.
 
 We view this process as approximating an unknown function $\hat{f}$ which takes a state $\mathbf{X}$ as input and gives some output $\mathbf{\hat{y}}$,  
  
@@ -36,6 +36,6 @@ The theory we present in this thesis is built on the understanding of expectatio
 
 In this paradigm, we have access to the outcomes of our process, $\hat{y}$, and the states, $\mathbf{X}$. In machine learning parlance, this is known as supervised learning. 
 
-However, this thesis deals mainly with the problem of modelling when one only has access to the system states. These modeling tasks are known as unsupervised learning tasks. As the models are often similar in supervised and unsupervised learning the concepts, terminology, and challenges inherent to the former are also ones we have to be mindful of in the latter.
+However, this thesis deals mainly with the problem of modelling when one only has access to the system states. These modelling tasks are known as unsupervised learning tasks. As the models are often similar in supervised and unsupervised learning the concepts, terminology, and challenges inherent to the former are also ones we have to be mindful of in the latter.
 
-Approximating functions with access to process outcomes starts with the separation of our data into two sets with zero intersection. This is done so that we can estimate the performance of our model in the real world. To elaborate on the need for this separation, we explore the concepts of over-fitting and under-fitting to data later in this chapter.
+Approximating functions with access to process outcomes starts with the separation of our data into two sets with zero intersection. We make this separation so that we can estimate the performance of our model in the real world. To elaborate on the need for this separation, we explore the concepts of over-fitting and under-fitting to data later in this chapter.

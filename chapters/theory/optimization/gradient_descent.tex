@@ -56,8 +56,8 @@ The first problem of multiple local minima has a proposed solution that to physi
 
 \begin{align*}
 \mathbf{v}_n &= \beta(\beta \mathbf{v}_{t-1} + (1-\beta)\nabla f(\mathbf{x}_{n-1})+ (1-\beta)\nabla f(\mathbf{x}_{n}), \\
-\mathbf{v}_n &= \beta(\beta (\beta \mathbf{v}_{t-2} \\& \hspace{0.5in}+ (1-\beta)\nabla f(\mathbf{x}_{n-2})), \\
-& \hspace{0.5in}+ (1-\beta)\nabla f(\mathbf{x}_{n-1})), \\
+\mathbf{v}_n &= \beta(\beta (\beta \mathbf{v}_{t-2} \\& \hspace{0.5in}+ (1-\beta)\nabla f(\mathbf{x}_{n-2})) \\
+& \hspace{0.5in}+ (1-\beta)\nabla f(\mathbf{x}_{n-1})) \\
 & \hspace{0.5in}+ (1-\beta)\nabla f(\mathbf{x}_{n}).
 \end{align*}
 
@@ -89,10 +89,10 @@ In the preceding sections, we discussed gradient descent as an update we do over
 One of the most powerful tools to avoid this behavior is batching, which involves taking the gradient with only a limited partition of the data and updating the parameters. This creates noise in the gradient, which encourages exploration of the loss-surface rather than strong convergence to the nearest minimum. If we set the batch size to $N=1$ we arrive at a special case of batched gradient descent known in statistics and machine learning nomenclature as stochastic gradient descent (SGD). As the naming implies, SGD aims to include the noisiness we wish to introduce to the optimization procedure. Both batched gradient descent and SGD show marked improvements compared to performing full-set gradient updates \cite{Keskar2016}. 
 Batches larger than one are usually employed when the computational cost of SGD becomes prohibitive. We show the effect of batch sizes on performance in figure \ref{fig:batch_size}. 
 
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{../figures/batch_size_plots}
-\caption[Effect of the batch size on performance]{Showing the effect of batch sizes on a fully connected and shallow convolutional network in figure (a) and (b) respectively. The smaller batch-sizes are consistently able to find minima of a higher quality than the large batch versions of the same network. The networks were trained on common machine learning datasets for illustrative purposes. Figure taken from \citet{Keskar2016} }\label{fig:batch_size}
+\caption[Effect of the batch size on performance]{Showing the effect of batch sizes on a fully connected and shallow convolutional network in figure (a) and (b) respectively. The smaller batch-sizes are consistently able to find minima of a higher quality than the large batch versions of the same network. The networks were trained on common machine learning datasets for illustrative purposes. Figure from \citet{Keskar2016} }\label{fig:batch_size}
 \end{figure}
 
 \subsection{adam}\label{sec:adam}
