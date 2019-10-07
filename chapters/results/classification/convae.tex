@@ -6,7 +6,7 @@ To test the hypothesis that classification can be improved by using unsupervised
 	\item \label{item:clf_freeze_vgg} Using the VGG16 network to compute a representation of the data which is compressed by one or more dense layers and finally reconstructed to the original image by a naively constructed decoder. 
 \end{enumerate}
 
-\noindent Choosing an architecture for the convolutional autoencoder is the principal challenge to solve. We want to estimate if the reconstruction and optional latent losses relate to the classification accuracy achieved by the logistic regression classifier. \todo{add plot with reconst/loss vs f1 scores}
+\noindent Choosing an architecture for the convolutional autoencoder is the principal challenge to solve. We want to estimate if the reconstruction and optional latent losses relate to the classification accuracy achieved by the logistic regression classifier.
 
 To aid in the understanding of the choice of architecture, we compare the optimal architectures given a dataset. In the event that one dataset finds a configuration of lesser complexity that was not present in the others, a verification run was computed with that configuration to ensure the validity of the performance measurement.
 
