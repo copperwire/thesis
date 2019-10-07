@@ -6,12 +6,12 @@ While the basis for the modern neural network was laid more than a hundred years
 
 Dubbed an artificial neural network (ANN) this computational analogue takes input from multiple sources, weights that input and produces an output if the signal from the weighted input is strong enough. A proper derivation will follow but for the moment we explore this simple intuition. These artificial neurons are ordered in layers, each successively passing information forward to a final output. Depending on the application, the output can be categorical or real-valued in nature. Each layer uses a matrix multiplication and a non-linear function to transform the input space in a way that condenses information, as most applications use transformations that reduce the dimensionality substantially before making a prediction.
 
-A simple illustration of two neurons in one layer is provided in figure \ref{fig:ann_illustration}.
+A simple illustration of two neurons in one layer is provided in figure \ref{fig:ann_illustration}. In the figure the edges of the graph represent model parameters that are multiplied with the contents of the nodes they emerge from. At the recipient node the contributions from all the antecedent nodes are summed over, and "activated" with a non-linear function. In this way the artificial neuron is analogous to the activation of a biological neuron.
 
 \begin{figure}[h]
 \centering
 \includegraphics{../figures/ann.pdf}
-\caption[Fully connected neural network illustration]{An illustration of the graph constructed by two artificial neurons with three input nodes. Colored lines show the flow of information from input to the predicted value. For details on notation see the text.}\label{fig:ann_illustration}
+\caption[Fully connected neural network illustration]{An illustration of the graph constructed by two artificial neurons with three input nodes. The edges in the graph denote parameters that are multiplied with the node contents they emerge from. Colored edges show the flow of information from one input node to the predicted value. For details see the text.}\label{fig:ann_illustration}
 \end{figure}
 
 
