@@ -255,7 +255,7 @@ Two sigmoid functions have been traditionally used in neural networks, and while
 \frac{d \tanh x}{d x}  = 1-\tanh^2 x
 \end{equation}
 
-\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure, we observe that for relatively small values the gradient goes to zero, which makes optimization hard. Additionally, we note one of the convenient properties of the sigmoid functions; their values are capped. This prohibits the gradient from exploding but also causes problems in the gradient. We also note that the logistic sigmoid is capped at zero, like the ReLU function, while the hyperbolic tangent is bounded at $-1$. The hyperbolic tangent then has the option to emit a bounded anti-signal.
+\noindent The challenge with the sigmoid functions is that the gradient saturates. A saturated gradient occurs where there is little or no change in the values as a function of $x$. We illustrate the sigmoid activation functions in figure \ref{fig:sigmoid}. From this figure, we observe that for relatively small values, the gradient goes to zero, which makes optimization hard. Additionally, we note one of the convenient properties of the sigmoid functions; their values are capped. This property prohibits the gradient from exploding but also causes problems in the gradient. In the backwards propagation of errors, we multiply the contributions from the derivative of the cost at the preceding layers. As these are smaller than $1/4$ for the logistic sigmoid, the product can quickly vanish.  We also note that the logistic sigmoid is capped at zero, like the ReLU function, while the hyperbolic tangent is bounded at $-1$. The hyperbolic tangent then has the option to emit a bounded anti-signal.
 
 \begin{figure}[ht]
 \centering
@@ -283,7 +283,7 @@ On the other end of the scale rectified activations have gained traction in late
     \end{cases}
 \end{equation}
 
-\noindent Immediately it becomes clear that for the rectifier functions we have the opposite problem from what we encountered for the sigmoid activations. As the derivative is non-zero for a large range of values, we no longer have a concern for vanishing gradients, but the activation is not positively bounded. This leads to a problem where the gradient might explode, leading to an unstable optimization that fails to find a minimum of the cost. We illustrate the defining features of the rectifiers in figure \ref{fig:elu}
+\noindent Immediately it becomes clear that for the rectifier functions we have the opposite problem from what we encountered for the sigmoid activations. As the derivative is non-zero for a large range of values, we no longer have a concern for saturated gradients. We are also safe from the activation contributing to exploding or vanishing gradients as the derivative is equal to one. We illustrate the defining features of the rectifiers in figure \ref{fig:elu}
 
 \begin{figure}[ht]
 \centering
@@ -316,7 +316,7 @@ Armed with the knowledge that neural networks are usually more complex than the 
 
 The second addition we discuss more directly addresses a problem in the optimization, and adds a regularizing effect only as a bi-product of the intended purpose. Batch normalization was introduced by \citet{Ioffe2015} as a means to address the internal covariance shift in neural networks. 
 
-Conceptually one can think of the challenge presented by an internal covariance shift as an unintended consequence of the gradient descent procedure. When adjusting weights in a layer its gradients, we do adjust them with respect to the change in the weights of the preceding layers. This slows down training substantially and is what \citet{Ioffe2015} describes as the internal covariance shift. To reduce the effects of this problem the authors propose to scale and center the outputs of each layer, before feeding it to the next in line. The normalization happens over each batch of training data and consists of two steps. Let the output from a layer be given as $a_k^{[l]}$ in keeping with previous notation. Furthermore, let the samples in a batch be indicated by the index $i$. Thus the activations can be denoted as a matrix $a_{ik}^{[l]}$. The batch normalization procedure then begins by computing the batch-wise mean, $\mu_k$, per feature $k$ for a batch of size $n$ 
+Conceptually one can think of the challenge presented by an internal covariance shift as an unintended consequence of the gradient descent procedure. When adjusting weights in a layer its gradients, we do not adjust them with respect to the change in the weights of the preceding layers. This slows down training substantially and is what \citet{Ioffe2015} describes as the internal covariance shift. To reduce the effects of this problem the authors propose to scale and center the outputs of each layer, before feeding it to the next in line. The normalization happens over each batch of training data and consists of two steps. Let the output from a layer be given as $a_k^{[l]}$ in keeping with previous notation. Furthermore, let the samples in a batch be indicated by the index $i$. Thus the activations can be denoted as a matrix $a_{ik}^{[l]}$. The batch normalization procedure then begins by computing the batch-wise mean, $\mu_k$, per feature $k$ for a batch of size $n$ 
 
 \begin{equation}
 \mu_k = \frac{1}{n} \sum_i^n a_{ik}^{[l]}.
@@ -328,7 +328,7 @@ Conceptually one can think of the challenge presented by an internal covariance 
 \sigma_k^2= \sum_i (a^{[l]}_{ik} - \mu_k)^2.
 \end{equation}
 
-\noindent We can then compute the normalized activations using the mean and variance of the features, mathematically we then compute the normalized activations as 
+\noindent We can then compute the normalized activations using the mean and variance of the features, mathematically these are given as
 
 \begin{equation}
 \hat{a}_{ik}^{[l]} = \frac{\hat{a}_{ik}^{[l]} - \mu_k}{\sqrt{\sigma_k^2 + \epsilon}},
@@ -340,7 +340,7 @@ Conceptually one can think of the challenge presented by an internal covariance 
 \text{BN}_{\gamma, \beta}(a_{ik}^{[l]}) = \gamma  \hat{a}_{ik}^{[l]} + \beta.
 \end{equation} 
 
-\noindent The primary effect of batch normalization is then to speed up training. \cite{Ioffe2015} shows that orders of magnitude larger learning rates may be used in experiments. Additionally, there is a contribution to the regularization by providing non-deterministic outputs as the normalization parameters are dependent on the other samples in a batch. 
+\noindent The primary effect of batch normalization is then to speed up training. \citet{Ioffe2015} shows that orders of magnitude larger learning rates may be used in experiments. Additionally, there is a contribution to the regularization by providing non-deterministic outputs as the normalization parameters are dependent on the other samples in a batch. 
 
 As a bonus effect, the procedure lessens the potential problems with exploding and vanishing gradients: By placing the normalization layer before a sigmoid layer the probability of the activations being in the active region of the functions increases. Conversely, for the rectifier units placing the normalization after the activation lessens the chance for an exploding value in the gradient.
 

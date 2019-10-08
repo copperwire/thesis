@@ -1,6 +1,8 @@
 \section{Deep Recurrent Attentive Writer}\label{sec:draw}
 
-One of the central challenges of the ELBO as presented in equation \ref{eq:elbo} is that the probability of a pixel in the output being activated is not conditional on whether the pixels surrounding it has is activated. The deep recurrent attentive writer (DRAW) aims to solve this problem by creating an iterative algorithm which updates the canvass multiple times \cite{Gregor2015}. In this thesis, we make three central modifications to the algorithm. 
+One of the central challenges of the ELBO as presented in equation \ref{eq:elbo}is that the probability of a pixel in the output being activated is not conditional on whether the pixels surrounding it has is activated. In part, this problem is what gives rise to the blurriness often observed in the output from variational autoencoders. The deep recurrent attentive writer (DRAW) aims to solve this problem by casting the generation of a sample as an iterative algorithm which uses a recurrent architecture \cite{Gregor2015}. Recurrent architectures present the researcher with a set of tools to not only model sequences but to use a sequential structure to improve upon aspects of prior models.
+
+In this thesis, we make three central modifications to the DRAW algorithm. 
 
 \begin{itemize}
 \item Originally DRAW views parts of the input conditioning the latent sample $\mathbf{z_t}$ on differently sized patches of the input image. We modify the model such that the model gets glimpses of the same size at each time step. This is done to make samples comparable between time steps in line with the work of \citet{Harris2019}
