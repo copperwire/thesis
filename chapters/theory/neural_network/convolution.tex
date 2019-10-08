@@ -8,10 +8,10 @@ We begin our discussion of convolutional networks with a comparison to ordinary 
 
 There are a couple of challenges with neural network layers as they were introduced in section \ref{sec:ANN}. Firstly, the number of parameters can quickly get out of hand, as the number of parameters in a dense layer is the product of the input and output nodes. For example, a layer with $10^3$ inputs and $10^2$ nodes contains $10^5$ parameters. Another challenge the dense layer faces is the local structure in the data. As convolutional layers were developed primarily for images, the forward pass is constructed in a way that captures local structures in an efficient manner. In short, the advantage of convolutional layers is an allowance for a vastly reduced number of parameters at the cost of much higher demands of memory. The increased memory cost comes from the fact that convolutional networks make many transformations of the input at each layer that must be stored.
 
-The increased memory cost comes from how we construct the convolutional layer. Each layer maintains $k$ filters, or kernels, each of which is a $n\times m$ matrix of weights. To compute the forward pass a stack of $k$ filters, $\mathbf{F}$, is convolved with the input by taking the inner product with a sliding $n\times m$ patch of the image thus iteratively moving over the entire input, $\mathbf{I}$ with size $h \times w \times c$. Mathematically we express the forward pass with the convolution operator $*$, and it can then be written in terms of an element of the output as
+The increased memory cost comes from how we construct the convolutional layer. Each layer maintains $k$ filters, or kernels, each of which is a $n\times m$ matrix of weights. To compute the forward pass a stack of $k$ filters, $\boldsymbol{F}$, is convolved with the input by taking the inner product with a sliding $n\times m$ patch of the image thus iteratively moving over the entire input, $\boldsymbol{I}$ with size $h \times w \times c$. Mathematically we express the forward pass with the convolution operator $*$, and it can then be written in terms of an element of the output as
 
 \begin{equation}\label{eq:conv}
-(\mathbf{F}*\mathbf{I})_{ijk} = 
+(\boldsymbol{F}*\boldsymbol{I})_{ijk} = 
 \sum_{f=-n'}^{n'}\sum_{g=-m'}^{m'}\sum_{h=1} ^c
 I_{i+f,\, j+g,\, h}\cdot F_{fghk}.
 \end{equation}

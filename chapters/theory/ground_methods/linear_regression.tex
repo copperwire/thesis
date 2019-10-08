@@ -4,27 +4,27 @@
 
 Modern machine learning has part of its foundations from the familiar linear regression framework. With its popularity, linear regression also has a multitude of solution strategies. The most straight forward of which is with some simple linear algebra and calculus.
 
-We begin by defining the constituents of our model: let the data be denoted as a matrix $\mathbf{X} \in \R^{m\times n+1}$, where $m$ is the number of data-points and $n$ the number of features. We add the $+1$ factor to describe the addition of a column of ones to our data as a convenient placeholder for the model intercept. Note also that the term features are used broadly in machine learning literature and denote the measurable aspects of our system; in the 1D Ising model, the $n$ would denote the number of spins and $m$ the number of measurements we made on that system. Furthermore let the parameter, or \textit{weight}, matrix be given as $\mathbf{w} \in \R^{n + 1\times k}$. Generally, the outcome-dimension $k$ can be greater than one when estimating multi-variate outcomes. We limit this section and the following to the case where $k=1$ for illustrative purposes. The linear regression model is then the transformation of the input using the weight matrix, i.e. 
+We begin by defining the constituents of our model: let the data be denoted as a matrix $\boldsymbol{X} \in \R^{m\times n+1}$, where $m$ is the number of data-points and $n$ the number of features. We add the $+1$ factor to describe the addition of a column of ones to our data as a convenient placeholder for the model intercept. Note also that the term features are used broadly in machine learning literature and denote the measurable aspects of our system; in the 1D Ising model, the $n$ would denote the number of spins and $m$ the number of measurements we made on that system. Furthermore let the parameter, or \textit{weight}, matrix be given as $\boldsymbol{w} \in \R^{n + 1\times k}$. Generally, the outcome-dimension $k$ can be greater than one when estimating multi-variate outcomes. We limit this section and the following to the case where $k=1$ for illustrative purposes. The linear regression model is then the transformation of the input using the weight matrix, i.e. 
 
 \begin{equation}\label{eq:og_linreg}
-\mathbf{y} = \mathbf{X}\mathbf{w}.
+\boldsymbol{y} = \boldsymbol{X}\boldsymbol{w}.
 \end{equation}
-\noindent Finally, let the outcome we wish to approximate be given as a vector $\mathbf{\hat{y}} \in \R^m$. We will not concern ourselves overly with the properties of the process that generates $\mathbf{\hat{y}}$ in this section as this is elaborated on in the following sections, and assume that that the outcome has no noise.
+\noindent Finally, let the outcome we wish to approximate be given as a vector $\boldsymbol{\hat{y}} \in \R^m$. We will not concern ourselves overly with the properties of the process that generates $\boldsymbol{\hat{y}}$ in this section as this is elaborated on in the following sections, and assume that that the outcome has no noise.
 
-The challenge is then finding the weights that give correct predictions from data. To measure the quality of our model, we introduce the squared distance between our predictions and $\mathbf{\hat{y}}$, which also gives us a path to optimization. By differentiating with respect to the model parameters, we can find the optimal solution for the problem. The squared error is defined in terms of the Euclidean vector norm  
+The challenge is then finding the weights that give correct predictions from data. To measure the quality of our model, we introduce the squared distance between our predictions and $\boldsymbol{\hat{y}}$, which also gives us a path to optimization. By differentiating with respect to the model parameters, we can find the optimal solution for the problem. The squared error is defined in terms of the Euclidean vector norm  
 
-$$L_2(\mathbf{x}) =||\mathbf{x}||_2 = \left(\sum x_i^2\right)^{\frac{1}{2}},$$
+$$L_2(\boldsymbol{x}) =||\boldsymbol{x}||_2 = \left(\sum x_i^2\right)^{\frac{1}{2}},$$
 
 \noindent  In mathematical terms we define the squared error objective as
 
 \begin{equation}
-\mathcal{O} = || \mathbf{\hat{y}} - \mathbf{y} ||_2 ^2.
+\mathcal{O} = || \boldsymbol{\hat{y}} - \boldsymbol{y} ||_2 ^2.
 \end{equation}
 
 \noindent An objective function $\mathcal{O}$ defines some optimization problem to minimize or maximize. In machine learning, these are most commonly cast as minimization problems. Objective functions for finding minima are termed cost functions in machine learning literature, and we will adopt that nomenclature moving forward. In this thesis, we use the symbol $\mathcal{C}$ to indicate such functions, and the optimization problem is then finding the minimum w.r.t the parameters $\theta^*$, i.e. 
 
 \begin{align}\label{eq:cost}
-\theta^* = \argmin_\theta \mathcal{C}(\mathbf{\hat{y}}, f(\mathbf{X}; \theta)).
+\theta^* = \argmin_\theta \mathcal{C}(\boldsymbol{\hat{y}}, f(\boldsymbol{X}; \theta)).
 \end{align}
 
 \noindent We use the starred notation to indicate the optimal parameters for the given cost function.
@@ -32,21 +32,21 @@ $$L_2(\mathbf{x}) =||\mathbf{x}||_2 = \left(\sum x_i^2\right)^{\frac{1}{2}},$$
 Returning to the least squares problem the task is finding the optimal parameters now requires a differentiation, and to aid in that we write the objective as a matrix inner product 
 
 \begin{align*}
-\mathcal{C} &= || \mathbf{\hat{y}} - \mathbf{y} ||_2 ^2, \\
-\mathcal{C} &= ( \mathbf{\hat{y}} - \mathbf{Xw})^T( \mathbf{\hat{y}} - \mathbf{Xw}).
+\mathcal{C} &= || \boldsymbol{\hat{y}} - \boldsymbol{y} ||_2 ^2, \\
+\mathcal{C} &= ( \boldsymbol{\hat{y}} - \boldsymbol{Xw})^T( \boldsymbol{\hat{y}} - \boldsymbol{Xw}).
 \end{align*}
 
 \noindent Since the problem is one of minimization we take the derivative with respect to the model parameters and locate its minima by setting it to zero 
 
 \begin{align}
-\nabla _{\mathbf{w}}\mathcal{C} &= \nabla _{\mathbf{w}} ( \mathbf{\hat{y}} - \mathbf{Xw})^T( \mathbf{\hat{y}} - \mathbf{Xw}), \\
-&= -2\mathbf{X}^T\mathbf{\hat{y}} + 2\mathbf{X}^T\mathbf{X}\mathbf{w}, \\
-\mathbf{0} &= -2\mathbf{X}^T\mathbf{\hat{y}} + 2\mathbf{X}^T\mathbf{X}\mathbf{w}, \\
-\mathbf{X}^T\mathbf{\hat{y}} &= \mathbf{X}^T\mathbf{X}\mathbf{w}, \\
-\mathbf{w} &=(\mathbf{X}^T\mathbf{X})^{-1} \mathbf{X}^T\mathbf{\hat{y}}. \label{eq:least_squares}
+\nabla _{\boldsymbol{w}}\mathcal{C} &= \nabla _{\boldsymbol{w}} ( \boldsymbol{\hat{y}} - \boldsymbol{Xw})^T( \boldsymbol{\hat{y}} - \boldsymbol{Xw}), \\
+&= -2\boldsymbol{X}^T\boldsymbol{\hat{y}} + 2\boldsymbol{X}^T\boldsymbol{X}\boldsymbol{w}, \\
+\boldsymbol{0} &= -2\boldsymbol{X}^T\boldsymbol{\hat{y}} + 2\boldsymbol{X}^T\boldsymbol{X}\boldsymbol{w}, \\
+\boldsymbol{X}^T\boldsymbol{\hat{y}} &= \boldsymbol{X}^T\boldsymbol{X}\boldsymbol{w}, \\
+\boldsymbol{w} &=(\boldsymbol{X}^T\boldsymbol{X})^{-1} \boldsymbol{X}^T\boldsymbol{\hat{y}}. \label{eq:least_squares}
 \end{align}
 
- \noindent This problem is analytically solvable with a plethora of tools. Most notably, we have the ones that do not perform the matrix inversion $(\mathbf{X}^T \mathbf{X})^{-1}$ as this inverse is not unique for data that does not have full rank.
+ \noindent This problem is analytically solvable with a plethora of tools. Most notably, we have the ones that do not perform the matrix inversion $(\boldsymbol{X}^T \boldsymbol{X})^{-1}$ as this inverse is not unique for data that does not have full rank.
 
 Admittedly, the least-squares linear regression model is relatively simple and is rarely applicable to complex systems. Additionally, we have not discussed the assumptions made to ensure the validity of the model. Most important of which concerns the measurement errors, which we assume to be identical independent normally distributed.
 

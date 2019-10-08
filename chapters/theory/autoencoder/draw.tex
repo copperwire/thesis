@@ -5,28 +5,28 @@ One of the central challenges of the ELBO as presented in equation \ref{eq:elbo}
 In this thesis, we make three central modifications to the DRAW algorithm. 
 
 \begin{itemize}
-\item Originally DRAW views parts of the input conditioning the latent sample $\mathbf{z_t}$ on differently sized patches of the input image. We modify the model such that the model gets glimpses of the same size at each time step. This is done to make samples comparable between time steps in line with the work of \citet{Harris2019}
+\item Originally DRAW views parts of the input conditioning the latent sample $\boldsymbol{z_t}$ on differently sized patches of the input image. We modify the model such that the model gets glimpses of the same size at each time step. This is done to make samples comparable between time steps in line with the work of \citet{Harris2019}
 \item The attentive part of DRAW as described by \citet{Gregor2015} is a set of Gaussian filters that pick out a part of the input allowing the image to focus on discrete regions. We modify the algorithm to allow the use of a convolutional network as a feature extractor.
-\item Latent samples from DRAW are originally described in the framework of the VAE where the latent sample is drawn from a normal distribution i.e. $\mathbf{z}_t \sim \mathcal{N}(Z_t|\mu_t, \sigma_t)$. Since then proposals have been made for autoencoders that do not require this stochasticity in the forward-pass and as such the latent samples can be generated from fully connected layers, e.g. the InfoVae architecture proposed by \citet{Zhao}
+\item Latent samples from DRAW are originally described in the framework of the VAE where the latent sample is drawn from a normal distribution i.e. $\boldsymbol{z}_t \sim \mathcal{N}(Z_t|\mu_t, \sigma_t)$. Since then proposals have been made for autoencoders that do not require this stochasticity in the forward-pass and as such the latent samples can be generated from fully connected layers, e.g. the InfoVae architecture proposed by \citet{Zhao}
 \end{itemize}
 
-\noindent At the core of the DRAW algorithm sits an encoder- and a decoder network, making it part of the autoencoder sub-family of neural networks. A pair of recurrent LSTM cells then enact this familiar framework. We use the same notation as \citet{Gregor2015} and denote the encoder with with RNN${}^{enc}$ whose output at time $t$ is $\mathbf{h}_t^{enc}$, and the decoder with RNN${}^{dec}$. The form of the encoder/decoder pair is determined by the read/write functions which we discuss in the next section. Next the encoder output, $\mathbf{h}_t^{enc}$, is used to draw a latent sample, $\mathbf{z}_t$, using a function $\text{latent}(\cdot)$ which is determined by the form of the latent loss. At each time-step, the algorithm produces a sketched version of the input $c_t$, which is used to compute an error image, $\hat{\mathbf{x}}_t$, that feeds back into the network. The following equations from \citet{Gregor2015} summarizes the DRAW forward pass
+\noindent At the core of the DRAW algorithm sits an encoder- and a decoder network, making it part of the autoencoder sub-family of neural networks. A pair of recurrent LSTM cells then enact this familiar framework. We use the same notation as \citet{Gregor2015} and denote the encoder with with RNN${}^{enc}$ whose output at time $t$ is $\boldsymbol{h}_t^{enc}$, and the decoder with RNN${}^{dec}$. The form of the encoder/decoder pair is determined by the read/write functions which we discuss in the next section. Next the encoder output, $\boldsymbol{h}_t^{enc}$, is used to draw a latent sample, $\boldsymbol{z}_t$, using a function $\text{latent}(\cdot)$ which is determined by the form of the latent loss. At each time-step, the algorithm produces a sketched version of the input $c_t$, which is used to compute an error image, $\hat{\boldsymbol{x}}_t$, that feeds back into the network. The following equations from \citet{Gregor2015} summarizes the DRAW forward pass
 
 \begin{align}
-\hat{\mathbf{x}} &= \mathbf{x} - \sigma(\mathbf{c_{t-1}}), \\
-\mathbf{r}_t &= \text{read}(\mathbf{x}_t, \hat{\mathbf{x}}_t ), \\
-\mathbf{h}^{enc}_t &= \text{RNN}^{enc}( \mathbf{h}^{enc}_{t-1}, [\mathbf{r}_t, \mathbf{h}^{dec}_{t-1}]),\\
-\mathbf{z}_t &= \text{latent}(\mathbf{h}^{enc}_t),\\
-\mathbf{h}^{dec}_t &= \text{RNN}^{dec}( \mathbf{h}^{dec}_{t-1}, \mathbf{z}_t),\\
-\mathbf{c}_t &= \mathbf{c}_{t-1} + \text{write}(\mathbf{h}_t^{dec}) \label{eq:draw},
+\hat{\boldsymbol{x}} &= \boldsymbol{x} - \sigma(\boldsymbol{c_{t-1}}), \\
+\boldsymbol{r}_t &= \text{read}(\boldsymbol{x}_t, \hat{\boldsymbol{x}}_t ), \\
+\boldsymbol{h}^{enc}_t &= \text{RNN}^{enc}( \boldsymbol{h}^{enc}_{t-1}, [\boldsymbol{r}_t, \boldsymbol{h}^{dec}_{t-1}]),\\
+\boldsymbol{z}_t &= \text{latent}(\boldsymbol{h}^{enc}_t),\\
+\boldsymbol{h}^{dec}_t &= \text{RNN}^{dec}( \boldsymbol{h}^{dec}_{t-1}, \boldsymbol{z}_t),\\
+\boldsymbol{c}_t &= \boldsymbol{c}_{t-1} + \text{write}(\boldsymbol{h}_t^{dec}) \label{eq:draw},
 \end{align} 
 
- \noindent where $\sigma(\cdot)$ denotes the logistic sigmoid function. The iteration then consists of an updating canvass $\mathbf{c}_t$ which informs the next time-step. We outline the architecture in figure \ref{fig:draw}.
+ \noindent where $\sigma(\cdot)$ denotes the logistic sigmoid function. The iteration then consists of an updating canvass $\boldsymbol{c}_t$ which informs the next time-step. We outline the architecture in figure \ref{fig:draw}.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{../figures/draw}
-\caption[DRAW network architecture]{\textbf{Left:} an ordinary one\-shot encoder\-decoder network. \textbf{Right:} DRAW network that iteratively constructs the canvas using RNN cells as the encoder/decoder pair. The final output is then iteratively constructed using a series of updates on a canvass, $c_t$. DRAW function read that process the input and feeds this to the encoder which outputs a latent sample $\mathbf{z}_t$. The latent sample, in turn, acts as input to the decoder part of the network which modifies the canvass using a write function that mirrors the read operation.}\label{fig:draw}
+\caption[DRAW network architecture]{\textbf{Left:} an ordinary one\-shot encoder\-decoder network. \textbf{Right:} DRAW network that iteratively constructs the canvas using RNN cells as the encoder/decoder pair. The final output is then iteratively constructed using a series of updates on a canvass, $c_t$. DRAW function read that process the input and feeds this to the encoder which outputs a latent sample $\boldsymbol{z}_t$. The latent sample, in turn, acts as input to the decoder part of the network which modifies the canvass using a write function that mirrors the read operation.}\label{fig:draw}
 \end{figure}
  
  \subsection{Read and Write functions}
@@ -43,7 +43,7 @@ In this thesis, we make three central modifications to the DRAW algorithm.
 \noindent The attention parameters are computed from a fully connected layer connecting the decoder state to a 4-tuple of floating point numbers i.e
 
 \begin{equation}\label{eq:draw_params}
-\tilde{g}_x, \,\tilde{g}_y, \, \log \sigma^2, \, \log \gamma = \text{Dense} (\mathbf{h}_t^{dec}),
+\tilde{g}_x, \,\tilde{g}_y, \, \log \sigma^2, \, \log \gamma = \text{Dense} (\boldsymbol{h}_t^{dec}),
 \end{equation}
 
 \noindent where $\sigma^2$ is the isotropic variance of the Gaussian filters, and $\gamma$ the multiplicative intensity of the filtering. We parametrize the $\sigma^2$ and $\gamma$ variables as being log-transformed to ensure positivity by exponentiation prior to use. Gregor et al. makes an additional transformation on the centres to ensure that the initial patch roughly covers the entire input image. The transformation is made with respect to the input width, $W$, and height, $H$, giving
@@ -67,7 +67,7 @@ F_y [j, h] = \frac{1}{Z_y}e^{-\frac{(h - \mu_y^j)^2}{2\sigma^2}},\label{eq:Fy}
 Finally, we define the read and write functions with attention parameters. The read operation reads a patch from the input and the error image and returns their concatenation to the encoder, and the write function returns an array that adds to the current canvass $c_t$. From \citet{Gregor2015} the read function is defined as
 
 \begin{equation}\label{eq:read}
-\text{read}(\mathbf{x}, \mathbf{\hat{x}}, \mathbf{h}_{t-1}^{dec}) = \gamma[F_y \mathbf{x} F_x^T, F_y \mathbf{\hat{x}} F_x^T].
+\text{read}(\boldsymbol{x}, \boldsymbol{\hat{x}}, \boldsymbol{h}_{t-1}^{dec}) = \gamma[F_y \boldsymbol{x} F_x^T, F_y \boldsymbol{\hat{x}} F_x^T].
 \end{equation} 
 
 \noindent For the write function we compute a new set of attention parameters which we denote as, e.g. $\hat{\gamma}$. Subsequently, we compute a dense layer transform from the current decoder state to a matrix $w_t \in \R^{N \times N}$ to ensure the matrix multiplications are sane. The write function is then defined as
@@ -82,7 +82,7 @@ Finally, we define the read and write functions with attention parameters. The r
 
 Optimizing the DRAW algorithm is almost entirely analogous to the procedure for the variational autoencoder. We operate with a divergence over our latent samples and a latent prior, as well as a reconstruction term parameterizing the log evidence. In not so many words, we still have a cross-entropy loss over the reconstruction and input as well as a divergence term from our latent samples.  
 
-As the DRAW model creates a sequence of latent samples, the considerations for the latent loss changes somewhat. In the DRAW algorithm our encoder parametrizes a distribution $q(\mathbf{z}_t | \mathbf{h}_t^{enc})$ which we want to model as being drawn from some prior $p(\mathbf{z}_t)$. As with the variational autoencoder, we let the prior be a multivariate isotropic Gaussian. The latent loss, $L_z$, is then a sum over individual divergence terms for each time-step
+As the DRAW model creates a sequence of latent samples, the considerations for the latent loss changes somewhat. In the DRAW algorithm our encoder parametrizes a distribution $q(\boldsymbol{z}_t | \boldsymbol{h}_t^{enc})$ which we want to model as being drawn from some prior $p(\boldsymbol{z}_t)$. As with the variational autoencoder, we let the prior be a multivariate isotropic Gaussian. The latent loss, $L_z$, is then a sum over individual divergence terms for each time-step
 
 \begin{equation}\label{eq:draw_latent}
 L_z = \sum_t^T D_{KL}(q||p).

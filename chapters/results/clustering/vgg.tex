@@ -6,7 +6,7 @@ As with chapter \ref{ch:architectures}, we also use the VGG16 pre-trained networ
 
 \subsection{K-means}
 
-We begin by investigating the K-means clustering algorithm on the VGG16 latent space. As in the previous chapter the VGG16 model is pre-trained on the imagenet dataset creating a set of vectors $\mathbf{x} \in \R^{8192}$. To cluster we use \lstinline{scikit-learn} implementation of the K-means algorithm, with default parameters \cite{Pedregosa2011}. The results of the clustering runs are included in table \ref{tab:clstr_vgg}. We observe  that we are able to attain near perfect clustering on simulated data, and that there is a sharp decline in performance as we add noise by moving to the filtered and full datasets. 
+We begin by investigating the K-means clustering algorithm on the VGG16 latent space. As in the previous chapter the VGG16 model is pre-trained on the imagenet dataset creating a set of vectors $\boldsymbol{x} \in \R^{8192}$. To cluster we use \lstinline{scikit-learn} implementation of the K-means algorithm, with default parameters \cite{Pedregosa2011}. The results of the clustering runs are included in table \ref{tab:clstr_vgg}. We observe  that we are able to attain near perfect clustering on simulated data, and that there is a sharp decline in performance as we add noise by moving to the filtered and full datasets. 
 
 \begin{table}[H]
 \centering 

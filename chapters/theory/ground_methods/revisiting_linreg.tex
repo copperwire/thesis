@@ -1,15 +1,15 @@
 \section{Revisiting linear regression}
 
-We've seen the applications of the maximum likelihood estimate to classification in section \ref{sec:LogReg}, but the same formalism can very easily be applied to regression. In this section we'll detail the derivation of linear regression solution in the formalism of a maximum likelihood estimate, as it is in this formalism the thesis writ large is framed. Re-introducing linear regression we define the model on a general form as the linear relationship expressed in equation \ref{eq:linreg}. The basis of $\mathbf{w}$ is left unspecified, but we are free to model using polynomial, sinusoidal or ordinary Cartesian basis-sets. Using the terminology introduced earlier in this chapter our model is then, 
+We've seen the applications of the maximum likelihood estimate to classification in section \ref{sec:LogReg}, but the same formalism can very easily be applied to regression. In this section we'll detail the derivation of linear regression solution in the formalism of a maximum likelihood estimate, as it is in this formalism the thesis writ large is framed. Re-introducing linear regression we define the model on a general form as the linear relationship expressed in equation \ref{eq:linreg}. The basis of $\boldsymbol{w}$ is left unspecified, but we are free to model using polynomial, sinusoidal or ordinary Cartesian basis-sets. Using the terminology introduced earlier in this chapter our model is then, 
 
 \begin{equation}\label{eq:linreg}
-y_i = \mathbf{x}_i\mathbf{w}.
+y_i = \boldsymbol{x}_i\boldsymbol{w}.
 \end{equation}
 
 \noindent In addition to equation \ref{eq:linreg} we introduce the error term $\epsilon_i= y_i - \hat{y_i}$ which is the difference between the models prediction, $y_i$, and the actual value $\hat{y}_i$. The goal of linear regression is to minimize this error, in mathematical terms we have an optimization problem on the form
 
 \begin{equation}
-\mathcal{O} = \argmin _{\mathbf{w}} || \mathbf{\hat{y}} - \mathbf{Xw} ||^2.
+\mathcal{O} = \argmin _{\boldsymbol{w}} || \boldsymbol{\hat{y}} - \boldsymbol{Xw} ||^2.
 \end{equation}
 
 \noindent The central assumption of linear regression, that provides the opportunity for a closed form solution, is the assumption of Independent Identically Distributed (IID) $\epsilon_i$'s. We assume that the error is normally distributed with zero-mean and identical variance, $\sigma^2$,across all samples, e.g. 
@@ -21,7 +21,7 @@ y_i = \mathbf{x}_i\mathbf{w}.
 \noindent and similarly we consider the model predictions to be normally distributed, but with zero variance, e.g.
 
 \begin{align}
-\hat{y}_i \sim \mathcal{N}(\mathbf{x}_i\mathbf{w}, 0).
+\hat{y}_i \sim \mathcal{N}(\boldsymbol{x}_i\boldsymbol{w}, 0).
 \end{align}
 
 \noindent We use $\mathcal{N}(\mu, \sigma^2)$ to denote a Gaussian normal distribution with mean $\mu$ and variance $\sigma^2$ which has a probability density function defined as 
@@ -35,7 +35,7 @@ p(x ; \mu, \sigma) := \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x - \mu)^2}{\sigm
 \begin{align}
 \langle \hat{y}_i \rangle &= \langle y_i + \epsilon \rangle,  \\
 \langle \hat{y}_i\rangle &= \langle y_i \rangle + \langle \epsilon \rangle, \\
-\langle \hat{y}_i \rangle &= \mathbf{x}_i\mathbf{w}.
+\langle \hat{y}_i \rangle &= \boldsymbol{x}_i\boldsymbol{w}.
 \end{align}
 
 \noindent The expectation of the error term is zero following the definitions of the expectation we presented in section \ref{sec:fundament_intro}. Following the exact same properties we have that the variance of the prediction is the variance of the error term $\sigma^2$, i.e. 
@@ -44,41 +44,41 @@ p(x ; \mu, \sigma) := \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(x - \mu)^2}{\sigm
 \langle \hat{y_i}\rangle^2 + \langle \hat{y_i}^2\rangle = \sigma^2.
 \end{align}
 
-\noindent In concise terms we simply consider our outcome as a set of IID normal variables on the form $y_i \sim \mathcal{N}(\mathbf{x}_i^T\mathbf{w}, \sigma^2)$. The likelihood of the linear regression can then be written using the same tuple notation as for equation \ref{eq:likelihood}
+\noindent In concise terms we simply consider our outcome as a set of IID normal variables on the form $y_i \sim \mathcal{N}(\boldsymbol{x}_i^T\boldsymbol{w}, \sigma^2)$. The likelihood of the linear regression can then be written using the same tuple notation as for equation \ref{eq:likelihood}
 
 \begin{align}
-p(S|\mathbf{\theta}) 
-&= \prod_i^n \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(\hat{y}_i - \mathbf{x}_i\mathbf{w})^2}{\sigma^2}}, \\
-&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n \prod_i^n e^{-\frac{(\hat{y}_i - \mathbf{x}_i\mathbf{w})^2}{\sigma^2}}, \\
-&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n  e^{-\sum_i\frac{(\hat{y}_i - \mathbf{x}_i\mathbf{w})^2}{\sigma^2}}, \\
-&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n  e^{-\frac{(\mathbf{\hat{y}}_i - \mathbf{X}\mathbf{w})^T(\mathbf{\hat{y}}_i - \mathbf{X}\mathbf{w})}{\sigma^2}} .
+p(S|\boldsymbol{\theta}) 
+&= \prod_i^n \frac{1}{\sqrt{2\pi \sigma^2}}e^{-\frac{(\hat{y}_i - \boldsymbol{x}_i\boldsymbol{w})^2}{\sigma^2}}, \\
+&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n \prod_i^n e^{-\frac{(\hat{y}_i - \boldsymbol{x}_i\boldsymbol{w})^2}{\sigma^2}}, \\
+&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n  e^{-\sum_i\frac{(\hat{y}_i - \boldsymbol{x}_i\boldsymbol{w})^2}{\sigma^2}}, \\
+&= \left(\frac{1}{\sqrt{2\pi \sigma^2}} \right)^n  e^{-\frac{(\boldsymbol{\hat{y}}_i - \boldsymbol{X}\boldsymbol{w})^T(\boldsymbol{\hat{y}}_i - \boldsymbol{X}\boldsymbol{w})}{\sigma^2}} .
 \end{align}
 
 \noindent We recall from section \ref{sec:information} that the best parameters of a model is defined as 
 
 \begin{equation}
-\mathbf{\theta}^* = \argmax_\mathbf{\theta} p(S|\mathbf{\theta}).
+\boldsymbol{\theta}^* = \argmax_{\boldsymbol{\theta}} p(S|\boldsymbol{\theta}).
 \end{equation}
 
 \noindent To find the optimal values we then want to take the derivative w.r.t the parameters and find a minimum. But as we saw before this is impractical, if not impossible, with the product sum in the likelihood. To solve this problem we repeat the log-trick from section \ref{sec:information} re-familiarizing ourselves with the log-likelihood
 
 \begin{align}
-\log(p(S|\theta)) = n \log(\frac{1}{\sqrt{2\pi \sigma^2}}) - \frac{(\mathbf{\hat{y}}_i - \mathbf{X}\mathbf{w})^T(\mathbf{\hat{y}}_i - \mathbf{X}\mathbf{w})}{\sigma^2}.
+\log(p(S|\theta)) = n \log(\frac{1}{\sqrt{2\pi \sigma^2}}) - \frac{(\boldsymbol{\hat{y}}_i - \boldsymbol{X}\boldsymbol{w})^T(\boldsymbol{\hat{y}}_i - \boldsymbol{X}\boldsymbol{w})}{\sigma^2}.
 \end{align}
 
 \noindent Taking the derivative with respect to the model parameters and setting to zero we get
 
 \begin{align*}
-\nabla_\mathbf{w} \log(p(S|\theta)) &=\nabla_\mathbf{w}\left( - \frac{1}{\sigma^2} (\mathbf{\hat{y}}_i - \mathbf{X}\mathbf{w})^T(\mathbf{\hat{y}}_i - \mathbf{X}\mathbf{w}) \right),\\
-&=  - \frac{1}{\sigma^2}(-2\mathbf{X}^Ty + 2\mathbf{X}^T\mathbf{X}\mathbf{w}),\\
-&= -\frac{1}{\sigma^2} 2 \mathbf{X}^T(\mathbf{\hat{y}}_i- \mathbf{X}\mathbf{w}), \\
-\mathbf{0} & = -\frac{2}{\sigma^2}(\mathbf{X}^T\mathbf{\hat{y}}_i - \mathbf{X}^T\mathbf{Xw}), \\
-\mathbf{X}^T\mathbf{Xw} &= \mathbf{X}^T\mathbf{\hat{y}}_i .
+\nabla_{\boldsymbol{w}} \log(p(S|\theta)) &=\nabla_{\boldsymbol{w}}\left( - \frac{1}{\sigma^2} (\boldsymbol{\hat{y}}_i - \boldsymbol{X}\boldsymbol{w})^T(\boldsymbol{\hat{y}}_i - \boldsymbol{X}\boldsymbol{w}) \right),\\
+&=  - \frac{1}{\sigma^2}(-2\boldsymbol{X}^Ty + 2\boldsymbol{X}^T\boldsymbol{X}\boldsymbol{w}),\\
+&= -\frac{1}{\sigma^2} 2 \boldsymbol{X}^T(\boldsymbol{\hat{y}}_i- \boldsymbol{X}\boldsymbol{w}), \\
+\boldsymbol{0} & = -\frac{2}{\sigma^2}(\boldsymbol{X}^T\boldsymbol{\hat{y}}_i - \boldsymbol{X}^T\boldsymbol{Xw}), \\
+\boldsymbol{X}^T\boldsymbol{Xw} &= \boldsymbol{X}^T\boldsymbol{\hat{y}}_i .
 \end{align*}
 
 \noindent Which ultimately supplies us with the solution for of the optimal parameters 
 \begin{equation}\label{eq:ls}
-\mathbf{w}= (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T\mathbf{\hat{y}}.
+\boldsymbol{w}= (\boldsymbol{X}^T \boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{\hat{y}}.
 \end{equation}
 
 

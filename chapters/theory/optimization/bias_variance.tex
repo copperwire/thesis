@@ -3,29 +3,29 @@
 Understanding over and under-fitting is very important to understanding the challenges faced when doing machine learning. As it turns out those concepts are fundamentally tied to the out-of-sample error, $E_{out}$, for which the mean squared error (MSE) cost function can be decomposed in three contributions\footnote{We show this derivation in appendix \ref{appendix:bias_variance}}, namely
 
 \begin{align}\label{eq:bv_decomp}
-E_{out} = \langle C(S, f(\mathbf{x}; \theta_{S_t}))\rangle_{S,\, \epsilon} = \text{Bias}^2 + \text{Variance} + \text{Noise}.
+E_{out} = \langle C(S, f(\boldsymbol{x}; \theta_{S_t}))\rangle_{S,\, \epsilon} = \text{Bias}^2 + \text{Variance} + \text{Noise}.
 \end{align}
 
 \noindent This expectation is rather compact and so before we move on to explaining the bias and variance start by elaborating on $S$ and $\epsilon$. Recall from equation \ref{eq:target} that we decompose the target values as a contribution from a true function $\hat{f}$, and an error term $\epsilon$
 
 \begin{equation}
-\hat{y}_i = \hat{f}(\mathbf{x}_i) + \epsilon.
+\hat{y}_i = \hat{f}(\boldsymbol{x}_i) + \epsilon.
 \end{equation}
 
 \noindent In this section, we assume that the noise is distributed as $\epsilon \sim \mathcal{N}(0, \sigma^2)$.
 
-The expectation in equation \ref{eq:bv_decomp} is taken over a model with optimized parameters $\theta_{S_t}$, whose value are a function of the selected data used in the optimization, $S_t = \{(\hat{y}_i, \mathbf{x}_i)\}$. We can then view our model, $f(\mathbf{x}; \theta_{S_t})$, as a stochastic functional which varies over the selected data used for training. The expectation over $S$ is then an expectation over the set of different choices of training data.
+The expectation in equation \ref{eq:bv_decomp} is taken over a model with optimized parameters $\theta_{S_t}$, whose value are a function of the selected data used in the optimization, $S_t = \{(\hat{y}_i, \boldsymbol{x}_i)\}$. We can then view our model, $f(\boldsymbol{x}; \theta_{S_t})$, as a stochastic functional which varies over the selected data used for training. The expectation over $S$ is then an expectation over the set of different choices of training data.
 
 With the derived quantities from appendix \ref{appendix:bias_variance}, and equation \ref{eq:target}, we can then define the bias as
 
 \begin{equation}\label{eq:bias}
-\text{Bias}^2 = \sum_i (\mathbf{\hat{y}}_i - \langle f(\mathbf{x}_i; \theta_{S_t})\rangle_S)^2.
+\text{Bias}^2 = \sum_i (\boldsymbol{\hat{y}}_i - \langle f(\boldsymbol{x}_i; \theta_{S_t})\rangle_S)^2.
 \end{equation}
 
 \noindent The bias term is analogous to the squared error cost and gives and estimate to the degree of under-fitting the model is susceptible to. Building on this we have the variance term 
 
 \begin{equation}\label{eq:variance}
-\text{Variance} = \sum_i \langle (f(\mathbf{x}_i; \theta_{S_t}) - \langle f(\mathbf{x}_i; \theta_{S_t}) \rangle_S)\rangle_S.
+\text{Variance} = \sum_i \langle (f(\boldsymbol{x}_i; \theta_{S_t}) - \langle f(\boldsymbol{x}_i; \theta_{S_t}) \rangle_S)\rangle_S.
 \end{equation}
 
 \noindent For clarity we note that the summation is over the testing set elements. The variance term relates to the consistency in the testing region, and as such describes the degree of over-fitting the model is exhibiting.

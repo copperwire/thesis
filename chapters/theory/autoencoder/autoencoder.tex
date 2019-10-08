@@ -22,7 +22,7 @@ The second part of the model is the decoder that maps back to the original space
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth]{plots/autoencoder.pdf}
-	\caption[Autoencoder schematic]{Schematic of an autoencoder model. A sample $\hat{\mathbf{x}}$ is compressed to a lower-dimensional representation $\mathbf{z}$, which is subsequently reconstructed to the original space by the decoder. The tapered shape of trapezoid which represents the networks indicates if the network is compressing or uncompressing a representation.}
+	\caption[Autoencoder schematic]{Schematic of an autoencoder model. A sample $\hat{\boldsymbol{x}}$ is compressed to a lower-dimensional representation $\boldsymbol{z}$, which is subsequently reconstructed to the original space by the decoder. The tapered shape of trapezoid which represents the networks indicates if the network is compressing or uncompressing a representation.}
 	\label{fig:autoencoder}
 \end{figure}
 
@@ -31,7 +31,7 @@ The second part of the model is the decoder that maps back to the original space
 The objective is then to find the configuration of the two maps $\phi$ and $\psi$ which gives the best possible reconstruction. That is the objective $\mathcal{O}$ for the model is given as
 
 \begin{align}\label{eq:objective_autoenc}
-  \mathcal{O} = \argmin_{\phi, \psi} \sum_i || \mathbf{x}_i - \phi(\psi( \mathbf{x}_i ))  ||^2
+  \mathcal{O} = \argmin_{\phi, \psi} \sum_i || \boldsymbol{x}_i - \phi(\psi( \boldsymbol{x}_i ))  ||^2
 \end{align}
 
 \noindent  As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. A mean-squared-error cost optimizes this objective function in the event of real-valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to principal component analysis (PCA)\cite{Marsland2009} which we introduced in chapter \ref{chap:fundament}. In practice, the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. We refer to section \ref{sec:ANN} for a detailed discussion on deep learning and neural networks.
@@ -139,10 +139,10 @@ D_{KL}(\Psi || Q ) - \log q(x) &=  \langle \log \psi(z|x) - \log q(z) - \log \le
 
 \section{Optimizing the variational autoencoder}
 
-From equation \ref{eq:vae_cost}, we observe that the optimization is split in two. The first is a reconstruction term that approximates the log evidence, which we can train with a squared error or cross-entropy cost. Secondly, we have a divergence term over the parametrized and theoretical latent distribution. We want to simplify the second to conserve computational resources. Thankfully this is computationally cheap given a specific prior latent distribution. Let the target distribution $p(z | x) $ be a multivariate normal distribution with zero means and a diagonal unit variance matrix, i.e. $p(z | x) \sim  \mathcal{N}(\mathbf{0}, \mathbf{I})$. And accordingly the neural network approximation then follows $\psi(z | x) \sim \mathcal{N}(\mu, \Sigma)$. The normalized probability density function for the normal Gaussian is defined as 
+From equation \ref{eq:vae_cost}, we observe that the optimization is split in two. The first is a reconstruction term that approximates the log evidence, which we can train with a squared error or cross-entropy cost. Secondly, we have a divergence term over the parametrized and theoretical latent distribution. We want to simplify the second to conserve computational resources. Thankfully this is computationally cheap given a specific prior latent distribution. Let the target distribution $p(z | x) $ be a multivariate normal distribution with zero means and a diagonal unit variance matrix, i.e. $p(z | x) \sim  \mathcal{N}(\boldsymbol{0}, \boldsymbol{I})$. And accordingly the neural network approximation then follows $\psi(z | x) \sim \mathcal{N}(\mu, \Sigma)$. The normalized probability density function for the normal Gaussian is defined as 
 
 \begin{equation}
-p(\mathbf{x}) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(\mathbf{x} - \mathbb{\mu})^T\Sigma^{-1}(\mathbf{x}-\mu)),
+p(\boldsymbol{x}) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(\boldsymbol{x} - \mathbb{\mu})^T\Sigma^{-1}(\boldsymbol{x}-\mu)),
 \end{equation}
 
 \noindent and the Kullback-Leibler divergence for two multivariate Gaussians is given by 
@@ -153,7 +153,7 @@ p(\mathbf{x}) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(\mathbf{x} 
 D_{KL}(p_1|| p_2 ) = \frac{1}{2} \left( \log \frac{|\Sigma_2|}{|\Sigma_1|} -n + tr(\Sigma^{-1}_2 \Sigma_1) + (\mu_2 - \mu_1)^T\Sigma_2^{-1}(\mu_2 - \mu_1) \right),
 \end{equation}
 
-\noindent which we derive in appendix \ref{appendix:kl_gauss}. Substituting $p_1$ and $p_2$ with the model distribution $\psi(z|x)$ and a latent prior $p(\mathbf{z}) \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$ we get 
+\noindent which we derive in appendix \ref{appendix:kl_gauss}. Substituting $p_1$ and $p_2$ with the model distribution $\psi(z|x)$ and a latent prior $p(\boldsymbol{z}) \sim \mathcal{N}(\boldsymbol{0}, \boldsymbol{I})$ we get 
 
 \begin{align*}
 D_{KL}(q||p) &= \frac{1}{2} \left( - \log {|\Sigma_1|} -n + tr(I \Sigma_1) + \mu_2 ^TI\mu_2 \right) \\
@@ -169,10 +169,10 @@ D_{KL}(q||p) = \frac{1}{2} \sum_i -\log \sigma_i^2 - 1 + \sigma^2_i + \mu_i^2 .
 \noindent We note that equation \ref{eq:kl_opt} satisfies the equality that the divergence is zero when the target and model distributions are equal. The VAE model can then be enacted with a pair of neural networks acting as an encoder and decoder. To parametrize the sample, we compute a mean vector $\mu$ and a variance vector $\sigma^2$ from the encoded representation. The latent sample is then given as 
 
 \begin{equation}
-\mathbf{z} = \mathbf{\mu} + \mathbf{\sigma}^2 \cdot \epsilon,
+\boldsymbol{z} = \boldsymbol{\mu} + \boldsymbol{\sigma}^2 \cdot \epsilon,
 \end{equation} 
 
-\noindent where $\epsilon$ is a stochastic vector drawn from $\mathcal{N}(\mathbf{0}, \mathbf{1})$. A schematic of a VAE model is shown in figure \ref{fig:var_autoencoder}.
+\noindent where $\epsilon$ is a stochastic vector drawn from $\mathcal{N}(\boldsymbol{0}, \boldsymbol{1})$. A schematic of a VAE model is shown in figure \ref{fig:var_autoencoder}.
 
 An important feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. This was the point of contention in the paper by \citet{Zhao}. In the paper, the authors propose alternate measures for regularizing the latent space. The intuitive alternative to a point-wise measurement is comparing the moments of the distribution and minimize their difference. 
 
@@ -180,7 +180,7 @@ An important feature of the Kullback-Leibler divergence is that it operates poin
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\textwidth]{plots/variational_autoenc.pdf}
-	\caption[Variational autoencoder schematic]{Schematic of a variational autoencoder model. A sample $\hat{\mathbf{x}}$ is compressed to a lower-dimensional representation $\mathbf{z}$, which is parametrized by a mean vector, $\mathbf{\mu}$, and a variance vector $\mathbf{\sigma}^2$. Subsequently, we reconstruct the original input with the decoder.}
+	\caption[Variational autoencoder schematic]{Schematic of a variational autoencoder model. A sample $\hat{\boldsymbol{x}}$ is compressed to a lower-dimensional representation $\boldsymbol{z}$, which is parametrized by a mean vector, $\boldsymbol{\mu}$, and a variance vector $\boldsymbol{\sigma}^2$. Subsequently, we reconstruct the original input with the decoder.}
 	\label{fig:var_autoencoder}
 \end{figure}
 

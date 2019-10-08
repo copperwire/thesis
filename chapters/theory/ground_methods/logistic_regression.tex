@@ -10,10 +10,10 @@ To understand classification algorithms we begin from the simplest algorithm in 
 o = \frac{p}{1-p}.
 \end{equation}
 
-\noindent Since $p$ is bounded in the unit interval unfortunately the odds are bounded in $\R^+$. Again the logarithm comes to the rescue as the logarithm of a positively bounded variable is unbounded, and so we define the log-odds as the output of our model given a data-point $\mathbf{x}_i$ and the model parameters $\mathbf{w}$
+\noindent Since $p$ is bounded in the unit interval unfortunately the odds are bounded in $\R^+$. Again the logarithm comes to the rescue as the logarithm of a positively bounded variable is unbounded, and so we define the log-odds as the output of our model given a data-point $\boldsymbol{x}_i$ and the model parameters $\boldsymbol{w}$
 
 \begin{equation}\label{eq:log_odds}
-\log \left(\frac{p_i}{1-p_i}\right) = \mathbf{x}_i\mathbf{w}. 
+\log \left(\frac{p_i}{1-p_i}\right) = \boldsymbol{x}_i\boldsymbol{w}. 
 \end{equation} 
 
 \noindent As a reminder we note that we add a column of ones to the data and thus include the intercept in the weights. 
@@ -21,31 +21,31 @@ o = \frac{p}{1-p}.
 We can then transform the log-odds back to a model for the probability which gives us the formulation for logistic regression 
 
 \begin{equation}
-q(y_i=1 | \mathbf{x}_i; \mathbf{w})= q(\mathbf{x}_i\mathbf{w}) = \frac{1}{1 + e^{-\mathbf{x}_i \mathbf{w}}}.
+q(y_i=1 | \boldsymbol{x}_i; \boldsymbol{w})= q(\boldsymbol{x}_i\boldsymbol{w}) = \frac{1}{1 + e^{-\boldsymbol{x}_i \boldsymbol{w}}}.
 \end{equation} 
 
 \noindent The term on the right-hand side is the logistic sigmoid function, which has the notable properties one needs from a function that models probabilities e.g. $f(x) = 1-f(1-x)$. With a binary outcome we can plug this model directly into the MLE cost defined in equation \ref{eq:mle}, i.e. 
 
 \begin{align}\label{eq:mle_lr}
-P(S|\mathbf{w}) &=  - \sum_i y_i\log q (\mathbf{x}_i\mathbf{w}) + (1-y_i)\log\left(1-q(\mathbf{x}_i\mathbf{w})\right).
+P(S|\boldsymbol{w}) &=  - \sum_i y_i\log q (\boldsymbol{x}_i\boldsymbol{w}) + (1-y_i)\log\left(1-q(\boldsymbol{x}_i\boldsymbol{w})\right).
 \end{align}
 
-\noindent Finding the optimal values for the parameters $\mathbf{w}$ is again a matter of finding the minimum of the cost. Noting first that the derivative of the logistic sigmoid is 
+\noindent Finding the optimal values for the parameters $\boldsymbol{w}$ is again a matter of finding the minimum of the cost. Noting first that the derivative of the logistic sigmoid is 
 
 \begin{equation}
-\nabla_{\mathbf{w}} q(\mathbf{x}_i \mathbf{w}) = q(\mathbf{x}_i \mathbf{w}) (1 - q(\mathbf{x}_i \mathbf{w}))\mathbf{x}_i,
+\nabla_{\boldsymbol{w}} q(\boldsymbol{x}_i \boldsymbol{w}) = q(\boldsymbol{x}_i \boldsymbol{w}) (1 - q(\boldsymbol{x}_i \boldsymbol{w}))\boldsymbol{x}_i,
 \end{equation}
 
 \noindent which is known as the sigmoid derivative identity in the machine learning literature. Additionally the derivative of the log model is straightforwardly computed as 
 
 \begin{equation}
-\nabla_\mathbf{w} \log q(\mathbf{x}_i \mathbf{w}) = 1- q(\mathbf{x}_i \mathbf{w})\mathbf{x}_i.
+\nabla_{\boldsymbol{w}} \log q(\boldsymbol{x}_i \boldsymbol{w}) = 1- q(\boldsymbol{x}_i \boldsymbol{w})\boldsymbol{x}_i.
 \end{equation}
  We can then write out the derivative of the cost as 
 
 \begin{align}
-\nabla_{\mathbf{w}} \mathcal{C} &= - \sum_i y_i (1 - q(\mathbf{x}_i \mathbf{w})) 1-y_i (-) q(\mathbf{x}_i \mathbf{w})\mathbf{x}_i, \\
-&= - \sum_i \left(y_i -  q(\mathbf{x}_i \mathbf{w})\right)\mathbf{x}_i.
+\nabla_{\boldsymbol{w}} \mathcal{C} &= - \sum_i y_i (1 - q(\boldsymbol{x}_i \boldsymbol{w})) 1-y_i (-) q(\boldsymbol{x}_i \boldsymbol{w})\boldsymbol{x}_i, \\
+&= - \sum_i \left(y_i -  q(\boldsymbol{x}_i \boldsymbol{w})\right)\boldsymbol{x}_i.
 \end{align}
 
-\noindent Unfortunately this derivative is transcendental in $\mathbf{w}$ which means that there is no closed form solution w.r.t. the parameters. Finding the optimal values for the parameters is then a problem that has to be solved with iterative methods. The same methods are used to fit very complex machine learning methods and as such proper understanding of these underpin the understanding of complex machine learning methods as much as understanding linear and logistic-regression. We discuss gradient descent in some detail in section \ref{sec:gd}, but first we re-visit linear regression with the MLE formalism fresh in mind.
+\noindent Unfortunately this derivative is transcendental in $\boldsymbol{w}$ which means that there is no closed form solution w.r.t. the parameters. Finding the optimal values for the parameters is then a problem that has to be solved with iterative methods. The same methods are used to fit very complex machine learning methods and as such proper understanding of these underpin the understanding of complex machine learning methods as much as understanding linear and logistic-regression. We discuss gradient descent in some detail in section \ref{sec:gd}, but first we re-visit linear regression with the MLE formalism fresh in mind.

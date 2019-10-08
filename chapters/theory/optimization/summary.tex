@@ -8,7 +8,7 @@ Typically $C(\cdot, \cdot)$ is something like a squared distance, or a cross ent
 
 In equation \ref{eq:target} the $\epsilon_i$ term expresses a noise term at that point, and the function $P(\cdot)$ is the true process which we are interested in modeling but whose shape is hidden from us. It is important to note that for data with no noise, most of the problems and cautions we describe in this chapter do not apply, however measuring any physical phenomenon inherently carries with it some noise.
 
-To quantify the quality of the model during optimization we measure the change in the value of the cost function. In the machine learning community the best practice for this in settings were we train on tuples of response variables and data, e.g. $s_i = \{y_i, \mathbf{x}_i\}$ is to split the data in disjoint sets. From the full data one selects a subset of around $\sim 20\%$ or so that is withheld from training. After training we can evaluate the cost function on this data to create an unbiased estimate the out-of-sample error
+To quantify the quality of the model during optimization we measure the change in the value of the cost function. In the machine learning community the best practice for this in settings were we train on tuples of response variables and data, e.g. $s_i = \{y_i, \boldsymbol{x}_i\}$ is to split the data in disjoint sets. From the full data one selects a subset of around $\sim 20\%$ or so that is withheld from training. After training we can evaluate the cost function on this data to create an unbiased estimate the out-of-sample error
 
 \begin{equation}
 E_{out} = C(y_{test}, f(x_{test}; \theta^*))

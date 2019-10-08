@@ -44,7 +44,7 @@ The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package de
 
 More formally the events are originally composed of peak-only 4-tuples of $e_i = (x_i, y_i, t_i, c_i)$. The peak-only designation indicates that we use the recorded peak amplitude on each pad, the tuples then correspond to pads that recorded a signal for that event. Each event is then a set of these four-tuples: $\epsilon_j = \{e_i\}$ creating a track in three-dimensional space. 
 
-To emulate the real-data case, we set a subset of the simulated data to be labelled and treat the rest as unlabelled data. We chose this partition to be $15\%$ of each class. We denote this subset and its associated labels as $\gamma_L=(\mathbf{X}_L, \mathbf{y}_L)$, the entire dataset which we will denote as $\mathbf{X}_F$. To clarify, please note that $\mathbf{X}_L \subset \mathbf{X}_F$.
+To emulate the real-data case, we set a subset of the simulated data to be labelled and treat the rest as unlabelled data. We chose this partition to be $15\%$ of each class. We denote this subset and its associated labels as $\gamma_L=(\boldsymbol{X}_L, \boldsymbol{y}_L)$, the entire dataset which we will denote as $\boldsymbol{X}_F$. To clarify, please note that $\boldsymbol{X}_L \subset \boldsymbol{X}_F$.
 
 We display two simulated events in figure \ref{fig:sim_samples}. The top row illustrates a proton-event, and the bottom a carbon-event. 
 

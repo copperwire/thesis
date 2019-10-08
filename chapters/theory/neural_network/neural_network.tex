@@ -15,41 +15,41 @@ A simple illustration of two neurons in one layer is provided in figure \ref{fig
 \end{figure}
 
 
-\noindent The ANN produces an output by what we call a forward pass. This defines all the mathematical operations from the input to the output of the network. More formally, let the input to an ANN be $\mathbf{x} \in \R^N$, and the matrix $\mathbf{W}^{[1]} \in \R^{N \times D}$ be a representation of the weight matrix forming the connections between the input and the artificial neurons, each layer has its own weights which we denote with bracketed superscripts. For a network with $n$ layers each layer then maintains a weight matrix 
+\noindent The ANN produces an output by what we call a forward pass. This defines all the mathematical operations from the input to the output of the network. More formally, let the input to an ANN be $\boldsymbol{x} \in \R^N$, and the matrix $\boldsymbol{W}^{[1]} \in \R^{N \times D}$ be a representation of the weight matrix forming the connections between the input and the artificial neurons, each layer has its own weights which we denote with bracketed superscripts. For a network with $n$ layers each layer then maintains a weight matrix 
 
 \begin{align}
-\mathbf{W}^{[l]} \; \forall \; l \in \{1,\, 2,\, \dots, n\},
+\boldsymbol{W}^{[l]} \; \forall \; l \in \{1,\, 2,\, \dots, n\},
 \end{align}
 
 \noindent which are used to transform the input to a space which enables regression or classification.  
 
 Lastly we define the activation function $f(x)$ as a monotonic, once differentiable, function on $\R^1$. The function $f(x)$ determines the complexity of the neural network together with the number of neurons per layer and number of layers. The use of a non-linear activation is what allows for the ANN to represent more complex problems than we were able to with logistic and linear regression.
 
-We are now ready to fully describe the forward pass, which transforms the input to an intermediate representation $\mathbf{a}$. The simplest such transformation is the fully connected, or \textit{dense}, layer. It bears close resemblance to the formulation of linear and logistic regression and is defined as 
+We are now ready to fully describe the forward pass, which transforms the input to an intermediate representation $\boldsymbol{a}$. The simplest such transformation is the fully connected, or \textit{dense}, layer. It bears close resemblance to the formulation of linear and logistic regression and is defined as 
 
 \begin{equation}\label{eq:fwd}
-	\mathbf{a}^{[1]} = f(\mathbf{x}\mathbf{W}^{[1]})_D,
+	\boldsymbol{a}^{[1]} = f(\boldsymbol{x}\boldsymbol{W}^{[1]})_D,
 \end{equation}
 
-\noindent for the first layer in the network with inputs $\mathbf{x}$. In equation \ref{eq:fwd} the subscript, $D$, denotes that the function is applied element-wise on the output of dimension $\R^D$. 
+\noindent for the first layer in the network with inputs $\boldsymbol{x}$. In equation \ref{eq:fwd} the subscript, $D$, denotes that the function is applied element-wise on the output of dimension $\R^D$. 
 
-Each node is additionally associated with a bias, ensuring that even zero valued weights in $\mathbf{W}^{[l]}$ can encode information. Let the bias for the layer be given as $\mathbf{b} \in \R^D$ in keeping with the notation above. Equation \ref{eq:fwd} then becomes
+Each node is additionally associated with a bias, ensuring that even zero valued weights in $\boldsymbol{W}^{[l]}$ can encode information. Let the bias for the layer be given as $\boldsymbol{b} \in \R^D$ in keeping with the notation above. Equation \ref{eq:fwd} then becomes
 
 \begin{equation}\label{eq:fwd_b}
-	\mathbf{a}^{[1]} = f(\mathbf{x}\mathbf{W}^{[1]} + \mathbf{b}^{[1]})_D.
+	\boldsymbol{a}^{[1]} = f(\boldsymbol{x}\boldsymbol{W}^{[1]} + \boldsymbol{b}^{[1]})_D.
 \end{equation}
 
 \noindent To tie the notation back to more traditional methods we note that if we only have one layer and a linear activation $f(x) = x$ the ANN becomes a formulation of a linear regression model. Keeping the linear regression formulation in mind we illustrate the difference by showing the full forward pass of a two-layer neural network, where we also introduce the output activation function $o(\cdot)$
 
 \begin{align}
-\mathbf{a}^{[1]} &= f(\mathbf{x}\mathbf{W}^{[1]}+ \mathbf{b}^{[1]})_D , \\
-\mathbf{y} &= o(\mathbf{a}^{[1]}\mathbf{W}^{[2]} + \mathbf{b}^{[2]})_D .
+\boldsymbol{a}^{[1]} &= f(\boldsymbol{x}\boldsymbol{W}^{[1]}+ \boldsymbol{b}^{[1]})_D , \\
+\boldsymbol{y} &= o(\boldsymbol{a}^{[1]}\boldsymbol{W}^{[2]} + \boldsymbol{b}^{[2]})_D .
 \end{align}  
 
-\noindent The difference between the intermediate representations $\mathbf{a}^{[l]}$ and the output $\mathbf{y}$ is largely semantic. However, we find it useful to separate the notations in an effort to provide clarity, and because the last layer of a network usually has an activation which differs from the rest of the network. This output activation $o(\cdot)$ is usually formulated depending on the analysis at hand. For regression tasks $o$ is commonly just a linear activation. Conversely for classification the logistic sigmoid is used for binary outcomes, or in the event of multiple classes we use the soft-max function. For a network with $n$ layers the soft-max function is defined as 
+\noindent The difference between the intermediate representations $\boldsymbol{a}^{[l]}$ and the output $\boldsymbol{y}$ is largely semantic. However, we find it useful to separate the notations in an effort to provide clarity, and because the last layer of a network usually has an activation which differs from the rest of the network. This output activation $o(\cdot)$ is usually formulated depending on the analysis at hand. For regression tasks $o$ is commonly just a linear activation. Conversely for classification the logistic sigmoid is used for binary outcomes, or in the event of multiple classes we use the soft-max function. For a network with $n$ layers the soft-max function is defined as 
 
 \begin{equation}\label{eq:softmax}
-o(\mathbf{z})_i = \frac{e^{z_i^{[n]}}}{\sum_j e^{z_j^{[n]}}},
+o(\boldsymbol{z})_i = \frac{e^{z_i^{[n]}}}{\sum_j e^{z_j^{[n]}}},
 \end{equation}
 
 \noindent where we introduce our notation for the input to the activation at each layer as $z_j^{[l]}$. We explicitly define this input as 
@@ -67,15 +67,15 @@ a_j ^{[l]} = f(z_j^{[l]})_D.
 \noindent We seamlessly transition to a network of many layers $n$ which is a simple extension of the two-layer network presented above. A multi-layer network can then be described in terms of its forward pass as 
 
 \begin{align}
-\mathbf{a}^{[1]} &= f(\mathbf{x}\mathbf{W}^{[1]}+ \mathbf{b}^{[1]})_D , \\
-\mathbf{a}^{[2]} &= f(\mathbf{a}^{[1]}\mathbf{W}^{[2]}+ \mathbf{b}^{[2]})_D , \\
+\boldsymbol{a}^{[1]} &= f(\boldsymbol{x}\boldsymbol{W}^{[1]}+ \boldsymbol{b}^{[1]})_D , \\
+\boldsymbol{a}^{[2]} &= f(\boldsymbol{a}^{[1]}\boldsymbol{W}^{[2]}+ \boldsymbol{b}^{[2]})_D , \\
 &\vdots \\
-\mathbf{y} &= o(\mathbf{a}^{[n-1]}\mathbf{W}^{[n]} + \mathbf{b}^{[n]})_D .
+\boldsymbol{y} &= o(\boldsymbol{a}^{[n-1]}\boldsymbol{W}^{[n]} + \boldsymbol{b}^{[n]})_D .
 \end{align} 
 
-\noindent Furthermore we note that the dimensions of the weight matrices are largely user specified, excepting the first dimension of $\mathbf{W}^{[1]}$ which maps to the input dimension, and the second dimension of the last layer which maps to the output. Otherwise the first dimension is chosen to fit with the previous output and the second is specified as a hyperparameter. Recall from section \ref{sec:hyperparams} that hyperparameters have to be specified and tuned outside the ordinary optimization procedure and are usually related to the complexity of the model and so cannot be arbitrarily chosen. 
+\noindent Furthermore we note that the dimensions of the weight matrices are largely user specified, excepting the first dimension of $\boldsymbol{W}^{[1]}$ which maps to the input dimension, and the second dimension of the last layer which maps to the output. Otherwise the first dimension is chosen to fit with the previous output and the second is specified as a hyperparameter. Recall from section \ref{sec:hyperparams} that hyperparameters have to be specified and tuned outside the ordinary optimization procedure and are usually related to the complexity of the model and so cannot be arbitrarily chosen. 
 
-We can now turn to the process of optimizing the model. In a neural network the variables that need to be fit are the elements of $\mathbf{W}^{[l]}$ that we denote $\wij^{[l]}$, and the biases which we denote with $b_j^{[l]}$. And while one can solve the linear regression optimization problem by matrix inversion, the multi-layer neural net does not have a closed form first derivative for $\wij^{[l]}$ or  $b_j^{[l]}$ because of the non-linearities between each layer. We are then forced to turn to iterative methods of the gradient, which we previously introduced in section \ref{sec:gd}
+We can now turn to the process of optimizing the model. In a neural network the variables that need to be fit are the elements of $\boldsymbol{W}^{[l]}$ that we denote $\wij^{[l]}$, and the biases which we denote with $b_j^{[l]}$. And while one can solve the linear regression optimization problem by matrix inversion, the multi-layer neural net does not have a closed form first derivative for $\wij^{[l]}$ or  $b_j^{[l]}$ because of the non-linearities between each layer. We are then forced to turn to iterative methods of the gradient, which we previously introduced in section \ref{sec:gd}
 
 Based on whether the output is described by real values or a set of probabilities the cost takes on different forms, just as for linear and logistic regression. In the real case we use the now familiar mean squared error (MSE) cost, or in the event that we want to estimate a probability of an outcome; the binary cross-entropy. We discuss these cost-functions in general and especially the MSE and binary cross-entropy (BCE) earlier on in chapter \ref{chap:fundament}. Regardless of the cost the optimization problem is solved by a gradient descent procedure discussed in section \ref{sec:gd}. We we re-introduce the update form for the parameters as 
 
@@ -91,7 +91,7 @@ Backpropagation of errors by automatic differentiation, first described by \cite
 
 The backpropagation algorithm begins with computing the total loss, here exemplified with the squared error function,
 \begin{equation}\label{eq:tot_err}
-	E = \mathcal{C}(\mathbf{\hat{y}}, \mathbf{y}) = \frac{1}{2n}\sum_n \sum_j (\hat{y}_{nj}-y_{nj} )^2.
+	E = \mathcal{C}(\boldsymbol{\hat{y}}, \boldsymbol{y}) = \frac{1}{2n}\sum_n \sum_j (\hat{y}_{nj}-y_{nj} )^2.
 \end{equation}
 
 \noindent The factor one half is included for practical reasons to cancel the exponent under differentiation. As the gradient is multiplied by the learning rate $\eta$, this is ineffectual on the training itself. 
@@ -153,7 +153,7 @@ Returning to the optimization problem we start to unravel the backpropagation al
 The element-wise product of two matrices or vectors is denoted as  
 
 \begin{equation}
-\mathbf{a} \circ \mathbf{b}.
+\boldsymbol{a} \circ \boldsymbol{b}.
 \end{equation}
 
 \noindent This short-hand lets us define equations \ref{eq:backprop_w} and \ref{eq:backprop_b} in a more compact way
@@ -199,17 +199,17 @@ The element-wise product of two matrices or vectors is denoted as
 \noindent To finalize the discussion on the algorithm we illustrate how backpropagation might be implemented in algorithm \ref{algo:backprop}.
 
 \begin{algorithm}
-\caption{Backpropagation of errors in a fully connected neural network for a single sample $\mathbf{x}$.}\label{algo:backprop}
+\caption{Backpropagation of errors in a fully connected neural network for a single sample $\boldsymbol{x}$.}\label{algo:backprop}
 \KwData{Iterables 
- $\mathbf{a}^{[l]} $
- $\mathbf{z}^{[l]}$
- $\mathbf{W}^{[l]}$
- $\mathbf{b}^{[l]}$ 
+ $\boldsymbol{a}^{[l]} $
+ $\boldsymbol{z}^{[l]}$
+ $\boldsymbol{W}^{[l]}$
+ $\boldsymbol{b}^{[l]}$ 
 $\forall \; l \in [1,\, 2,\, \dots ,\, n] $}
-\KwIn{$\frac{\partial E}{\partial \mathbf{y}}$, $o'(\mathbf{z^{[n]}})$, $f'(\cdot)$}
+\KwIn{$\frac{\partial E}{\partial \boldsymbol{y}}$, $o'(\boldsymbol{z^{[n]}})$, $f'(\cdot)$}
 \KwResult{Two iterables of the derivatives $\frac{\partial E}{\partial w_{ij}^{[l]}}$ and $\frac{\partial E}{\partial b_{j}^{[l]}}$ }
 Initialization\;
-$\delta_j^{n} \gets \frac{\partial E}{\partial \mathbf{y}} \circ o'(\mathbf{z^{[n]}})$\;
+$\delta_j^{n} \gets \frac{\partial E}{\partial \boldsymbol{y}} \circ o'(\boldsymbol{z^{[n]}})$\;
 Compute derivatives\;  
 \For{$l \in [n-1,\, \dots ,\, 1] $}{
 	$\frac{\partial E}{\partial w_{jm}^{[l]}} \gets \hat{\delta}_j^{l+1} a^{[l]}_m$\;
@@ -303,7 +303,7 @@ Traditional measures of regularization like using cross-validation and weight co
 Weight constraints are similarly convenient additions to the cost function. The only modification required from equation \ref{eq:mse_ridge} is adding a summation term over the layers. For a $L_2$ regularized neural net the cost function can then be written as 
 
 \begin{equation}
-C(\hat{y}_i, f(\mathbf{x}_i; \theta)) = (\hat{y}_i - f(\mathbf{x}_i; \theta))^2 + \lambda\sum_{lij}||w_{ij}^{[l]}||^2_2.
+C(\hat{y}_i, f(\boldsymbol{x}_i; \theta)) = (\hat{y}_i - f(\boldsymbol{x}_i; \theta))^2 + \lambda\sum_{lij}||w_{ij}^{[l]}||^2_2.
 \end{equation}
 
 \noindent More specific tools for neural networks have been developed in later years, and we will discuss two of these that has seen extensive application in recent works. 

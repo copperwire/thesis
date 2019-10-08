@@ -31,7 +31,7 @@ log $\leftarrow [\hspace{0.1in}]$;\\
     \For{$\eta_k \in \eta$}{
         opt $\leftarrow$ optimizer($ \eta _k $);\\
         model\_instance $\leftarrow$ model($\lambda _k$);\\
-        metrics $\leftarrow$ model\_instance.fit($\mathbf{X}, \mathbf{\hat{y}}$, opt) ;\\
+        metrics $\leftarrow$ model\_instance.fit($\boldsymbol{X}, \boldsymbol{\hat{y}}$, opt) ;\\
         log.append((metrics, ($\lambda_k$, $\eta_k$)))
     }
 }
