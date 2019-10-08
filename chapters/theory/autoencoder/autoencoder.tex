@@ -5,7 +5,7 @@
 
 The primary challenge we face with data from the active target time projection chamber (AT-TPC) is that labelling data is not always possible for a given experiment. Given that fact, and the considerable amount of data available, we turn to dimensionality reduction methods to possibly express the different physics occurring in this data. One such set of methods is the autoencoder family of neural network algorithms.
 
-An autoencoder is an attempt at learning a distribution of data by reconstruction. This means that the model encodes the data into a much lower dimensional latent space before projecting back into the original space of data. The goal, as a matter of course, is then to learn the true distribution, $P(\mathcal{X})$, over the data with some parametrized model $Q(\mathcal{X};\theta)$. The model consists of two discrete parts: an encoder and a decoder. The encoder is, in general, a nonlinear map $\psi$
+An autoencoder is an attempt at learning a distribution of data by reconstruction. This goal means that the model encodes the data into a much lower dimensional latent space before projecting back into the original space of data. The goal, as a matter of course, is then to learn the true distribution, $P(\mathcal{X})$, over the data with some parametrized model $Q(\mathcal{X};\theta)$. The model consists of two discrete parts: an encoder and a decoder. The encoder is, in general, a nonlinear map $\psi$
 
 \begin{align}
   \psi: \mathcal{X} \rightarrow \mathcal{Z},
@@ -20,29 +20,29 @@ The second part of the model is the decoder that maps back to the original space
 \end{align}
 
 \begin{figure}[tb]
-	\centering
-	\includegraphics[width=\textwidth]{plots/autoencoder.pdf}
-	\caption[Autoencoder schematic]{Schematic of an autoencoder model. A sample $\hat{\boldsymbol{x}}$ is compressed to a lower-dimensional representation $\boldsymbol{z}$, which is subsequently reconstructed to the original space by the decoder. The tapered shape of trapezoid which represents the networks indicates if the network is compressing or uncompressing a representation.}
-	\label{fig:autoencoder}
+    \centering
+    \includegraphics[width=\textwidth]{plots/autoencoder.pdf}
+    \caption[Autoencoder schematic]{Schematic of an autoencoder model. A sample $\hat{\boldsymbol{x}}$ is compressed to a lower-dimensional representation $\boldsymbol{z}$, which is subsequently reconstructed to the original space by the decoder. The tapered shape of trapezoid which represents the networks indicates if the network is compressing or uncompressing a representation.}
+    \label{fig:autoencoder}
 \end{figure}
 
 \noindent An illustration of a general autoencoder architecture is included in figure \ref{fig:autoencoder}.
 
-The objective is then to find the configuration of the two maps $\phi$ and $\psi$ which gives the best possible reconstruction. That is the objective $\mathcal{O}$ for the model is given as
+The objective is then to find the configuration of the two maps, $\phi$ and $\psi$, which gives the best possible reconstruction. That is the objective $\mathcal{O}$ for the model is given as
 
 \begin{align}\label{eq:objective_autoenc}
   \mathcal{O} = \argmin_{\phi, \psi} \sum_i || \boldsymbol{x}_i - \phi(\psi( \boldsymbol{x}_i ))  ||^2
 \end{align}
 
-\noindent  As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. A mean-squared-error cost optimizes this objective function in the event of real-valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. This can be thought of as an analogue to principal component analysis (PCA)\cite{Marsland2009} which we introduced in chapter \ref{chap:fundament}. In practice, the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. We refer to section \ref{sec:ANN} for a detailed discussion on deep learning and neural networks.
+\noindent  As the name implies the encoder creates a lower-dimensional "encoded" representation of the input. A mean-squared-error cost optimizes this objective function in the event of real-valued data, but just as commonly through a binary cross-entropy for data normalized to the range $[0, 1]$. This representation can be useful for identifying whatever information-carrying variations are present in the data. An autoencoder can be thought of as an analogue to principal component analysis (PCA)\cite{Marsland2009}, which we introduced in chapter \ref{chap:fundament}. In practice, the non-linear maps, $\psi$ and $\phi$, are most often parametrized by neural networks. We refer to section \ref{sec:ANN} for a detailed discussion on deep learning and neural networks.
 
 The autoencoder has previously been successfully implemented in de-noising tasks. More recently, the Machine Learning community discovered that one could impose a constraining term on the latent distribution to allow for the imposition of structure in the latent space. The goal in mind was to create a generative algorithm, a class of models used to sample from the distribution $P(\mathcal{X})$. For example, to generate bespoke images of houses. 
 
-The first of these employed a Kullback-Leibler divergence to impose structure on the latent space. These models were dubbed variational autoencoders or VAEs by \citet{Kingma2013}. While VAEs lost the contest for preeminence as a generative algorithm to adversarial\footnote{Adversarial networks are a pair of networks where one aims to generate realistic samples, and the other aims to separate between fake and real samples} networks, they remain a fixture in the literature of expressive latent variable models with development focusing on the salience of the latent space (\cite{Higgins2017}, \cite{Zhao}, \cite{Fertig}).
+The first of these employed a Kullback-Leibler divergence to impose structure on the latent space. These models were dubbed variational autoencoders or VAEs by \citet{Kingma2013}. While VAEs lost the contest for preeminence as a generative algorithm to adversarial\footnote{Adversarial networks are a pair of networks where one aims to generate realistic samples, and the other aims to separate between fake and real samples} networks, they remain a fixture in the literature of expressive latent variable models with development focusing on the salience of the latent space \cite{Higgins2017}, \cite{Zhao}, \cite{Fertig}.
 
 \section{The Variational Autoencoder}\label{sec:vae}
 
-Originally presented by \citet{Kingma2013} the VAE is a twist upon the traditional autoencoder. Where the applications of an ordinary autoencoder largely extended to de-noising, with some authors using it for dimensionality reduction, the VAE seeks to control the latent space of the model. The goal of the VAE is then to be able to generate samples from the unknown distribution over the data. In this thesis, the generative properties of the algorithm are only interesting as a metric to describe the latent space. Our efforts mainly concentrate on the latent space itself. Specifically, the focus is discerning whether class membership, be it a physical property or something more abstract \footnote{examples include discerning whether a particle is a proton or electron, or capturing the "five-ness" of a number in the handwritten digits MNIST dataset} is encoded.
+Initially presented by \citet{Kingma2013} the VAE is a twist upon the traditional autoencoder. Where the applications of an ordinary autoencoder largely extended to de-noising, with some authors using it for dimensionality reduction, the VAE seeks to control the latent space of the model. The goal of the VAE is then to be able to generate samples from the unknown distribution over the data. In this thesis, the generative properties of the algorithm are not of interest. Our efforts mainly concentrate on the latent space itself. Specifically, the focus is discerning whether class membership, be it a physical property or something more abstract\footnote{examples include discerning whether a particle is a proton or electron, or capturing the "five-ness" of a number in the handwritten digits MNIST dataset} is encoded in the space.
 
 We begin this chapter with the discussion of the VAE as the framework for deriving the cost, and the methodology underpins the formalism on how we view the regularization of latent spaces.
 
@@ -52,42 +52,48 @@ In section \ref{sec:intro_autoenc} we introduced the structure of the autoencode
 
 We begin by considering the family of problems encountered in variational inference, where the VAE takes its theoretical inspiration. Specifically, we will derive the VAE  as a solution to a Bayesian variational inference problem. Bayesian inference is a framework for linking some observed values $x$ to some hypothesized latent variable $z$. 
 
-This family of techniques all begin with a consideration of the problem from Bayes' rule, which relates the probability of seeing our model given our data, $p(z|x)$ to the odds ratio of seeing our model $p(x|z)p(z)$ to the evidence $p(x)$. Bayes' rule can then be expressed mathematically as 
+This family of techniques all begin with a consideration of the problem from Bayes' theorem, which relates the probability of seeing our model given our data, $p(z|x)$ to the odds ratio of seeing our model $p(x|z)p(z)$ to the evidence $p(x)$. Bayes' rule is expressed mathematically as 
 
  \begin{equation}\label{eq:bayes}
  p(z| x) = \frac{p(x|z) p(z)}{p(x)}.
  \end{equation}
 
- \noindent The left-hand side is termed the posterior distribution, which describes the updated knowledge given some prior belief expressed by the probability of the model and the likelihood which we know from chapter \ref{chap:fundament}. The last part of this equation is the denominator which is commonly referred to as the evidence. It is also what causes the problem to be challenging. To see why we introduce some common re-writing tools used in statistical analysis. Beginning with the evidence, which can be expressed as the integral of the joint distribution $p(x, z) = p(x|z)p(z)$ such that
+ \noindent The left-hand side is termed the posterior distribution, which describes the updated knowledge given some prior belief, $p(z)$ which expresses the probability of the model and the likelihood, $p(x|z)$ which we know from chapter \ref{chap:fundament}. The last part of this equation is the denominator which is commonly referred to as the evidence. It is also what causes the problem to be challenging. To see why we introduce some common re-writing tools used in statistical analysis. Beginning with the evidence, expressed as the integral of the joint distribution 
+
+\begin{equation}
+p(x, z) = p(x|z)p(z),
+\end{equation}
+
+\noindent such that
 
 \begin{equation}\label{eq:evidence}
-p(x) = \int_z p(x|z)p(z)
+p(x) = \int_z p(x|z)p(z).
 \end{equation}
 
 \noindent The integral in the denominator of equation \ref{eq:bayes} is intractable for most interesting problems, as the space over $z$ is usually combinatorially large. 
 
 Another standard tool for solving this problem is Markov chain Monte Carlo (MCMC) methods. In physics, this family of algorithms has been applied to solve many-body problems in quantum mechanics primarily by gradient descent on variational parameters \cite{Hjorth-Jensen}.
 
-We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive a solution, we begin by introducing the KL-divergence \cite{Kullback1951}, which is a measure of how much two distributions are alike. It is important to note that it is, however, not a metric. We define the KL-divergence in equation \ref{eq:kl} from a probability measure P to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$
+We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive an approximation to the evidence, we begin by introducing the KL-divergence, which is a measure of how much two distributions are alike\cite{Kullback1951}. We define the KL-divergence in equation \ref{eq:kl} from a probability measure P to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$ as
 
 \begin{align}\label{eq:kl}
 D_{KL} (P || Q) &= - \int^{\infty}_{-\infty} p(x) \log \left(\frac{p(x)}{q(x)}\right) dx, \\
 &= \langle \log \left(\frac{p(x)}{q(x)} \right)\rangle_{p}.
 \end{align}
 
-\noindent In the context of the VAE, the KL-divergence is a measure of the quality of P approximating Q \cite{Burnham2002}. The first part of deriving the cost is then to introduce an approximation of the evidence. 
+\noindent In the context of the VAE, the KL-divergence is a measure of the quality of a model P approximating the true measure Q \cite{Burnham2002}. The first part of deriving the cost is then to introduce an approximation of the evidence. 
 
-We introduce the evidence lower bound (ELBO) as an approximation to the evidence following the derivation laid out by \cite{Kingma2013}. The EBLO function is defined as 
+We introduce the evidence lower bound (ELBO) as an approximation to the evidence following the derivation laid out by \citet{Kingma2013}. The EBLO function is defined as 
 
 \begin{equation}\label{eq:elbo}
 ELBO(q) = \langle \log(p(z, x)) \rangle - \langle \log(q(z|x)) \rangle.
 \end{equation}
 
-\noindent To fit the VAE cost we rewrite the ELBO in terms of the conditional distribution of $x$ given $z$
+\noindent To show that this function approximates the evidence we rewrite the ELBO in terms of the conditional distribution of $x$ given $z$
 
 \begin{align}
 ELBO(q) &= \langle \log(p(z)) \rangle +  \langle \log(p(x|z)) \rangle - \langle \log(q(z|x)) \rangle, \\
-&=   \langle \log(p(x|z)) \rangle - D_{KL}(q(z|x) | p(z))
+&=   \langle \log(p(x|z)) \rangle - D_{KL}(q(z|x) | p(z)).
 \end{align}
 
 \noindent Finally, the ELBO can be written as a lower bound on the evidence using Jensen's inequality (J) for concave functions. Mathematically we express the inequality as 
@@ -104,10 +110,10 @@ f(\langle x\rangle) \geq \langle f(x) \rangle.
 & = log \langle p(x|z) p(z)/ \psi (z|x) \rangle, \\
 &  \stackrel{\mathclap{\text{(J)}}}{\geq} \langle \log (p(x|z) p(z)/ \psi(z|x))\rangle,\\
 & = \langle \log(p(x|z))\rangle + \langle \log(p(z))\rangle  - \langle \log(\psi (z|x))\rangle, \\
-\log (p (x)) &\geq \langle \log(p(x|z))\rangle - D_{KL}(\psi (z|x) || p(z)).
+\log (p (x)) &\geq \langle \log(p(x|z))\rangle - D_{KL}(\psi (z|x) || p(z)),
 \end{align}
 
-\noindent Showing that the ELBO is indeed a lower bound on the log evidence. 
+\noindent where we inserted $\psi$ to denote the encoder model. We have now shown that the ELBO is indeed a lower bound on the log evidence. 
 
  We can then move on to the VAE cost. We begin by defining $q(z|x)$ to be the posterior distribution over the latent variable $z \in \mathcal{Z}$, conditional on our data $x \in \mathcal{X}$ with evidence $p(x)$ and latent prior $q(z)$, with an associated probability measure $Q$ as per our notation above. Let then the parametrized distribution over the latent space enacted by the encoder be given as $\psi(z|x)$, and an associated probability measure $\Psi$. The quality of our encoder can then be decomposed as 
 
@@ -121,7 +127,7 @@ D_{KL}(\Psi || Q ) &= \langle \log \left(\frac{\psi(z|x)}{q(z|x)}\right) \rangle
 \begin{align}
 D_{KL}(\Psi || Q ) &=  \langle \log \left( \psi(z|x)\right)  - \log \left( \phi( x | z) q(z) \right) + \log (q(x))\rangle_z, 
 \end{align}
-\noindent We identify that the evidence can be taken outside the expectation. Re-arranging the terms separates the model from the optimization targets 
+\noindent where we identify that the evidence can be taken outside the expectation. Re-arranging the terms separates the model from the optimization targets 
 
 \begin{align}
 D_{KL}(\Psi || Q ) - \log q(x) &=  \langle \log \psi(z|x) - \log q(z) - \log \left( \phi( x | z)\right) \rangle_z, 
@@ -133,7 +139,7 @@ D_{KL}(\Psi || Q ) - \log q(x) &=  \langle \log \psi(z|x) - \log q(z) - \log \le
 \log(p(x)) - D_{KL}(\Psi || Q )=  \langle \log \left( \phi( x | z)\right) \rangle_z - D_{KL}(\psi(z|x)|| q(z)).
 \end{equation}
  
-\noindent We are still bound by the intractable integral defining the evidence $p(x) = \int_z p(x, z)$ which is the same integral as in the denominator in equation \ref{eq:bayes}. This problem is solved by recognizing that the right-hand side is the ELBO and so we conclude that the VAE fits on the lower bound of the evidence.
+\noindent We are still bound by the intractable integral defining the evidence $q(x) = \int_z q(x, z)$ which is the same integral as in the denominator in equation \ref{eq:bayes}. We solve this problem by recognizing that the right-hand side is the ELBO and so we conclude that the VAE fits on the lower bound of the evidence.
 
 \citet{Kingma2013} showed that this variational lower bound on the marginal likelihood of our data is feasibly approximated with a neural network when trained with backpropagation and gradient descent methods. That is, we estimate the derivative of the ELBO with respect to the neural network parameters, as described by the backpropagation algorithm in section \ref{sec:backpropagation} and iteratively improve the neural network with a gradient descent algorithm.
 
@@ -174,14 +180,14 @@ D_{KL}(q||p) = \frac{1}{2} \sum_i -\log \sigma_i^2 - 1 + \sigma^2_i + \mu_i^2 .
 
 \noindent where $\epsilon$ is a stochastic vector drawn from $\mathcal{N}(\boldsymbol{0}, \boldsymbol{1})$. A schematic of a VAE model is shown in figure \ref{fig:var_autoencoder}.
 
-An important feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. This was the point of contention in the paper by \citet{Zhao}. In the paper, the authors propose alternate measures for regularizing the latent space. The intuitive alternative to a point-wise measurement is comparing the moments of the distribution and minimize their difference. 
+An essential feature of the Kullback-Leibler divergence is that it operates point-wise on the probability densities. This aspect was the point of contention in the paper by \citet{Zhao}. In the paper, the authors propose alternate measures for regularizing the latent space. They argue that the KL-divergence is problematic where the probability of the target distribution is close to zero. As a remedy, the authors propose to compare the moments of the distribution and minimize their difference. 
 
 
 \begin{figure}[tb]
-	\centering
-	\includegraphics[width=\textwidth]{plots/variational_autoenc.pdf}
-	\caption[Variational autoencoder schematic]{Schematic of a variational autoencoder model. A sample $\hat{\boldsymbol{x}}$ is compressed to a lower-dimensional representation $\boldsymbol{z}$, which is parametrized by a mean vector, $\boldsymbol{\mu}$, and a variance vector $\boldsymbol{\sigma}^2$. Subsequently, we reconstruct the original input with the decoder.}
-	\label{fig:var_autoencoder}
+    \centering
+    \includegraphics[width=\textwidth]{plots/variational_autoenc.pdf}
+    \caption[Variational autoencoder schematic]{Schematic of a variational autoencoder model. A sample $\hat{\boldsymbol{x}}$ is compressed to a lower-dimensional representation $\boldsymbol{z}$, which is parametrized by a mean vector, $\boldsymbol{\mu}$, and a variance vector $\boldsymbol{\sigma}^2$. Subsequently, we reconstruct the original input with the decoder.}
+    \label{fig:var_autoencoder}
 \end{figure}
 
 
