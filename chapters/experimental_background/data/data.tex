@@ -1,6 +1,6 @@
 \section{Data}\label{sec:data}
 
-In this thesis, we will work with data from the ${}^{46}Ar(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. We principally work with two different data sources: data from AT-TPC simulation tools, and data recorded in the AT-TPC experiment proper. The experimental data were recorded from a single run of the experiment, which yields on the order of $\sim 10^4$ events.    For the simulated data, we construct two datasets on the order of $\sim10^3$ and $\sim10^4$ events, respectively. In this section we give a brief overview of the data, for a more in-depth consideration we refer to \cite{Mittig2015}, \cite{Suzuki2012} and  \cite{Bradt2017a}. 
+In this thesis, we will work with data from the ${}^{46}$Ar$(p, p')$ experiment conducted at the national superconducting cyclotron laboratory (NSCL) located on the Michigan state university campus. We principally work with two different data sources: data from AT-TPC simulation tools, and data recorded in the AT-TPC experiment proper. The experimental data were recorded from a single run of the experiment, which yields on the order of $10^4$ events. For the simulated data, we construct two datasets on the order of $10^3$ and $10^4$ events, respectively. In this section we give a brief overview of the data, for a more in-depth consideration we refer to \cite{Mittig2015}, \cite{Suzuki2012} and  \cite{Bradt2017a}. 
 
 In this thesis we will explore the machine learning algorithms described in chapters \ref{ch:ml} and \ref{ch:autoencoder} on three datasets from the AT-TPC, listed in table \ref{tab:datasets}. The simulated data will serve as a baseline for performance, while the filtered and full data are real records from the ${}^{46}$Ar experiment. Each of these datasets have different distributions of the constituent classes, which we list in table \ref{tab:class_distr}. The filtered data differs from the full dataset as it has some post-processing applied to remove noise, which is not the case for the full data. The details of the post-processing are given in later sections. First, we consider the pipeline from raw data to images that the algorithms described in chapter \ref{ch:autoencoder} can process. 
 
@@ -17,7 +17,6 @@ labelled & $2400$ & $1774$ &  $1582$ \\
 \end{tabular}
 \end{table}
 
-
 \begin{table}
 \centering
 \caption{Event class percentages for each of the datasets used in the analysis conducted in this thesis. The decrease in the "other" class of events from full to filtered data owes to the thresholding of events. If an event contains fewer than $20$ data-points it is discarded}\label{tab:class_distr}
@@ -31,7 +30,6 @@ $\%$ Other & $0$ & $62.8$ & $60.1$ \\
 \end{tabular}
 \end{table}
 
-
 \subsection{Data processing}
 
 Our data processing pipeline begins with localized point-cloud data in the two-dimensional detector coordinate system, with one time dimension and a corresponding charge measurement. The charge and time measurement are extracted as the peak of this signal over the event, resulting in a maximum of one measurement per pad in the sensor plane. The events range from fairly sparse $< 10^2$ records to being very populated, depending on where in the volume the reaction occurs as well as other noise-generating factors. We centre the charge data to values $>1$ by adding the lowest occurring record in the run and apply a log-transform to get values in $\R^+$. Subsequently, we scale by the maximum value in the run to get charge data in the interval $[0, 1]$. Lastly, the transformed charge data is saved in a two-dimensional $128px\, \times \,128px$ array using the \lstinline{matplotlib} package provided in the \lstinline{Python} programing language \cite{matplotlib}. The choice of scaling was made to accommodate a binary cross-entropy loss on a 2D projection, as it presumes the true values to be bounded as probabilities.
@@ -40,7 +38,7 @@ We will begin by considering the simulated events, followed by subsequent consid
 
 \subsection{Simulated \texorpdfstring{${}^{46}$Ar}{46Ar}  events}\label{sec:data_sim}
 
-The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package developed by \citet{Bradt2017a}. Using the same parameters as for the $Ar^{46}(p, p)$ experiment, a small set of $N=4000$ events were generated per class, as well as a larger set of $N=40000$ events per class. The events are generated as point-clouds, consisting of position data on the x-y plane, a time-stamp and an associated charge value. These point-clouds are transformed into pure x-y projections with charge intensity for the analysis in this thesis using the pipeline described in the previous section. 
+The simulated AT-TPC tracks were simulated with the \lstinline{pytpc} package developed by \citet{Bradt2017a}. Using the same parameters as for the ${}^{46}$Ar$(p, p)$ experiment, a small set of $N=4000$ events were generated per class, as well as a larger set of $N=40000$ events per class. The events are generated as point-clouds, consisting of position data on the x-y plane, a time-stamp and an associated charge value. These point-clouds are transformed into pure x-y projections with charge intensity for the analysis in this thesis using the pipeline described in the previous section. 
 
 More formally the events are originally composed of peak-only 4-tuples of $e_i = (x_i, y_i, t_i, c_i)$. The peak-only designation indicates that we use the recorded peak amplitude on each pad, the tuples then correspond to pads that recorded a signal for that event. Each event is then a set of these four-tuples: $\epsilon_j = \{e_i\}$ creating a track in three-dimensional space. 
 
