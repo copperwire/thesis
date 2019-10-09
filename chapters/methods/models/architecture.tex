@@ -6,7 +6,7 @@ The architecture is straightforward, and consists of a model class \lstinline{La
 
 Throughout the thesis we follow the convention that classes are named in the \lstinline{CamelCase} style, and functions and methods of classes in the \lstinline{snake_case} style. 
 
-The subclasses of \lstinline{LatentModel} implement two main functions: \lstinline{compute_gradients}, and \lstinline{compile_model}, which call the model specific functions that constructs the computational graph, and subsequently computes the gradients. The gradient computation is done through a TensorFlow \lstinline{optimizer} class, which defines the operations needed to update the weights. 
+The subclasses of \lstinline{LatentModel} implement two main functions: \lstinline{compute_gradients}, and \lstinline{compile_model}, which call the model specific functions that constructs the computational graph, and subsequently computes the gradients. The gradient computation is done through a TensorFlow \lstinline{optimizer} class. This class defines the operations needed to update the weights. 
 
 The \lstinline{LatentModel} class contains the framework and functions used for common training operations. In the initialization it iterates through a configuration dictionary, which defines class variables pertinent to the current experiment. The configuration explicitly defines the type of latent loss (discussed in section \ref{sec:latent}) to be used for the experiment, as well as whether to use the DCEC clustering loss, batch-normalization or if the model should restore the weights from a previous run. These are saved in the model state and referenced at key junctions.
 

@@ -5,6 +5,6 @@ To tune the hyperparameters of the sequential and non-sequential autoencoders, w
 
 A parent class, \lstinline{ModelGenerator}, defines the variables and the type of model to be generated, e.g. one of \lstinline{ConVAE} or \lstinline{DRAW}, as well as helper functions to log performance metrics and loss values. The \lstinline{ModelGenerator} class is treated as an abstract class and should never be instantiated on its own, only through its children. We have implemented one subclass of  \lstinline{ModelGenerator} for  \lstinline{ConVAE} and \lstinline{DRAW} model classes for this purpose. 
 
-We implement a simple random-search algorithm for applications in this thesis. The search is conducted with the \lstinline{RandomSearch} class, which administrates the search, saves the results to file and handles untoward errors. 
+We implement a simple random-search algorithm for applications in this thesis. The search is conducted with the \lstinline{RandomSearch} class, which administrates the search, saves the results to disk and handles untoward errors. 
 
 Searching can be done with a select sub-set of variables by specifying the \lstinline{static} flag to the model-creator. This flag locks some parameters to pre-selected values and searches over the others. For the convolutional autoencoder the \lstinline{static} flag holds the convolutional architecture, i.e. kernel sizes stride size and number of layers constant. Other flags are \lstinline{ours} for a very wide search and \lstinline{vgg} for a VGG16 like architecture.

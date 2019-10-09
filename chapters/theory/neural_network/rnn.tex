@@ -2,7 +2,7 @@
 
 \section{Recurrent Neural Networks}\label{sec:rnn}
 
-The recurrent neural network (RNN) models a unit that has "memory". The memory is encoded as a state variable, which is ordinarily concatenated with the input to make a prediction. The model predictions typically enact a sequence which has led to applications text generation, time-series predictions, and other serialized applications. RNNs were first discussed in a theoretical paper by Jordan, MI in 86' but implemented in the modern temporal sense by \citet{Pearlmutter1989}. A simple graphical representation of the RNN cell is presented in figure \ref{fig:rnn}
+The recurrent neural network (RNN) models a unit that has "memory". The memory is encoded as a state variable, and is ordinarily concatenated with the input to make a prediction. The model predictions typically enact a sequence which has led to applications text generation, time-series predictions, and other serialized applications. RNNs were first discussed in a theoretical paper by Jordan, MI in 86' but implemented in the modern temporal sense by \citet{Pearlmutter1989}. A simple graphical representation of the RNN cell is presented in figure \ref{fig:rnn}
 
 \begin{figure}[h]
 \centering
@@ -58,6 +58,6 @@ The LSTM network implements a series of layers inside each cell. By combining si
 \boldsymbol{h}_t &= \boldsymbol{o}_t \circ \tau (\boldsymbol{c}_t).
 \end{align}
 
-\noindent Recall the Hadamard product denoted by $\circ$, and the concatenation of two vectors denoted by square brackets. In the equations above, we have also followed the convention of including a column of ones in the data. This inclusion bakes the biases into the weight matrices, which is convenient for notational clarity. 
+\noindent Recall the Hadamard product denoted by $\circ$, and the concatenation of two vectors denoted by square brackets. In the equations above, we have also followed the convention of including a column of ones in the data. This inclusion bakes the biases into the weight matrices, and is convenient for notational clarity. 
 
 The LSTM network was designed to allow for the network to forget parts of the input. However, it also solves a vanishing gradient problem as the gradient flows through the network by the cell outputs.

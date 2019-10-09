@@ -134,7 +134,7 @@ elif reconst_loss == "mse":
 \end{minipage}
 
 
-Depending on the configuration, the model then compiles a loss over the latent space. In a variational autoencoder, the loss is a  Kullback-Leibler divergence (KL-divergence) of the latent distribution with a multivariate normal distribution with zero mean and unit variance. This has a closed-form solution given a tensor representing the mean and standard deviation, which we derived in equation \ref{eq:kl_opt}. This equation is relatively straightforward to implement, as it just implies a sum over the mean and log-variance tensor. The form of equation \ref{eq:kl_opt} also makes clear why we parametrize the log-variance and not the variance directly as the exponentiation ensures positivity of the variance.
+Depending on the configuration, the model then compiles a loss over the latent space. In a variational autoencoder, the loss is a  Kullback-Leibler divergence (KL-divergence) of the latent distribution with a multivariate normal distribution with zero mean and unit variance. This has a closed-form solution given a tensor representing the mean and standard deviation. We derive this equation in section \ref{sec:vae_opt}. This equation is relatively straightforward to implement, as it just implies a sum over the mean and log-variance tensor. The form of equation \ref{eq:kl_opt} also makes clear why we parametrize the log-variance and not the variance directly as the exponentiation ensures positivity of the variance.
 
 
 \begin{minipage}{\linewidth}
@@ -226,7 +226,7 @@ model = ConVae(
 \end{minipage}
 
 
-\noindent When the model is defined two steps have to be completed before we train it. Firstly model has to be compiled, which constructs the forward pass and computes the select losses over the outputs from the forward pass. Secondly the gradient-graph has to be computed, as it defines the iterative step for the optimization. For the former the model accepts two dictionaries that specify details of the forward pass; a dictionary \lstinline{graph_kwds} which specifies the activation function and a dictionary \lstinline{loss_kwds} regularization and the type of loss on the reconstruction, be it cross entropy or mean squared error. When the model is compiled it will print to the console a table of its configuration allowing the researcher to confirm that the model is specified correctly. This print is omitted for brevity but can be found in the notebook.
+\noindent When the model is defined two steps have to be completed before we train it. Firstly model has to be compiled. The compilation constructs the forward pass and computes the select losses over the outputs from the forward pass. Secondly the gradient-graph has to be computed, as it defines the iterative step for the optimization. For the former the model accepts two dictionaries that specify details of the forward pass; a dictionary \lstinline{graph_kwds} which specifies the activation function and a dictionary \lstinline{loss_kwds} regularization and the type of loss on the reconstruction, be it cross entropy or mean squared error. When the model is compiled it will print to the console a table of its configuration allowing the researcher to confirm that the model is specified correctly. This print is omitted for brevity but can be found in the notebook.
 
 
 \begin{minipage}{\linewidth}
