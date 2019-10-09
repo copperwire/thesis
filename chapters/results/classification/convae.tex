@@ -13,7 +13,7 @@ To aid in the understanding of the choice of architecture, we compare the optima
 \begin{table}[ht]
 \renewcommand*{\arraystretch}{0.7}
 \centering
-\caption{Hyperparameters that gives the strongest classifier performance on the three simulated, filtered and full datasets.}\label{tab:best_params_clf_convae}
+\caption{Hyperparameters that gives the strongest classifier performance on the three simulated, filtered and full datasets. Note that the two orders of magnitude difference in $\beta$ just stem from a change in cost function.}\label{tab:best_params_clf_convae}
 \setlength{\extrarowheight}{15pt}
 \hspace*{-0.5in}
 \begin{tabular}{llll}
@@ -33,7 +33,7 @@ Filters & $[2, 16, 64]$ & $[8, 4, 16, 16, 16, 16]$ & $[16, 16, 16, 16, 32, 32]$ 
 Activation & ReLU & LeakyReLU & LeakyReLU \\
 Latent type & MMD & MMD & None \\
 Latent dimension & $150$ & $50$ & $100$ \\
-$\beta$ & \num{0.01} & $100$ & $ 100$  \\
+$\beta$ & \num{0.01} & $100$ & $ N/A $  \\
 \midrule
 \multicolumn{4}{l}{Optimizer parameters: } \\
 \midrule
@@ -91,7 +91,7 @@ Lastly, for the architecture we project the latent space for comparison with the
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth, height=7cm]{plots/vgg_ac_tsne.pdf}
-\caption[VGG16-autoencoder latent space visualization]{Visualizing the latent space of an \ref{item:clf_freeze_vgg} trained autoencoder. The mapping is a t-SNE projection of the latent space to two dimensions.}\label{fig:ac_tnse}
+\caption[VGG16-autoencoder latent space visualization]{Visualizing the latent space of an \ref{item:clf_freeze_vgg} trained autoencoder. The mapping is a t-SNE projection of the latent space to two dimensions.}\label{fig:vgg_ac_tnse}
 \end{figure}
 
 \noindent In addition to the architectures explored above, we investigate the effect of adding a duelling decoder to the objective. We provided two distinct auxiliary representations to reconstruct, grounded in the physics of the experiment. The chosen representations were the charge distribution heuristically chosen to be at the high end of the distribution and the net charge deposited during the event. We perform the analysis on the full events and use their original representation. 

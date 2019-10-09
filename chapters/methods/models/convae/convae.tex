@@ -13,7 +13,7 @@ The encoder is constructed with a for loop over the number of layers, using a 2D
 
 \begin{lstlisting}[language=iPython]
 # excerpt from convolutional_VAE.py
-# at https://github.com/ATTPC/VAE-event-classification
+# at https://GitHub.com/ATTPC/VAE-event-classification
 # from commit ca9b722
 kernel_reg=reg.l2
 kernel_reg_strength=0.01
@@ -116,7 +116,7 @@ The reconstruction loss is specified in the configuration dictionary, and the mo
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
 # excerpt from convolutional_VAE.py
-# at https://github.com/ATTPC/VAE-event-classification
+# at https://GitHub.com/ATTPC/VAE-event-classification
 # from commit ca9b722
 x_recons = self.output
 if self.use_vgg:
@@ -155,9 +155,9 @@ Alternatively to a KL-divergence the latent space may be regularized in the styl
 
 \subsection{Applying the framework}
 
-To illustrate the use and functionality of the model we'll demonstrate the pipeline for constructing a semi-supervised and clustering version of the architecture using the code written for this thesis. Beginning with the semi-supervised use-case. These tutorials are also available in the Github repository for the thesis. They are provided as \lstinline{jupyter-notebooks} and can be viewed in browser, or hosted locally. The example takes the reader through the entirety of the analysis pipeline as presented in chapter \ref{ch:architectures} and shows how the model was fit to data as well as post-analysis steps. 
+To illustrate the use and functionality of the model we'll demonstrate the pipeline for constructing a semi-supervised and clustering version of the architecture using the code written for this thesis. Beginning with the semi-supervised use-case. These tutorials are also available in the GitHub repository for the thesis. They are provided as \lstinline{jupyter-notebooks} and can be viewed in browser, or hosted locally. The example takes the reader through the entirety of the analysis pipeline as presented in chapter \ref{ch:architectures} and shows how the model was fit to data as well as post-analysis steps. 
 
-The goal of this example is to introduce the reader to the analysis framework used in this thesis. We will go through defining a model with convolutional parameters and fit this model to simulated AT-TPC events. With a 2D latent space this allows us to explore the latent configuration directly, but yields worse reconstructions. The \href{https://github.com/ATTPC/VAE-event-classification/blob/master/notebooks/simulated_tutorial.ipynb}{notebook-tutorial} walks through the example and is entirely analogous to this section.
+The goal of this example is to introduce the reader to the analysis framework used in this thesis. We will go through defining a model with convolutional parameters and fit this model to simulated AT-TPC events. With a 2D latent space this allows us to explore the latent configuration directly, but yields worse reconstructions. The \href{https://GitHub.com/ATTPC/VAE-event-classification/blob/master/notebooks/simulated_tutorial.ipynb}{notebook-tutorial} walks through the example and is entirely analogous to this section.
 
 We begin by loading the data files. The repository comes equipped with a small data-set of simulated data that can be analyzed. To achieve reasonable run-times a GPU enabled TensorFlow distribution is encouraged\footnote{If the run-time is too slow the data can be replaced with the MNIST data, which is much smaller in terms of size per data-point}. We assume that the script as we walk through it is located in the \lstinline{notebooks/} directory of the repository. We begin by making the necessary imports for the analysis. The packages \lstinline{TensorFlow} and \lstinline{matplotlib} have to be installed on the system for the tools to work, along with \lstinline{Numpy} and \lstinline{pandas}. The \lstinline{data_loader} module contains functions to load files to \lstinline{numpy} arrays, while the module \lstinline{convolutional_VAE} contains the model class itself.
 
@@ -296,7 +296,7 @@ plt.show()
 \end{lstlisting}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth, height=8cm]{reconst_sim_events.pdf}
+\includegraphics[width=0.8\textwidth]{reconst_sim_events.pdf}
 \caption[Simulated events and reconstructions]{Showing four events and their corresponding reconstructions. The reconstructions faithfully reconstruct the artifacts from the simulation procedure but has a fuzzy quality common to the ELBO approximation.}\label{fig:reconst_sim}
 \end{figure}
 \end{minipage}

@@ -26,12 +26,8 @@ For the algorithms implemented in this thesis, we set up the computational graph
 
 To accommodate different gradient descent schemes, TensorFlow wraps the computation of gradients in optimizer modules. Defined in \lstinline{tf.train} these include stochastic gradient descent and ADAM, which we discuss in section \ref{sec:gd}. In this thesis, we will largely be using the ADAM optimizer.
 
-We outline a basic TensorFlow script in \ref{code:tf_script} that goes through the basic steps outlined above.
+We outline a basic TensorFlow script that goes through the basic steps outlined above. In the script we use the \lstinline{tf.train} module to compute the gradients needed to perform backpropagation of errors on the cost function assigned to the variable \lstinline{C}. Additionally we show the structure of a session and its run method to perform a backwards pass with respect to the loss \lstinline{C}:
 
-\begin{figure}
-\centering 
-\begin{minipage}[c]{\linewidth}
+\begin{minipage}{\linewidth}
 \lstinputlisting[language=iPython]{../snippets/tf_script.py}
 \end{minipage}
-\caption[Computing gradients and performing back-propagation in TensorFlow]{A TensorFlow script that uses the \lstinline{tf.train} module to compute the gradients needed to perform backpropagation of errors on the cost function assigned to the variable \lstinline{C}. Additionally we show the structure of a session and it's run method to perform a backwards pass with respect to the loss \lstinline{C}}\label{code:tf_script}
-\end{figure}
