@@ -6,7 +6,7 @@ As introduced in section \ref{sec:vae} the latent space of an autoencoder can be
 D_{MMD} = \langle k(z, z')\rangle_{p(z), p(z')} - 2 \langle k(z, z')\rangle_{q(z), p(z')} + \langle k(z, z')\rangle_{q(z), q(z')}.
 \end{equation}
 
-\noindent Which does not have a convenient closed form like the the Kullback-Leibler divergence and so adds some computational complexity. In this thesis we use mixture of Gaussian distributions of the prior $p(z)$ to encourage class separability in the latent space.
+\noindent Which does not have a convenient closed form like the the Kullback-Leibler divergence and so adds some computational complexity. In this thesis we use a mixture of Gaussian distributions of the prior $p(z)$ to encourage class separability in the latent space.
 
 Recent research by \citet{Seybold2019}, amongst others, points to the challenge of the model collapsing to an autodecoder. In other words a sufficiently complex decoder can learn to reconstruct the sample independent of the latent sample \cite{Seybold2019}. To combat this problem they introduce a change in the optimization objective by adding a second decoder term to the optimization task
 

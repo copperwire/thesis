@@ -1,8 +1,8 @@
 \section{Gradient Descent}\label{sec:gd}
 
-The process of finding minima or maxima of a function is well-trodden ground for physicists. These points along a function are collectively known as extrema, and with Newton and Leibniz's formulation of calculus, we were given analytical procedures for finding extrema by the derivative of functions. The power of these methods is demonstrated by the sheer volume of problems we cast as minimization or maximization objectives. From first-year calculus, we know that a function has an extremum where the derivative is equal to zero. Moreover, for many functions and functionals this has a closed-form solution. For functionals of complicated functions this becomes impractical or impossible. 
+The process of finding minima or maxima of a function is well-trodden ground for physicists. A function may have many valleys and hills in the function space, the bottoms and tops of which are minima and maxima of the function. We collectively call these tops and bottoms extrema and with Newton and Leibniz's formulation of calculus, we were given analytical procedures for finding extrema by the derivative of functions. The power of these methods is demonstrated by the sheer volume of problems we cast as minimization or maximization objectives. From first-year calculus, we know that a function has an extremum where the derivative is equal to zero. Moreover, for many functions and functionals, this has a closed-form solution. For functionals of complicated functions, this becomes impractical or impossible. 
 
-We showed in section \ref{sec:LogReg} that even a relatively simple model like logistic regression is transcendental in the first derivative of the cost. For both too-complex or analytically unsolvable first derivatives, we then turn to iterative methods of the gradient. In this thesis, we will restrict discussions to gradient descent, which is an iterative method of the first order for used for finding function minima. All the optimization problems are thus cast as minimization problems to fit in this framework. We begin by considering the simplest form of gradient descent of a function, $f$, of many variables $\boldsymbol{x}$ and a weighting term for the update, $\eta$
+We showed in section \ref{sec:LogReg} that even a relatively simple model like logistic regression is transcendental in the first derivative of the cost. For both too-complex or analytically unsolvable first derivatives, we then turn to iterative methods of the gradient. In this thesis, we will restrict discussions to gradient descent, which is an iterative method of the first order used for finding function minima. All the optimization problems are thus cast as minimization problems to fit in this framework. We begin by considering the simplest form of gradient descent of a function, $f$, of many variables $\boldsymbol{x}$ and a weighting term for the update, $\eta$
 
 \begin{equation}\label{eq:gd}
 \boldsymbol{x}_{n+1} = \boldsymbol{x}_{n} - \eta \nabla_{\boldsymbol{x}} f(\boldsymbol{x}_{n}). 
@@ -96,7 +96,7 @@ Batches larger than one are usually employed when the computational cost of SGD 
 \end{figure}
 
 \subsection{adam}\label{sec:adam}
-One of the breakthroughs in modern machine learning is the improvements made to gradient descent from the most simple version introduced in equation \ref{eq:gd} to the adam paradigm introduced by \citet{Kingma2015}. Since its conception adam has become the de facto solver for many ML applications. Conceptually, adam ties together stochastic optimization in the form of batched data, momentum, and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, of the magnitude of the derivative, or both. Adding to the momentum part adam maintains an exponentially decaying average over the previous first and second moments of the derivative. Physically this is akin to maintaining velocity and momentum for an inertial system. Mathematically we describe these decaying moments as functions of the first and second  moments of the gradient 
+One of the breakthroughs in modern machine learning is the improvements made to gradient descent from the most simple version introduced in equation \ref{eq:gd} to the \textit{adam} paradigm introduced by \citet{Kingma2015}. Since its conception \textit{adam} has become the de facto solver for many ML applications. Conceptually, \textit{adam} ties together stochastic optimization in the form of batched data, momentum, and adaptive learning rates. The latter of which involves changing the learning rate as some function of the epoch, of the magnitude of the derivative, or both. Adding to the momentum part \textit{adam} maintains an exponentially decaying average over the previous first and second moments of the derivative. Physically this is akin to maintaining velocity and momentum for an inertial system. Mathematically we describe these decaying moments as functions of the first and second  moments of the gradient 
 
 \begin{align}
 m_t &= \beta_1 m_{t-1} +(1-\beta_1)\nabla f(\boldsymbol{x}_{t, i}), \\
@@ -117,18 +117,18 @@ v_t &= \beta_2 v_{t-1} +(1-\beta_2)\nabla f(\boldsymbol{x}_{t, i})^2.
 
 \noindent The authors provide suggested values for $\beta_1 =0.9 $, $\beta_2 =0.999$ and $\epsilon = \num{1e-8}$. They also recommend that one constricts the values for such that $\beta_2 > \beta_1$. 
 
-To summarize, we consider the hyperparameters required for the usage of adam. Both $\beta_1$ and $\beta_2$ are in principle needed to be tuned, but we restrict the tuning to $\beta_1$ in this thesis and freeze the value of $\beta_2$ to retain some semblance manageability in the hyperparameter space. The parameters and their scales are listed for convenience in table \ref{tab:adam}.
+To summarize, we consider the hyperparameters required for the usage of \textit{adam}. Both $\beta_1$ and $\beta_2$ are in principle needed to be tuned, but we restrict the tuning to $\beta_1$ in this thesis and freeze the value of $\beta_2$ to retain some semblance manageability in the hyperparameter space. The parameters and their scales are listed for convenience in table \ref{tab:adam}.
 
 \begin{table}
 \begin{tabular}{cccl}
 \toprule
 Name &Default value & Scale  & Description\\
 \midrule
-$\beta_1$  & $0.9$ & Gaussian normal & \makecell[l]{Exponential decay rate of the fist moment \\ of the gradient}\\
-$\beta_2$  & $0.999$ & Gaussian normal & \makecell[l]{Exponential decay rate of the second moment \\ of the gradient}\\
-$\eta$  & $10^{-3}$ & Linear & Weight of the momentum update \\
+$\beta_1$  & $0.9$ & Gaussian normal & \makecell[l]{Exponential decay rate of \\ the first moment of the \\ gradient}\\
+$\beta_2$  & $0.999$ & Gaussian normal & \makecell[l]{Exponential decay rate of \\ the second moment of the \\ gradient}\\
+$\eta$  & $10^{-3}$ & Linear & \makecell[l]{Weight of the momentum \\update} \\
 \bottomrule
 \end{tabular}
-\caption{Hyperparameter table for adam. These parameters have to be tuned without gradient information, we discuss ways to achieve this in section \ref{sec:hyperparams}}\label{tab:adam}
+\caption{Hyperparameter table for \textit{adam}. These parameters have to be tuned without gradient information, we discuss ways to achieve this in section \ref{sec:hyperparams}}\label{tab:adam}
 \end{table}
 

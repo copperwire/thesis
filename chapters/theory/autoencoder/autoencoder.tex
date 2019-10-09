@@ -52,7 +52,7 @@ In section \ref{sec:intro_autoenc} we introduced the structure of the autoencode
 
 We begin by considering the family of problems encountered in variational inference, where the VAE takes its theoretical inspiration. Specifically, we will derive the VAE  as a solution to a Bayesian variational inference problem. Bayesian inference is a framework for linking some observed values $x$ to some hypothesized latent variable $z$. 
 
-This family of techniques all begin with a consideration of the problem from Bayes' theorem. This theorem relates the probability of seeing our model given our data, $p(z|x)$ to the odds ratio of seeing our model $p(x|z)p(z)$ to the evidence $p(x)$. Bayes' rule is expressed mathematically as 
+This family of techniques all begin with a consideration of the problem from Baye's theorem. This theorem relates the probability of seeing our model given our data, $p(z|x)$ to the odds ratio of seeing our model $p(x|z)p(z)$ to the evidence $p(x)$. Baye's rule is expressed mathematically as 
 
  \begin{equation}\label{eq:bayes}
  p(z| x) = \frac{p(x|z) p(z)}{p(x)}.
@@ -72,9 +72,9 @@ p(x) = \int_z p(x|z)p(z).
 
 \noindent The integral in the denominator of equation \ref{eq:bayes} is intractable for most interesting problems, as the space over $z$ is usually combinatorially large. 
 
-Another standard tool for solving this problem is Markov chain Monte Carlo (MCMC) methods. In physics, this family of algorithms has been applied to solve many-body problems in quantum mechanics primarily by gradient descent on variational parameters \cite{Hjorth-Jensen}.
+Another standard tool for solving this problem is Markov chain Monte Carlo (MCMC) methods. In physics, this family of algorithms has for example been applied to solve many-body problems in quantum mechanics primarily by gradient descent on variational parameters \cite{Hjorth-Jensen}.
 
-We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive an approximation to the evidence, we begin by introducing the KL-divergence. This function is a measure of how much two distributions are alike \cite{Kullback1951}. We define the KL-divergence from a probability measure P to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$ as
+We can then summarize variational Bayesian methods as being techniques for estimating computationally intractable integrals as the one expressed in \ref{eq:evidence}. To derive an approximation to the evidence, we begin by introducing the Kullback-Leibler (KL) divergence. This function is a measure of how much two distributions are alike \cite{Kullback1951}. We define the KL-divergence from a probability measure P to another Q, by their probability density functions p, q over the set $x \in \mathcal{X}$ as
 
 \begin{align}\label{eq:kl}
 D_{KL} (P || Q) &= - \int^{\infty}_{-\infty} p(x) \log \left(\frac{p(x)}{q(x)}\right) dx, \\
@@ -122,7 +122,7 @@ D_{KL}(\Psi || Q ) &= \langle \log \left(\frac{\psi(z|x)}{q(z|x)}\right) \rangle
 &= \langle \log \left(\psi(z|x)- \log q(z|x)\right) \rangle_z.
 \end{align}
 
-\noindent From Bayes' rule, we can re-state the posterior by introducing the decoder $\phi(x|z)$. Continuing the derivation we then have 
+\noindent From Baye's rule, we can re-state the posterior by introducing the decoder $\phi(x|z)$. Continuing the derivation we then have 
 
 \begin{align}
 D_{KL}(\Psi || Q ) &=  \langle \log \left( \psi(z|x)\right)  - \log \left( \phi( x | z) q(z) \right) + \log (q(x))\rangle_z, 
@@ -148,7 +148,7 @@ D_{KL}(\Psi || Q ) - \log q(x) &=  \langle \log \psi(z|x) - \log q(z) - \log \le
 From equation \ref{eq:vae_cost}, we observe that the optimization is split in two. The first is a reconstruction term that approximates the log evidence, which we can train with a squared error or cross-entropy cost. Secondly, we have a divergence term over the parametrized and theoretical latent distribution. We want to simplify the second to conserve computational resources. Thankfully this is computationally cheap given a specific prior latent distribution. Let the target distribution $p(z | x) $ be a multivariate normal distribution with zero means and a diagonal unit variance matrix, i.e. $p(z | x) \sim  \mathcal{N}(\boldsymbol{0}, \boldsymbol{I})$. And accordingly the neural network approximation then follows $\psi(z | x) \sim \mathcal{N}(\mu, \Sigma)$. The normalized probability density function for the normal Gaussian is defined as 
 
 \begin{equation}
-p(\boldsymbol{x}) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(\boldsymbol{x} - \mathbb{\mu})^T\Sigma^{-1}(\boldsymbol{x}-\mu)),
+p(\boldsymbol{x}) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp(-\frac{1}{2}(\boldsymbol{x} - \mathbf{\mu})^T\Sigma^{-1}(\boldsymbol{x}-\mu)),
 \end{equation}
 
 \noindent and the Kullback-Leibler divergence for two multivariate Gaussians is given by 

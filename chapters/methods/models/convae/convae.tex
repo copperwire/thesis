@@ -226,7 +226,7 @@ model = ConVae(
 \end{minipage}
 
 
-\noindent When the model is defined two steps have to be completed before we train it. Firstly model has to be compiled. The compilation constructs the forward pass and computes the select losses over the outputs from the forward pass. Secondly the gradient-graph has to be computed, as it defines the iterative step for the optimization. For the former the model accepts two dictionaries that specify details of the forward pass; a dictionary \lstinline{graph_kwds} which specifies the activation function and a dictionary \lstinline{loss_kwds} regularization and the type of loss on the reconstruction, be it cross entropy or mean squared error. When the model is compiled it will print to the console a table of its configuration allowing the researcher to confirm that the model is specified correctly. This print is omitted for brevity but can be found in the notebook.
+\noindent When the model is defined two steps have to be completed before we train it. First, the model has to be compiled. The compilation constructs the forward pass and computes the select losses over the outputs from the forward pass. Secondly the gradient-graph has to be computed, as it defines the iterative step for the optimization. For the former the model accepts two dictionaries that specify details of the forward pass; a dictionary \lstinline{graph_kwds} which specifies the activation function and a dictionary \lstinline{loss_kwds} regularization and the type of loss on the reconstruction, be it cross entropy or mean squared error. When the model is compiled it will print to the console a table of its configurations allowing the researcher to confirm that the model is specified correctly. This print is omitted for brevity but can be found in the notebook.
 
 
 \begin{minipage}{\linewidth}
@@ -296,12 +296,12 @@ plt.show()
 \end{lstlisting}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{reconst_sim_events.pdf}
+\includegraphics[width=\textwidth]{reconst_sim_events.pdf}
 \caption[Simulated events and reconstructions]{Showing four events and their corresponding reconstructions. The reconstructions faithfully reconstruct the artifacts from the simulation procedure but has a fuzzy quality common to the ELBO approximation.}\label{fig:reconst_sim}
 \end{figure}
 \end{minipage}
 
-From figure \ref{fig:reconst_sim} we that while the reconstructions are fuzzy they capture the important parts of the input, notably  the curvature of the proton. What remains now is the exploration and fitting of the latent space. We begin by computing the latent representation of the labelled subset of the data. This is done with the \lstinline{run_large} method which does a computation a few elements at a time as the memory requirements of the computations scale very poorly. The method accept an argument for the session with which to run the required output, what output we wish to retrieve and the input needed to compute that output. In this case we wish to compute the latent representation and so our output is \lstinline{mpdel.z_seq[0]}. To preserve homogeneity with the DRAW implementation the latent sample is stored as an iterable. 
+From figure \ref{fig:reconst_sim} we see that while the reconstructions are fuzzy they capture the important parts of the input, notably  the curvature of the proton. What remains now is the exploration and fitting of the latent space. We begin by computing the latent representation of the labelled subset of the data. This is done with the \lstinline{run_large} method which does a computation a few elements at a time as the memory requirements of the computations scale very poorly. The method accepts an argument for the session with which to run the required output, what output we wish to retrieve and the input needed to compute that output. In this case we wish to compute the latent representation and so our output is \lstinline{mpdel.z_seq[0]}. To preserve homogeneity with the DRAW implementation the latent sample is stored as an iterable. 
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=iPython]
@@ -334,9 +334,9 @@ ax.legend(loc="best", fontsize=20)
 \end{lstlisting}
 \end{minipage}
 
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
-\includegraphics[width=0.7\textwidth, height=7cm]{latent_sim.pdf}
+\includegraphics[width=0.95\textwidth, ]{latent_sim.pdf}
 \caption[2D latent space for simulated data]{2D latent space representation of the simulated AT-TPC data.}\label{fig:latent_sim}
 \end{figure}
 

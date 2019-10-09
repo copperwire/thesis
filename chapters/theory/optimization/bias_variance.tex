@@ -8,7 +8,7 @@ E_{out} = \langle C(S, f(\boldsymbol{x}; \theta_{S_t}))\rangle_{S,\, \epsilon} =
 
 \noindent This expectation is rather compact and so before we move on to explaining the bias and variance start by elaborating on $S$ and $\epsilon$. Recall from equation \ref{eq:target} that we decompose the target values as a contribution from a true function $\hat{f}$, and an error term $\epsilon$
 
-\begin{equation}
+\begin{equation}\label{eq:true_model}
 \hat{y}_i = \hat{f}(\boldsymbol{x}_i) + \epsilon.
 \end{equation}
 
@@ -36,6 +36,6 @@ With the derived quantities from appendix \ref{appendix:bias_variance}, and equa
 \caption[Bias-variance decomposition ]{Decomposition of the bias and variance from the overall test-set error $E_{out}$. A set of polynomials of varying degrees are fit to a known function using randomly selected training samples. The polynomial degree is denoted by the x-axis label. With the set of polynomials we evaluate the bias and variance terms shown in equation \ref{eq:bias} and \ref{eq:variance}. In the figure we observe the characteristic relationship where the out of sample error decreases steadily with complexity until the models start to over-fit as measured by the variance, and the $E_{out}$ increases as a consequence.}\label{fig:bv}
 \end{figure}
 
-The bias-variance relationship describes a fundamental challenge in most domains of machine learning; fitting a more complex model requires more data. This relationship has led to an explosion in the acquisition of vast amounts of data in the private sector. We illustrate the bias-variance relationship in figure \ref{fig:bv}, where polynomials of varying degrees are fit to a linear combination of exponential functions. We observe the characteristic tension between bias and variance wherein the out of sample error $E_{out}$ starts out decreasing with complexity but increases exponentially as a threshold is reached. Note also that we illustrate the concept of the irreducible error that for a model class, i.e. polynomials, there is an irreducible error term owing to the contribution from the noise. 
+The bias-variance relationship describes a fundamental challenge in most domains of machine learning; fitting a more complex model requires more data. This relationship has led to an explosion in the acquisition of vast amounts of data in the private sector. We illustrate the bias-variance relationship in figure \ref{fig:bv}, where polynomials of varying degrees are fit to a linear combination of exponential functions. We observe the inherent tension between bias and variance wherein the out of sample error $E_{out}$ starts out decreasing with complexity but increases exponentially as a threshold is reached. Note that the irreducible error is illustrated in the figure by the vertical offset of $E_{out}$ at the minimum.  The noise term in equation \ref{eq:true_model} causes this offset, owing to the stochastic nature of the noise.  
 
  In experimental nuclear physics, we often have an abundance of data. The challenge faced by researchers was centred around the lack of computing power. As such, it was the advent of optimized tools for machine learning that opened the avenue to explore complex models in the analysis of nuclear physics experiments. 

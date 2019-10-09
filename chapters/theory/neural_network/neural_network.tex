@@ -77,7 +77,7 @@ a_j ^{[l]} = f(z_j^{[l]})_D.
 
 We can now turn to the process of optimizing the model. In a neural network the variables that need to be fit are the elements of $\boldsymbol{W}^{[l]}$ that we denote $\wij^{[l]}$, and the biases which we denote with $b_j^{[l]}$. And while one can solve the linear regression optimization problem by matrix inversion, the multi-layer neural net does not have a closed form first derivative for $\wij^{[l]}$ or  $b_j^{[l]}$ because of the non-linearities between each layer. We are then forced to turn to iterative methods of the gradient, which we previously introduced in section \ref{sec:gd}
 
-Based on whether the output is described by real values or a set of probabilities the cost takes on different forms, just as for linear and logistic regression. In the real case we use the now familiar mean squared error (MSE) cost, or in the event that we want to estimate a probability of an outcome; the binary cross-entropy. We discuss these cost-functions in general and especially the MSE and binary cross-entropy (BCE) earlier on in chapter \ref{chap:fundament}. Regardless of the cost the optimization problem is solved by a gradient descent procedure discussed in section \ref{sec:gd}. We we re-introduce the update form for the parameters as 
+Based on whether the output is described by real values or a set of probabilities the cost takes on different forms, just as for linear and logistic regression. In the real case we use the now familiar mean squared error (MSE) cost, or in the event that we want to estimate a probability of an outcome; the binary cross-entropy. We discussed these cost functions in general and especially the MSE and binary cross-entropy (BCE) in chapter \ref{chap:fundament}. Regardless of the chosen cost function the optimization problem is solved by a gradient descent procedure discussed in section \ref{sec:gd}. We we re-introduce the update form for the parameters as 
 
 \begin{equation}\label{eq:nn_gd}
 	\wij^{[l]} \leftarrow \wij^{[l]} -\eta \frac{\partial \mathcal{C}}{\partial \wij^{[l]}} .
@@ -123,7 +123,7 @@ H(x) = f'(x) = 	\begin{cases}1, & \text{if } x > 0 \\
 
 \noindent Common to most neural network activations the computation of the derivative is very light-weight. In the case of the $ReLU$ function the computation of the derivative uses the mask needed to compute the activation itself, requiring no extra computing resources. 
 
-It is important to note that the cost and activation as introduced in equations \ref{eq:tot_err}, \ref{eq:relu} and \ref{eq:heaviside} is not a be-all-end-all solution, but chosen for their ubiquitous nature in modern machine learning.
+It is important to note that the cost and activation functions introduced in equations \ref{eq:tot_err}, \ref{eq:relu} and \ref{eq:heaviside} are not a be-all-end-all solution, but they are chosen for their ubiquitous nature in modern machine learning.
 
 Returning to the optimization problem we start to unravel the backpropagation algorithm. We use equation \ref{eq:err_grad} to find the derivatives in terms of the last parameters, i.e. $\wij^{[n]}$ and $b_j^{[n]}$
 
@@ -227,7 +227,7 @@ When creating a neural network on a computer with finite resources, a principled
 
 \subsection{Activation functions}\label{sec:activation}
 
-Building neural networks depend in large part on the choice of the non-linearity that acts on the output from each layer. They are intrinsically tied to the attributes of the optimization scheme. Gradients have to pass backwards through all the layers to adjust the weights to make better predictions in the next iterations. In this section, we will discuss the attributes, strengths, and weaknesses of the four principal functions used as activations in neural networks. 
+Building neural networks depends in large part on the choice of the non-linearity that acts on the output from each layer. They are intrinsically tied to the attributes of the optimization scheme. Gradients have to pass backwards through all the layers to adjust the weights to make better predictions in the next iterations. In this section, we will discuss the attributes, strengths, and weaknesses of the four principal functions used as activations in neural networks. 
 
 \subsubsection{Sigmoid activation functions}
 
@@ -300,13 +300,13 @@ As neural networks can be made arbitrarily complex, reducing the degree of over-
 
 Traditional measures of regularization like using cross-validation and weight constraints are both important features of reducing overfitting in deep learning algorithms. We introduced cross-validation in section \ref{sec:cv} as a way to estimate appropriate model complexities. Cross-validation is model agnostic and can be applied to estimate an appropriate complexity for an arbitrary model or the optimal values for the gradient descent hyperparameters. 
 
-Weight constraints are similarly convenient additions to the cost function. The only modification required from equation \ref{eq:mse_ridge} is adding a summation term over the layers. For a $L_2$ regularized neural net the cost function can then be written as 
+Weight constraints are similarly convenient additions to the cost function. The only modification required from equation \ref{eq:mse_ridge} is adding a summation term over the layers. For an $L_2$ regularized neural network the cost function can then be written as 
 
 \begin{equation}
 C(\hat{y}_i, f(\boldsymbol{x}_i; \theta)) = (\hat{y}_i - f(\boldsymbol{x}_i; \theta))^2 + \lambda\sum_{lij}||w_{ij}^{[l]}||^2_2.
 \end{equation}
 
-\noindent More specific tools for neural networks have been developed in later years, and we will discuss two of these that has seen extensive application in recent works. 
+\noindent More specific tools for neural networks have been developed in later years, and we will discuss two of these that have seen extensive application in recent works. 
 
 \subsubsection{Dropout}\label{sec:dropout}
 
@@ -340,8 +340,8 @@ Conceptually one can think of the challenge presented by an internal covariance 
 \text{BN}_{\gamma, \beta}(a_{ik}^{[l]}) = \gamma  \hat{a}_{ik}^{[l]} + \beta.
 \end{equation} 
 
-\noindent The primary effect of batch normalization is then to speed up training. \citet{Ioffe2015} shows that orders of magnitude larger learning rates may be used in experiments. Additionally, there is a contribution to the regularization by providing non-deterministic outputs as the normalization parameters are dependent on the other samples in a batch. 
+\noindent The primary effect of batch normalization is then to speed up training. \citet{Ioffe2015} show that orders of magnitude larger learning rates may be used in experiments. Additionally, there is a contribution to the regularization by providing non-deterministic outputs as the normalization parameters are dependent on the other samples in a batch. 
 
 As a bonus effect, the procedure lessens the potential problems with exploding and vanishing gradients: By placing the normalization layer before a sigmoid layer the probability of the activations being in the active region of the functions increases. Conversely, for the rectifier units placing the normalization after the activation lessens the chance for an exploding value in the gradient.
 
-For all the merits of batch normalization, a fundamental challenge still remains. Since the normalization is over the feature axis, it adds a substantial number of parameters. For models who heavily use normalization, the scale and shift parameters can add up to $20\%-30\%$ of the weights in a model. Additionally, we observe that the computation involves a square root and a squaring operation which principally necessitates a full $64$ bit precision in the floating-point computation. 
+For all the merits of batch normalization, a fundamental challenge remains. The challenge stems from the choice to normalize over the feature axis. This choice adds a substantial number of parameters. For models which make heavy use of normalization, the scale and shift parameters can add up to $20\%-30\%$ of the weights in a model. Additionally, we observe that the computation involves a square root and a squaring operation which principally necessitates a full $64$ bit precision in the floating-point computation. 
