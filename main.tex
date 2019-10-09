@@ -16,6 +16,7 @@
 \usepackage{makecell}
 \usepackage{array}
 \usepackage{multirow}
+\usepackage{mathpazo}
 %\usepackage{multicol}
 %\usepackage{siunits}
 \usepackage{siunitx}
@@ -32,17 +33,13 @@
 %\usepackage[backend=biber]{biblatex}
 %\usepackage{natbib}
 %\usepackage[super]{cite}
-
-
+\interfootnotelinepenalty=10000
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 \newcommand\MyHead[2]{\multicolumn{1}{l}{\parbox{#1}{\centering #2}}}
 % set python environment 
-
-
-%\addbibresource{link.bib}
 
 \usepackage{xcolor}
 \definecolor{maroon}{cmyk}{0, 0.87, 0.68, 0.32}
@@ -168,32 +165,37 @@
 
 
 % \usepackage{biblatex}
-\usepackage{natbib}
+\usepackage[numbers]{natbib}
 
 \author{Robert Solli}
-\title{Modern Machine Learning Algorithms: Applications in Nuclear Physics}
-
+\title{Latent Variable Machine Learning Algorithms: Applications in a Nuclear Physics Experiment}
 \begin{document}
 \maketitle
 
 \tableofcontents
 \listoffigures
-\listoftodos
 
 \newpage
 \section*{Acknowledgments}
-Who to thank \\
-Reading: Tommy, Sigmund, Geir, Øyvind, Maiken \\
-Academic: Morten, Michelle, Daniel \\
-Sanity: Maiken \\
+Writing a thesis is frustrating work, as I am sure the reader is aware. But the making of any scientific work is wonderfully rewarding. For me, the reward is much like what I feel like when pursuing my other passion: mountain climbing. The frustration and aches of traversing a sheer rock-face in possibly the dumbest way possible are validated by an astonishing feeling of accomplishment after a successful climb. Academic work is also like climbing in that it would not have been possible without the people supporting me through this work. While the point of failure is marginally less visceral for academic work, the help is no less appreciated. For their help through these two years of study, I particularly want to credit: 
+
+My academic advisors, I wish to convey my most sincere gratitude to Michelle Kuchera, Morten Hjorth-Jensen, and Daniel Bazin. Your contributions made writing this thesis an incredible learning experience. 
+
+My peers, who spent precious free time pouring over this sprawling piece of work, Geir Tore Ulvik, Tommy Myrvik, Sigmund Slang and Maiken Rian.  Thank you for thought-provoking conversations and valuable insights. 
+
+My office mates, who had to endure my procrastination. Procrastination which invariably included their involvement in some wonderfully pointless discussions. 
+
+My family and friends for their patience and understanding of my distraction these past months.
+
+Last, but in no way least, I want to thank my partner Maiken Rian. Without whom the process of writing a thesis would have been truly miserable, and thanks to which it ended up as a fundamentally positive experience. I can not thank you enough. 
 \newpage
 
 \subimport*{chapters/abstract/}{abstract.tex}
 \subimport*{chapters/introduction/}{introduction.tex}
-\todo{Need to add abbreviations to list}
+%\todo{Need to add abbreviations to list}
 
 % Theory part and experimental context 
-\part{Theory and Experimental Background}
+\part{Theory and Experimental Background}\label{part:theory_experiment}
 
 % Machine learning theory
 \subimport*{chapters/theory/}{background_theory.tex}
@@ -214,14 +216,13 @@ Sanity: Maiken \\
 \subimport*{chapters/theory/neural_network/}{neural_network.tex}
 \subimport*{chapters/theory/neural_network/}{convolution.tex}
 \subimport*{chapters/theory/neural_network/}{rnn.tex}
-\subimport*{chapters/theory/}{model_architecture}
 
 \subimport*{chapters/theory/autoencoder/}{intro_autoenc.tex}
 \subimport*{chapters/theory/autoencoder/}{autoencoder.tex}
 \subimport*{chapters/theory/autoencoder/}{regularizing_latent.tex}
 \subimport*{chapters/theory/autoencoder/}{draw.tex}
 \subimport*{chapters/theory/autoencoder/}{deep_clustering.tex}
-
+\subimport*{chapters/theory/}{model_architecture}
 
 % \subimport*{chapters/theory/}{todo.tex}
 
@@ -233,16 +234,17 @@ Sanity: Maiken \\
 
 % Methods chapter
 
-\part{Implementation}
+\part{Implementation}\label{part:implement}
 
 \subimport*{chapters/methods/}{methods.tex}
 \subimport*{chapters/methods/tensorflow/}{tensorflow.tex}
 \subimport*{chapters/methods/models/}{architecture.tex}
 \subimport*{chapters/methods/models/convae/}{convae.tex}
 \subimport*{chapters/methods/models/draw/}{draw.tex}
+\subimport*{chapters/methods/models/mixae/}{mixae.tex}
 \subimport*{chapters/methods/randomsearch/}{randomsearch.tex}
 
-\part{Results}
+\part{Results}\label{part:results}
 \subimport*{chapters/results/}{results.tex}
 \subimport*{chapters/results/classification/}{classification}
 \subimport*{chapters/results/classification/}{vgg}
@@ -254,23 +256,23 @@ Sanity: Maiken \\
 \subimport*{chapters/results/clustering/}{draw.tex}
 
 
-\part{Discussion and Conclusion}
+\part{Discussion, Conclusion and Future Prospects}\label{part:discuss_concludee}
 \subimport*{chapters/discussion/}{discussion.tex}
 \subimport*{chapters/discussion/classification/}{classification.tex}
 \subimport*{chapters/discussion/clustering/}{clustering.tex}
+\subimport*{chapters/conclusion/}{conclusion.tex}
+
 \part{Appendices}
-\begin{appendices}
+\appendix
 \subimport{chapters/appendix/maths/}{kl_divergence}
+\subimport{chapters/appendix/maths/}{bias_variance}
 \subimport{chapters/appendix/architectures/}{vgg}
 \subimport{chapters/appendix/hyperparameters/}{hyperparams}
 %\subimport{chapters/appendix/clf_tables/}{convae_simulated}
-\end{appendices}
-
-\subimport*{chapters/notes/}{notes.tex}
-
 
 % \bibliographystyle{te}
-\bibliographystyle{plainnat}
+%\bibliographystyle{plainnat}
+\bibliographystyle{mybibstyle}
 \bibliography{link.bib}
 %\printbibliography
 

@@ -1,0 +1,61 @@
+\chapter{The bias-variance decomposition}\label{appendix:bias_variance}
+
+In approximating functions we observe a relationship between the complexity of our model and how much data we have available to fit on. Quantizing this relationship helps understand what challenges we face when fitting models to data. We begin by considering the true process which we want to model, decomposed in contributions from the true function we wish to approximate, $\hat{f}$, and a noise term $\epsilon$ as
+
+\begin{equation}
+\hat{y}_i = \hat{f}(\boldsymbol{x}_i) + \epsilon,
+\end{equation}
+\noindent where the recorded data are the tuples $s_i = (\hat{y}_i, \boldsymbol{x}_i)$ and the set of recorded data are denoted as $S = \{s_i\}$. We here assume that the noise is uncorrelated and distributed as $\epsilon \sim \mathcal{N}(0, \sigma^2)$.
+
+Furthermore, assume that we have a procedure to fit a model, $g(\boldsymbol{x}_i; \theta)$, with parameters $\theta$ to a dataset $S_k$, giving an estimator for unseen data $g(\boldsymbol{x}_i; \theta _{S_k})$. The quality of this estimator we measure by the squared error cost function, which has the form
+
+\begin{equation}
+\mathcal{C}(S, g(\boldsymbol{x}_i)) = \sum_i (\hat{y}_i - g(\boldsymbol{x}_i; \theta_{S_k}))^2.
+\end{equation}
+
+\noindent The relationship we wish to describe is known as the bias-variance decomposition. This decomposition decomposes the expected error on unseen data of our modelling procedure to three discrete contributions, a bias term, a variance term and a noise term. Mathematically it has the form
+
+\begin{equation}
+\begin{split}
+\langle \mathcal{C}(S, g(\boldsymbol{x}_i)) \rangle_{S, \epsilon} = \sum_i &(\hat{f}(\boldsymbol{x}_i) - \langle g(\boldsymbol{x}_i ; \theta_{S_k} )\rangle_S)^2 \\
+& + \langle g(\boldsymbol{x}_i ; \theta_{S_k}) - \langle g(\boldsymbol{x}_i ; \theta_{S_k}) \rangle_S \rangle_S  \\
+& + \sigma^2.
+\end{split}
+\end{equation}
+
+\noindent Before we derive this expression we note that the expectation $\langle g_S(\boldsymbol{x}_i ; \theta_{S_k}) \rangle_S$ is the expected value of our model, $g$, on an unseen datum, $\boldsymbol{x}$, when trained on differing datasets, $S_k$. 
+
+The derivation of the relationship starts with the expectation of the cost with respect to the data selection- and noise-effects. It has the form 
+
+\begin{align}
+\langle \mathcal{C}(S, g(\boldsymbol{x}_i)) \rangle_{S, \epsilon} = \sum _i \langle (\hat{y}_i - g(\boldsymbol{x}_i; \theta_{S_k}))^2 \rangle_{S, \epsilon}.
+\end{align}
+
+\noindent We introduce a notational shorthand, $g(\boldsymbol{x}_i; \theta_{S_k}) := g_{S_k}$, for the estimator to maintain clarity in the derivation. The derivation begins by adding and subtracting the expected value of our estimator on the unseen data, and we then have that
+
+\begin{align}
+\langle \mathcal{C}(S, g(\boldsymbol{x}_i)) \rangle_{S, \epsilon} &= \sum _i \langle (\hat{y}_i - g_{S_k})^2 \rangle_{S, \epsilon}, \\
+&= \sum _i \langle (\hat{y}_i  + \langle g_{S_k}\rangle_S - \langle g_{S_k}\rangle_S  - g_{S_k})^2 \rangle_{S, \epsilon}, \\
+\begin{split} 
+&= \sum_i [\langle (\hat{y}_i  - \langle g_{S_k}\rangle_S )^2 \rangle_{S, \epsilon}\\
+& + \langle (g_{S_k} - \langle g_{S_k}\rangle_S)^2 \rangle_{S}\\
+& + \langle \hat{y}_i  - \langle g_{S_k}\rangle_S\rangle_{S, \epsilon} \cdot \langle g_{S_k} - \langle g_{S_k}\rangle_S \rangle_S ],
+\end{split}
+\end{align}
+
+\noindent where we observe that the cross-term is zero. Further decomposing the $\hat{y}_i$ we can write this as 
+
+\begin{align}
+\begin{split}
+\langle \mathcal{C}(S, g(\boldsymbol{x}_i)) \rangle_{S, \epsilon} &=
+\sum_i [\langle (\hat{f}(\boldsymbol{x}_i) + \epsilon  - \langle g_{S_k}\rangle_S )^2 \rangle_{S, \epsilon}\\
+& + \langle (g_{S_k} - \langle g_{S_k}\rangle_S)^2 \rangle_{S}],
+\end{split} \\
+\begin{split}
+ &= \sum_i [(\hat{f}(\boldsymbol{x}_i) - \langle g_{S_k}\rangle_S )^2 \\
+ &+ \langle (g_{S_k} - \langle g_{S_k}\rangle_S)^2 \rangle_{S}\\
+ &+\sigma^2 ],
+\end{split}
+\end{align}
+
+\noindent where the cross-term from the last transition is zero as the error has zero mean, by assumption. 

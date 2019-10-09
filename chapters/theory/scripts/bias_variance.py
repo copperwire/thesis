@@ -66,7 +66,7 @@ for i, l in enumerate(labels):
 ax.set_ylim((0, max(pw.biases+pw.variances)+2))
 labels = [l.get_label() for l in lines]
 axs[0].legend(lines, labels, loc="best")
-axs[0].set_xlabel("Model complexity")
+axs[0].set_xlabel("Model complexity [df]")
 axs[0].set_ylabel("Error")
 plt.savefig("../figures/bias_var_degree.png")
 plt.savefig("../figures/bias_var_degree.pdf")
