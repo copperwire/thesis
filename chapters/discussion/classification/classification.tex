@@ -28,7 +28,7 @@ We also want to understand why the MMD cost is preferable, in terms of classifie
 \begin{figure}
 \centering
 \includegraphics[width=0.9\textwidth, height=2.3in]{plots/latent_traversal}
-\caption[Difference between generative and discriminative latent spaces]{Demonstrating the difference of capturing class and feature information in the latent space. On the left, the $\beta$-VAE pushes the autoencoder to a representation favouring encoded class information in the latent space. On the right, the natural VAE which has a separate classification from the latent sample exhibits a tight distribution of the latent space. The sub-plots demonstrate the traversal in the output space when sampling from the latent x-axis. Figure copied from \citet{Antoran2019}.}\label{fig:latent_traversal}
+\caption[Difference between generative and discriminative latent spaces]{Demonstrating the difference of capturing class and feature information in the latent space. On the left, the $\beta$-VAE pushes the autoencoder to a representation favouring encoded class information in the latent space. On the right, the natural VAE which has a separate classification from the latent sample exhibits a tight distribution of the latent space. The sub-plots demonstrate the traversal in the output space when sampling from the latent x-axis. Figure from \citet{Antoran2019}.}\label{fig:latent_traversal}
 \end{figure}
 
 Indeed their semi-supervised objective improves the generative aspect of the variational autoencoder by tightening the latent distribution, i.e. achieving a density in the latent space without holes. Tight distributions of latent samples improve the generative properties by having no regions of the prior for which the generated sample is poorly defined. 
