@@ -1,6 +1,6 @@
 \section{Convolutional Autoencoder}
 
-To test the hypothesis that classification can be improved by using unsupervised methods to estimate the data distribution is investigated by using a convolutional autoencoder trained end-to-end on the data distribution, and then using the latent representation as input to a logistic regression classifier on the subset of data that has labels. This pipeline is outlined in chapter \ref{ch:architectures}, and the data are described in section \ref{sec:data}. The convolutional autoencoder has three configurations that we report results from. 
+To test the hypothesis that classification can be improved by using unsupervised methods to estimate the data distribution is investigated by using a convolutional autoencoder trained end-to-end on the data distribution, and then using the latent representation as input to a logistic regression classifier on the subset of data that has labels. This pipeline is outlined in chapter \ref{ch:architectures}, and the data are described in section \ref{sec:data}. The convolutional autoencoder has two configurations that we report results from. 
 \begin{enumerate}[start=0, label={(\bfseries Ar\arabic*):}, ref={(Ar\arabic*)}]
 	\item \label{item:clf_no_vgg} End-to-end training on data using kernel and filter architectures in a naive manner with decreasing kernel sizes, increasing filter sizes and a mirrored encoder-decoder structure
 	\item \label{item:clf_freeze_vgg} Using the VGG16 network to compute a representation of the data which is compressed by one or more dense layers and finally reconstructed to the original image by a naively constructed decoder. 
@@ -48,8 +48,8 @@ For the best models found by random search we re-compute the performance with $K
 
 \begin{table}
 \centering
-\subimport{plots/}{convae_clf_table}
 \caption{Logistic regression classification $f1$ scores using the \ref{item:clf_no_vgg} architecture. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:clf_no_vgg}
+\subimport{plots/}{convae_clf_table}
 \end{table}
 
 \noindent Furthermore, we estimate the performance of the best models as a function of the number of labelled samples it sees. We select a random subsample from the labelled dataset and iteratively add to that dataset in increments of $n=100$ samples. This procedure is repeated a total of $N=10$ times to estimate the variability as a function of the selection process. The resulting runs are shown in figure \ref{fig:ac_n_labelled}
@@ -74,8 +74,8 @@ Each of the configurations found by the random search was then evaluated with $K
 
 \begin{table}
 \centering
-\subimport{plots/}{convae_vgg_clf_table}
 \caption{Logistic regression classification $f1$ scores using the \ref{item:clf_freeze_vgg} architecture. The standard error is reported from a $K=5$ fold cross validation of the logistic regression classifier.}\label{tab:clf_freeze_vgg}
+\subimport{plots/}{convae_vgg_clf_table}
 \end{table}
 
 \noindent Furthermore, we estimate the performance of the model as a function of the number of latent samples it is shown. In exactly the same manner as we did for the \ref{item:clf_no_vgg} architecture. The results of this search is shown in figure \ref{fig:vgg_ac_n_labelled}
