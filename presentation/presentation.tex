@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{subfig}
+\usepackage{tikz}
 \usepackage[style=verbose]{biblatex}
 
 \makeatletter
@@ -32,7 +33,7 @@
 		\item An introduction to central Machine Learning concepts
 		\item The Auto-Encoder neural network
 		\item Results 
-		\item Discussion, Summary, Conclusion and Outlook
+		\item Summary, Conclusion and Outlook
 	\end{enumerate}
 \end{frame}
 
@@ -73,16 +74,17 @@
 
 \begin{frame}[t]{Challenges with the AT-TPC}
 	\begin{enumerate}[I]
-		\item Expensive integration - for each event a fit is computed
+		\item Expensive integration - for each event a fit is computed.
 		\item Assumptions of the integration technique: 
 			\begin{enumerate}[(i)]
-				\item Each event is fit against parameters of the event of interest
-				\item The integration is sensitive to Noise and Breaks in the tracks
+				\item Each event is fit against parameters of the event of interest,
+				\item The integration is sensitive to Noise and Breaks in the tracks.
 			\end{enumerate}
+		\item In some experiments researchers are unable to identify samples of the positive class of events.
 	\end{enumerate}
 	The amount of data is also significant: the experiment generates on the order of $10^5$ events per hour running.
 	\begin{block}{Idea}
-		Solve the problem by training deep neural networks, a very flexible algorithm from the Machine Learning community.
+		Solve the problem by training deep neural networks.
 	\end{block}
 \end{frame}
 
@@ -106,6 +108,14 @@
 	And many others...
 \end{frame}
 
+\begin{frame}[t]{Why machine learning}
+	\begin{enumerate}[I]
+		\item Builds on the work by Kuchera\footcite{Kuchera2019}.
+		\item Exploration of feasibility, modern computing resources
+			has created a resurgence in ML with strong results from other fields.
+	\end{enumerate}
+\end{frame}
+
 \begin{frame}[t]{Deep Learning}
 	A special sub-branch of Machine Learning is the field of Deep Learning, or more broadly: Differentiable Programming
 
@@ -119,25 +129,25 @@
 	\end{enumerate}
 \end{frame}
 
-\begin{frame}[t]{Deep Learning}
-	Then then model can be tuned with gradient methods, the simplest of which is a steepest descent update: 
-	\begin{equation}
-		\theta_i \leftarrow \theta_i - \eta \frac{\partial \mathcal{C}(\mathbf{x}, f, \hat{f})}{\partial \theta_i},
-	\end{equation}
-	moderated by a \textit{learning rate} $\eta$ to ensure that the steps are small enough.
-
-	The functional $\mathcal{C}$ is the \textit{cost} function for the problem and is commonly a variation of either, the Mean Squared Error: 
-
-	\begin{equation}
-		\mathcal{C}(\mathbf{x}, f, \hat{f}) = \sum (f(\mathbf{x})_i - \hat{f}(\mathbf{x})_i)^2,
-	\end{equation}
-
-	or the Cross Entropy
-
-	\begin{equation}
-		\mathcal{C}(\mathbf{x}, f, \hat{f}) = -\sum f(\mathbf{x})_i \log \hat{f}(\mathbf{x})_i. 
-	\end{equation}
-\end{frame}
+%\begin{frame}[t]{Deep Learning}
+%	Then then model can be tuned with gradient methods, the simplest of which is a steepest descent update: 
+%	\begin{equation}
+%		\theta_i \leftarrow \theta_i - \eta \frac{\partial \mathcal{C}(\mathbf{x}, f, \hat{f})}{\partial \theta_i},
+%	\end{equation}
+%	moderated by a \textit{learning rate} $\eta$ to ensure that the steps are small enough.
+%
+%	The functional $\mathcal{C}$ is the \textit{cost} function for the problem and is commonly a variation of either, the Mean Squared Error: 
+%
+%	\begin{equation}
+%		\mathcal{C}(\mathbf{x}, f, \hat{f}) = \sum (f(\mathbf{x})_i - \hat{f}(\mathbf{x})_i)^2,
+%	\end{equation}
+%
+%	or the Cross Entropy
+%
+%	\begin{equation}
+%		\mathcal{C}(\mathbf{x}, f, \hat{f}) = -\sum f(\mathbf{x})_i \log \hat{f}(\mathbf{x})_i. 
+%	\end{equation}
+%\end{frame}
 
 \begin{frame}[t]{Deep Learning: Neural Networks}
 	\begin{figure}[h]
@@ -151,7 +161,13 @@
 		\boldsymbol{a}^{[1]} = g(\boldsymbol{x}\boldsymbol{\theta}^{[1]})_D
 	\end{equation}
 \end{frame}
-
+\begin{frame}[t]{Deep Learning: Network Types}
+	\begin{figure}[h]
+		\centering
+		\subfloat[Convolutional architecture capturing local structures \footcite{Dumoulin2016}]{\includegraphics[width=0.2\textwidth]{../chapters/theory/figures/conv_zeropad_illustration.png}}
+		\subfloat[Recurrent architecture for serialized applications \footcite{Jianqiang19}]{\includegraphics[width=0.8\textwidth]{rnn.png}}
+	\end{figure}
+\end{frame}
 \begin{frame}[t]{Autoencoders}
 	\begin{itemize}
 		\item Recall that we want to separate classes of reaction products
@@ -161,7 +177,7 @@
 		Learn the distribution over the events through two nonlinear maps which compress and inflate a representation of the events.
 	\end{block}
 	\begin{block}{Central Hypothesis}
-		If we can compress a representation of an event reconstruct it - the compression must be informative of the type of event.
+		If we can create a compressed representation of an event from which we can reconstruct the even - the compression should be informative of the type of event that occurred.
 	\end{block}
 \end{frame}
 
@@ -184,6 +200,10 @@
 	\end{align}
 \end{frame}
 
+\begin{frame}[t]{Implementing details}
+	TBD
+\end{frame}
+
 \begin{frame}[t]{Experiment}
 	\begin{itemize}
 		\item We chose to represent the data as 2D projections, neglecting the z-axis.
@@ -199,16 +219,92 @@
 		\subfloat[Performance for an autoencoder with a naive architecture]{\includegraphics[height=3.5cm]{../chapters/results/classification/plots/ac_n_samples.pdf}}
 		\subfloat[Performance using a representation of the events as seen by a VGG16 network]{\includegraphics[height=3.5cm]{../chapters/results/classification/plots/vgg_ac_n_samples.pdf}}
 	\end{figure}
-\begin{equation}\label{eq:recall}
-\text{recall}= \frac{TP}{TP + FP}, \quad
-\text{precision} = \frac{TP}{TP + FN}.
-\end{equation}
+	\begin{equation}\label{eq:recall}
+		\text{recall}= \frac{TP}{TP + FP}, \quad
+		\text{precision} = \frac{TP}{TP + FN}.
+	\end{equation}
 
-\noindent The $f1$ score is defined as the harmonic mean of precision and recall for each class. Formally we define it as
+	\noindent The $f1$ score is defined as the harmonic mean of precision and recall for each class. Formally we define it as
 
-\begin{equation}\label{eq:f1}
-f1 = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}.
-\end{equation}
+	\begin{equation}\label{eq:f1}
+		f1 = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}.
+	\end{equation}
+\end{frame}
+\begin{frame}[t]{Clustering}
+	\begin{itemize}
+		\item We demonstrated that we can construct high quality spaces that are linearly separable
+		\item The next step then is a \textit{clustering} task. Can we separate classes without knowing the ground truth labels? 
+		\item Clustering, while similar to classification have some principal differences.
+	\end{itemize}
+	We explored two autoencoder-based clustering algorithms, in addition to ordinary K-means clustering.
 \end{frame}
 
+\begin{frame}[t]{K-means clustering}
+	\begin{itemize}
+		\item Ordinary K-means on the two-dimensional representations would obviously not be productive because of the dimensionality of the problem.
+		\item Instead we try to cluster the representation of the events as seen by an image classifying algorithm: VGG16
+	\end{itemize}
+
+	With $8e3$ output nodes the VGG16 representation is still very much high dimenisonal, but importantly it is sparse.
+\end{frame}
+
+\begin{frame}[t]{K-means results}
+	\begin{figure}[h]
+		\centering 
+		\subfloat{\includegraphics[width=0.3\textwidth]{../chapters/results/clustering/plots/Simulatedvgg_pca_conf_mat.pdf}}
+		\subfloat{\includegraphics[width=0.3\textwidth]{../chapters/results/clustering/plots/Filteredvgg_pca_conf_mat.pdf}}
+		\subfloat{\includegraphics[width=0.3\textwidth]{../chapters/results/clustering/plots/Fullvgg_pca_conf_mat.pdf}}
+		\caption{K-means clustering results using the VGG16 representation of the datasets}
+	\end{figure}
+	Cluster elements for clustering full data 
+	\centering 
+	\includegraphics[height=3cm]{../chapters/results/clustering/plots/full_vgg_cluster_repr.pdf}
+\end{frame}
+
+\begin{frame}[t]{Mixture of Autoencoders}
+	\begin{itemize}
+		\item One can also attempt clustering with Autoencoder based algorithms
+		\item Niche field with only limited applications (MNIST, Reuters)
+	\end{itemize}
+	\begin{columns}
+		\begin{column}{0.6\textwidth}
+\begin{equation*}\label{eq:mixae_reconst}
+\mathcal{L}_x = \sum_j p_j^{(i)} \mathcal{C}(\boldsymbol{x}_j^{(i)}, \hat{\boldsymbol{x}}^{(i)})
+\end{equation*}
+\begin{equation*}\label{eq:mixae_sample}
+S(\boldsymbol{p}^{(i)})_{\text{sample}} = -\sum_j p_j^{(i)} \log p_j^{(i)}
+\end{equation*}
+\begin{equation*}\label{eq:mixae_batch}
+\begin{split}
+S(\{\boldsymbol{p}^{(i)}\}_i)_{\text{batch}}&= \left(-\sum_j \bar{p}_j \log \bar{p}_j \right)^{-1},\\
+\bar{\boldsymbol{p}} &= \frac{1}{\beta} \sum_i ^\beta \boldsymbol{p}^{(i)}
+\end{split}
+\end{equation*}
+		\end{column}
+		\begin{column}{0.4\textwidth}
+			\includegraphics[height=3cm]{../chapters/theory/autoencoder/plots/mixae.pdf}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[t]{Deep Clustering Results}
+	\centering 
+	\begin{figure}[h]
+		\subfloat{\includegraphics[height=3cm]{../chapters/results/clustering/plots/Filtered_mixae_conf_mat.pdf}}
+		\subfloat{\includegraphics[height=3cm]{../chapters/results/clustering/plots/full_mixae_conf_mat.pdf}}
+		\caption{Top-performing mixae results for the real experimental data}
+	\end{figure}
+	Cluster elements for clustering of full data
+	\includegraphics[height=3cm]{../chapters/results/clustering/plots/real_cluster_repr.pdf}
+\end{frame}
+
+\begin{frame}[t]{Summary and Outlook}
+	\begin{itemize}
+		\item We have shown that Autoencoder models are suitable for both semi-supervised and unsupervised applications.
+		\item Autoencoder clustering has a fundamental challenge with issues of stability and convergence. We still need labelled samples to verify.
+		\item Including physical parameters increases the quality of the latent space.
+	\end{itemize}
+	Neural network models clearly have a place in this analyisis going forward: but connecting the anlysis to the physical properties of the system remains a challenge to solve.
+\end{frame}
 \end{document}
