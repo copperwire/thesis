@@ -98,28 +98,30 @@
 \end{frame}
 
 \begin{frame}[t]{ML background}
-	Machine Learning (ML) is an amorphous set of algorithms for pattern recognition and function approximation. Bred as a mix between computer science and statistical learning theory, it includes algorithms like: 
+	Machine Learning (ML) is an amorphous set of algorithms for pattern recognition and function approximation. Including models like:
 	\begin{enumerate}[I]
 		\item Linear Regression
 		\item Logistic Regression
 		\item Random Forest Classifiers
 		\item Genetic Algorithms 
+		\item Neural networks
 	\end{enumerate}
 	And many others...
 \end{frame}
 
 \begin{frame}[t]{Why machine learning}
 	\begin{enumerate}[I]
-		\item Builds on the work by Kuchera\footcite{Kuchera2019}.
-		\item Exploration of feasibility, modern computing resources
-			has created a resurgence in ML with strong results from other fields.
+		\item Modern computing resources has created a resurgence in ML fostering strong results in other fields.
+		\item Very strong results on image-like data. The resurgence brought Convolutional Neural Networks to the forefront.
+		\item Agnostic models can be applied very close to source data, possibly avoiding biases.
+		\item Broader perspective on what role ML has in physics?
 	\end{enumerate}
 \end{frame}
 
 \begin{frame}[t]{Deep Learning}
-	A special sub-branch of Machine Learning is the field of Deep Learning, or more broadly: Differentiable Programming
+	A branch of machine Learning.
 
-	The premise of Deep Learning is to formulate an approximation to some unknown function $f(\mathbf{x})$ with a model, $\hat{f}$, that maintains some set of parameters $\{\theta\}$. 
+	The premise of Deep Learning is to formulate an approximation to some unknown function $f(\mathbf{x})$ with a model, $\hat{f}$. 
 
 	Some examples of the unknown function, $f(\mathbf{x})$, we would want to approximate are:
 	\begin{enumerate}[(a)]
@@ -156,11 +158,32 @@
 		\caption{A neural network with three input nodes, two hidden nodes, and one output node}
 		\label{fig:ann}
 	\end{figure}
-	Each of the \textit{activations} $\mathbf{a}$ are computed as a matrix product fed through a nonlinear activation \textit{activation function} g
-	\begin{equation}\label{eq:fwd}
-		\boldsymbol{a}^{[1]} = g(\boldsymbol{x}\boldsymbol{\theta}^{[1]})_D
-	\end{equation}
+	Each of the \textit{activations} $a_i$ are computed from the values in the previous layer. 
+	The figure illustrates a \textit{forward pass} of the network.
 \end{frame}
+
+\begin{frame}[t]{Training Neural Networks}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.6\linewidth]{../chapters/theory/figures/gd_good.pdf}
+		\caption{Gradient descent on a quadratic function}
+		\label{fig:gd}
+	\end{figure}
+
+	Training neural networks is achieved with first order gradient optimization.
+	The function to be optimized is the cost: meaasuring the quality of the current state of the network.
+\end{frame}
+
+\begin{frame}[t]{Hazards in Training}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.55\linewidth]{../chapters/theory/figures/bias_var_degree.pdf}
+		\caption{Bias - variance decomposition of the MSE objective with iid. noise. Generalization error is denoted $E_{out}$, and is the sum of the Bias and Variance terms.}
+		\label{fig:bv}
+	\end{figure}
+	The quality of a model is measured by how well it does on data not seen during training, measured by $E_{out}$.
+\end{frame}
+
 \begin{frame}[t]{Deep Learning: Network Types}
 	\begin{figure}[h]
 		\centering
@@ -177,7 +200,7 @@
 		Learn the distribution over the events through two nonlinear maps which compress and inflate a representation of the events.
 	\end{block}
 	\begin{block}{Central Hypothesis}
-		If we can create a compressed representation of an event from which we can reconstruct the even - the compression should be informative of the type of event that occurred.
+		If we can create a compressed representation of an event from which we can reconstruct the event - the compression should be informative\footcite{Fertig} of the type of event that occurred.
 	\end{block}
 \end{frame}
 
@@ -201,7 +224,15 @@
 \end{frame}
 
 \begin{frame}[t]{Implementing details}
-	TBD
+	Models implemented in Python with TensorFlow (TF), a ML framework developed by Google.
+	TensorFlow provided a base on which to build complex NN models.
+	Code written for this analyis includes 
+
+	\begin{enumerate}[I]
+		\item Abstraction for autoencoder networks,
+		\item Implementation of variations on the Variational Autoencoder,
+		\item Custom class implementations based on the high-level Keras API for deep clustering.
+	\end{enumerate}
 \end{frame}
 
 \begin{frame}[t]{Experiment}
@@ -216,19 +247,10 @@
 
 \begin{frame}[t]{Results}
 	\begin{figure}[h]
-		\subfloat[Performance for an autoencoder with a naive architecture]{\includegraphics[height=3.5cm]{../chapters/results/classification/plots/ac_n_samples.pdf}}
-		\subfloat[Performance using a representation of the events as seen by a VGG16 network]{\includegraphics[height=3.5cm]{../chapters/results/classification/plots/vgg_ac_n_samples.pdf}}
+		\subfloat[Convolutional autoencoder performance with a naive architecture]{\includegraphics[height=3.5cm]{../chapters/results/classification/plots/ac_n_samples.pdf}}
+		\subfloat[Convolutional autoencoder performance using a VGG16 representation representation of the events.]{\includegraphics[height=3.5cm]{../chapters/results/classification/plots/vgg_ac_n_samples.pdf}}
 	\end{figure}
-	\begin{equation}\label{eq:recall}
-		\text{recall}= \frac{TP}{TP + FP}, \quad
-		\text{precision} = \frac{TP}{TP + FN}.
-	\end{equation}
-
-	\noindent The $f1$ score is defined as the harmonic mean of precision and recall for each class. Formally we define it as
-
-	\begin{equation}\label{eq:f1}
-		f1 = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}.
-	\end{equation}
+	
 \end{frame}
 \begin{frame}[t]{Clustering}
 	\begin{itemize}
@@ -266,25 +288,9 @@
 		\item One can also attempt clustering with Autoencoder based algorithms
 		\item Niche field with only limited applications (MNIST, Reuters)
 	\end{itemize}
-	\begin{columns}
-		\begin{column}{0.6\textwidth}
-\begin{equation*}\label{eq:mixae_reconst}
-\mathcal{L}_x = \sum_j p_j^{(i)} \mathcal{C}(\boldsymbol{x}_j^{(i)}, \hat{\boldsymbol{x}}^{(i)})
-\end{equation*}
-\begin{equation*}\label{eq:mixae_sample}
-S(\boldsymbol{p}^{(i)})_{\text{sample}} = -\sum_j p_j^{(i)} \log p_j^{(i)}
-\end{equation*}
-\begin{equation*}\label{eq:mixae_batch}
-\begin{split}
-S(\{\boldsymbol{p}^{(i)}\}_i)_{\text{batch}}&= \left(-\sum_j \bar{p}_j \log \bar{p}_j \right)^{-1},\\
-\bar{\boldsymbol{p}} &= \frac{1}{\beta} \sum_i ^\beta \boldsymbol{p}^{(i)}
-\end{split}
-\end{equation*}
-		\end{column}
-		\begin{column}{0.4\textwidth}
-			\includegraphics[height=3cm]{../chapters/theory/autoencoder/plots/mixae.pdf}
-		\end{column}
-	\end{columns}
+
+	\centering
+	\includegraphics[height=6cm]{../chapters/theory/autoencoder/plots/mixae.pdf}
 \end{frame}
 
 
