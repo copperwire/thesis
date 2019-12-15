@@ -1,10 +1,12 @@
-\documentclass{beamer}
+\documentclass[notes]{beamer}
+\usepackage{pgfpages}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{subfig}
 \usepackage{tikz}
-\usepackage[style=verbose]{biblatex}
-
+\usepackage{pgfplots}
+\usepackage[style=verbose]{biblatex} 
+\setbeameroption{show notes on second screen=right}
 \makeatletter
 \let\@@magyar@captionfix\relax
 \makeatother
@@ -18,7 +20,7 @@
 \date{\today}
 
 \begin{document}
-\begin{frame}[t]{Masters Presentation}
+\begin{frame}[t]{Thesis Presentation}
 	\titlepage
 \end{frame}
 
@@ -45,32 +47,49 @@
 	\end{figure}
 	The AT-TPC is an experiment set up at the rare isotopes facility on the Michigan State University campus. The AT-TPC is commissioned to capture reactions with exotic nuclei.
 \end{frame}
-
-\begin{frame}[t]{AT-TPC}
-	\begin{figure}
-		\centering
-		\includegraphics[height=3cm]{../chapters/experimental_background/plots/at_tpc_padplane.png}
-		\caption{Detector pad plane of the AT-TPC \footcite{Bradt2017a}}\label{fig:padplane}
-	\end{figure}
-	Each triangle represents spatial discrete regions of the detector surface. The pad-plane consists of some $10^4$ sensor pads on a circle with $r=29cm$
-\end{frame}
+\note{
+	$1e4$ pads, $1e2$ timebuckets, $1e5$ events/hr: terrabytes of data.
+}
 
 \begin{frame}[t]{AT-TPC Data}
 	\begin{figure}[t]
 		\centering
 		\includegraphics[width=0.8\linewidth]{../chapters/experimental_background/plots/display_eventssimulated.png}
-		\caption{Simulated AT-TPC data in an experiment with ${}^{46}$Ar}
+		\caption{Simulated AT-TPC data top row: a proton trajectory, bottom row: a carbon trajectory}
 		\label{fig:name}
 	\end{figure}
 \end{frame}
 
+\note{
+	Remember: talk about the plots in detail.
+	Proton on top, carbon on bottom.
+
+	Reactions in the whole volume (development of spirals), spirals from magnet.
+}
+
 \begin{frame}[t]{AT-TPC Data}
 	\begin{figure}
-		\subfloat[Unfiltered events from the ${}^{46}$Ar experiment]{\includegraphics[width=0.4\linewidth]{../chapters/experimental_background/plots/display_eventsfull_.png}}
-		\subfloat[Noise-filtered events from the ${}^{46}$Ar experiment]{\includegraphics[width=0.5\linewidth]{../chapters/experimental_background/plots/display_eventsclean_.pdf}}
+		\subfloat[Unfiltered events AT-TPC. Top: carbon nucleus, bottom: proton]{\includegraphics[width=0.4\linewidth]{../chapters/experimental_background/plots/display_eventsfull_.png}}
+		\subfloat[Same events as in (a), but filtered]{\includegraphics[width=0.5\linewidth]{../chapters/experimental_background/plots/display_eventsclean_.pdf}}
 	\end{figure}
 	Significant noise levels in the experiment, from unknown sources. Some $60\%$ of the recorded events are from unidentified reactions.
 \end{frame}
+
+\note{
+	Remember - talk about event plots in detail.\\
+	Not pictured: pure noise events.\\
+	More noise in carbon - more ionizing: not necessarily uncorrelated noise \\
+
+	\begin{enumerate}[I]
+			\item Expensive integration - for each event a fit is computed.
+			\item Assumptions of the integration technique: 
+				\begin{enumerate}[(i)]
+					\item Each event is fit against parameters of the event of interest,
+					\item The integration is sensitive to Noise and Breaks in the tracks.
+				\end{enumerate}
+			\item In some experiments researchers are unable to identify samples of the positive class of events.
+	\end{enumerate}
+}
 
 \begin{frame}[t]{Challenges with the AT-TPC}
 	\begin{enumerate}[I]
@@ -91,48 +110,43 @@
 \begin{frame}[t]{Previous Work}
 	\begin{itemize}
 		\item Work on applying ML to this data started with a supervised learning project by Kuchera et al.\footcite{Kuchera2019}.
-		\item The authors explored a \textit{supervised classification} problem of identifying reactions when ground-truth labels available.
 		\item By fine tuning pre-trained networks the authors achieve very impressive performance.
 	\end{itemize}
 	One of the open questions is then, can we segment the events based on reactions without the ground truth labels?
 \end{frame}
 
-\begin{frame}[t]{ML background}
-	Machine Learning (ML) is an amorphous set of algorithms for pattern recognition and function approximation. Including models like:
-	\begin{enumerate}[I]
-		\item Linear Regression
-		\item Logistic Regression
-		\item Random Forest Classifiers
-		\item Genetic Algorithms 
-		\item Neural networks
-	\end{enumerate}
-	And many others...
-\end{frame}
+\note{
+	The authors explored a \textit{supervised classification} problem of identifying reactions when ground-truth labels available.
+}
+
 
 \begin{frame}[t]{Why machine learning}
 	\begin{enumerate}[I]
-		\item Modern computing resources has created a resurgence in ML fostering strong results in other fields.
+		\item Modern computing resources have created a resurgence in ML fostering strong results in other fields.
 		\item Very strong results on image-like data. The resurgence brought Convolutional Neural Networks to the forefront.
-		\item Agnostic models can be applied very close to source data, possibly avoiding biases.
-		\item Broader perspective on what role ML has in physics?
+		\item Agnostic models can be applied to source data, possibly avoiding biases from filtering.
+		\item Broader perspective on what role ML has in (nuclear) physics?
 	\end{enumerate}
 \end{frame}
 
-\begin{frame}[t]{Deep Learning}
-	A branch of machine Learning.
-
-	The premise of Deep Learning is to formulate an approximation to some unknown function $f(\mathbf{x})$ with a model, $\hat{f}$. 
-
-	Some examples of the unknown function, $f(\mathbf{x})$, we would want to approximate are:
+\begin{frame}[t]{Machine Learning Principles}
+	The ingredients necessary to solve a Machine Learning problem: 
 	\begin{enumerate}[(a)]
-		\item a Hamiltonian of a system 
-		\item a function which determines the thermodynamic phase of a system
-		\item a function which itentifies dog-species from a picture
+		\item a model,
+		\item datasets,
+		\item and a cost function
 	\end{enumerate}
+
+	Separate between supervised and unsupervised learning.
 \end{frame}
+
+\note{
+Cost function measures the quality of the model. \\
+Can be MSE, crossent.
+}
 
 %\begin{frame}[t]{Deep Learning}
-%	Then then model can be tuned with gradient methods, the simplest of which is a steepest descent update: 
+%	Models can be tuned with gradient methods, the simplest of which is a steepest descent update: 
 %	\begin{equation}
 %		\theta_i \leftarrow \theta_i - \eta \frac{\partial \mathcal{C}(\mathbf{x}, f, \hat{f})}{\partial \theta_i},
 %	\end{equation}
@@ -151,17 +165,6 @@
 %	\end{equation}
 %\end{frame}
 
-\begin{frame}[t]{Deep Learning: Neural Networks}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.4\linewidth]{../chapters/theory/figures/ann.pdf}
-		\caption{A neural network with three input nodes, two hidden nodes, and one output node}
-		\label{fig:ann}
-	\end{figure}
-	Each of the \textit{activations} $a_i$ are computed from the values in the previous layer. 
-	The figure illustrates a \textit{forward pass} of the network.
-\end{frame}
-
 \begin{frame}[t]{Training Neural Networks}
 	\begin{figure}[h]
 		\centering
@@ -170,18 +173,24 @@
 		\label{fig:gd}
 	\end{figure}
 
-	Training neural networks is achieved with first order gradient optimization.
-	The function to be optimized is the cost: meaasuring the quality of the current state of the network.
+	Training neural networks is achieved with stochastic gradient methods.
+	The function to be optimized is the cost: measuring the quality of the current state of the network.
+\end{frame}
+
+\begin{frame}[t]{Deep Learning: Neural Networks}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\linewidth]{../chapters/theory/figures/ann.pdf}
+		\caption{A neural network with three input nodes, two hidden nodes, and one output node}
+		\label{fig:ann}
+	\end{figure}
+	Output is computed by passing input forwards through the network to the desired output type.
 \end{frame}
 
 \begin{frame}[t]{Hazards in Training}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.55\linewidth]{../chapters/theory/figures/bias_var_degree.pdf}
-		\caption{Bias - variance decomposition of the MSE objective with iid. noise. Generalization error is denoted $E_{out}$, and is the sum of the Bias and Variance terms.}
-		\label{fig:bv}
-	\end{figure}
-	The quality of a model is measured by how well it does on data not seen during training, measured by $E_{out}$.
+	\centering
+	\input{traintest.tex}\\
+	The quality of a model is measured by how well it does on data not seen during training.
 \end{frame}
 
 \begin{frame}[t]{Deep Learning: Network Types}
@@ -190,18 +199,6 @@
 		\subfloat[Convolutional architecture capturing local structures \footcite{Dumoulin2016}]{\includegraphics[width=0.2\textwidth]{../chapters/theory/figures/conv_zeropad_illustration.png}}
 		\subfloat[Recurrent architecture for serialized applications \footcite{Jianqiang19}]{\includegraphics[width=0.8\textwidth]{rnn.png}}
 	\end{figure}
-\end{frame}
-\begin{frame}[t]{Autoencoders}
-	\begin{itemize}
-		\item Recall that we want to separate classes of reaction products
-		\item Additionally - we assume that we have access to very little or no ground truth labelled data
-	\end{itemize}
-	\begin{block}{ Idea }
-		Learn the distribution over the events through two nonlinear maps which compress and inflate a representation of the events.
-	\end{block}
-	\begin{block}{Central Hypothesis}
-		If we can create a compressed representation of an event from which we can reconstruct the event - the compression should be informative\footcite{Fertig} of the type of event that occurred.
-	\end{block}
 \end{frame}
 
 \begin{frame}[t]{Autoencoders}
@@ -223,43 +220,75 @@
 	\end{align}
 \end{frame}
 
-\begin{frame}[t]{Implementing details}
-	Models implemented in Python with TensorFlow (TF), a ML framework developed by Google.
-	TensorFlow provided a base on which to build complex NN models.
-	Code written for this analyis includes 
-
+\note{
+	\begin{itemize}
+		\item Recall that we want to separate classes of reaction products
+		\item Additionally - we assume that we have access to very little or no ground truth labelled data
+	\end{itemize}
+	\begin{block}{ Idea }
+		Learn the distribution over the events through two nonlinear maps which compress and inflate a representation of the events.
+	\end{block}
+	\begin{block}{Central Hypothesis}
+		If we can create a compressed representation of an event from which we can reconstruct the event - the compression should be informative\footcite{Fertig} of the type of event that occurred.
+	\end{block}
+}
+\begin{frame}[t]{Applied algorithms}
+	Algorithms used from packages:
 	\begin{enumerate}[I]
-		\item Abstraction for autoencoder networks,
-		\item Implementation of variations on the Variational Autoencoder,
-		\item Custom class implementations based on the high-level Keras API for deep clustering.
+		\item Logistic Regression
+		\item K-means clustering
+	\end{enumerate}
+	Available architectures in code
+	\begin{enumerate}[I]
+		\item Ordinary Convolutional Autoencoder
+		\item Variational Autoencoder ($\beta$, MMD)
+		\item Mixture of Autoencoders 
+		\item Deep Convolutional Embedded Clustering
 	\end{enumerate}
 \end{frame}
 
 \begin{frame}[t]{Experiment}
 	\begin{itemize}
-		\item We chose to represent the data as 2D projections, neglecting the z-axis.
-		\item An autoencoder network is then fit to the events in an end to end manner.
-		\item After traing, we extract the compressed (or \textit{latent}) expressions of the data.
-		\item With varying amounts of labelled ground-truth data we fit a very simple classifier to the latent expressions
+		\item We chose to represent the data as 2D projections.
+		\item An autoencoder network is then fit.
+		\item After traing, we extract the compressed (or \textit{latent}) expressions.
+		\item With varying amounts of labelled ground-truth data we fit a very simple classifier to the latent expressions.
 	\end{itemize}
 	We wish to construct latent spaces that are as close to trivially separable, and so use a logistic regression classifier.
 \end{frame}
+
+
+\note{
+	\begin{itemize}
+		\item Neglecting the z-axis.
+		\item autoencoder is fit events in an end to end manner.
+		\item of the data
+		\item With varying amounts of labelled ground-truth data we fit a very simple classifier to the latent expressions
+	\end{itemize}
+}
 
 \begin{frame}[t]{Results}
 	\begin{figure}[h]
 		\subfloat[Convolutional autoencoder performance with a naive architecture]{\includegraphics[height=3.5cm]{../chapters/results/classification/plots/ac_n_samples.pdf}}
 		\subfloat[Convolutional autoencoder performance using a VGG16 representation representation of the events.]{\includegraphics[height=3.5cm]{../chapters/results/classification/plots/vgg_ac_n_samples.pdf}}
 	\end{figure}
-	
 \end{frame}
+
+\note{
+Most important region is the left-most side of the plot, with few samples
+}
+
 \begin{frame}[t]{Clustering}
 	\begin{itemize}
 		\item We demonstrated that we can construct high quality spaces that are linearly separable
 		\item The next step then is a \textit{clustering} task. Can we separate classes without knowing the ground truth labels? 
-		\item Clustering, while similar to classification have some principal differences.
 	\end{itemize}
 	We explored two autoencoder-based clustering algorithms, in addition to ordinary K-means clustering.
 \end{frame}
+
+\note{
+	Clustering, while similar to classification have some principal differences.
+}
 
 \begin{frame}[t]{K-means clustering}
 	\begin{itemize}
@@ -272,16 +301,21 @@
 
 \begin{frame}[t]{K-means results}
 	\begin{figure}[h]
-		\centering 
-		\subfloat{\includegraphics[width=0.3\textwidth]{../chapters/results/clustering/plots/Simulatedvgg_pca_conf_mat.pdf}}
-		\subfloat{\includegraphics[width=0.3\textwidth]{../chapters/results/clustering/plots/Filteredvgg_pca_conf_mat.pdf}}
-		\subfloat{\includegraphics[width=0.3\textwidth]{../chapters/results/clustering/plots/Fullvgg_pca_conf_mat.pdf}}
+		\centering
+		\subfloat{\includegraphics[width=0.35\textwidth]{../chapters/results/clustering/plots/Simulatedvgg_pca_conf_mat.pdf}}
+		\subfloat{\includegraphics[width=0.35\textwidth]{../chapters/results/clustering/plots/Filteredvgg_pca_conf_mat.pdf}}
+		\subfloat{\includegraphics[width=0.35\textwidth]{../chapters/results/clustering/plots/Fullvgg_pca_conf_mat.pdf}}
 		\caption{K-means clustering results using the VGG16 representation of the datasets}
 	\end{figure}
 	Cluster elements for clustering full data 
 	\centering 
 	\includegraphics[height=3cm]{../chapters/results/clustering/plots/full_vgg_cluster_repr.pdf}
 \end{frame}
+
+\note{
+	Clusters are well defined if they have one cell along the vertical axis. \\
+	And perfect if they are empty in a cross
+}
 
 \begin{frame}[t]{Mixture of Autoencoders}
 	\begin{itemize}
@@ -297,13 +331,18 @@
 \begin{frame}[t]{Deep Clustering Results}
 	\centering 
 	\begin{figure}[h]
-		\subfloat{\includegraphics[height=3cm]{../chapters/results/clustering/plots/Filtered_mixae_conf_mat.pdf}}
-		\subfloat{\includegraphics[height=3cm]{../chapters/results/clustering/plots/full_mixae_conf_mat.pdf}}
+		\subfloat{\includegraphics[width=5cm]{../chapters/results/clustering/plots/Filtered_mixae_conf_mat.pdf}}
+		\subfloat{\includegraphics[width=5cm]{../chapters/results/clustering/plots/full_mixae_conf_mat.pdf}}
 		\caption{Top-performing mixae results for the real experimental data}
 	\end{figure}
 	Cluster elements for clustering of full data
 	\includegraphics[height=3cm]{../chapters/results/clustering/plots/real_cluster_repr.pdf}
 \end{frame}
+
+\note{
+	Plagued by instability even with the same hyperparameters
+	Remember to link the plots together
+}
 
 \begin{frame}[t]{Summary and Outlook}
 	\begin{itemize}
@@ -313,4 +352,60 @@
 	\end{itemize}
 	Neural network models clearly have a place in this analyisis going forward: but connecting the anlysis to the physical properties of the system remains a challenge to solve.
 \end{frame}
+
+\begin{frame}[t]{AT-TPC pad plane}
+	\begin{figure}
+		\centering
+		\includegraphics[height=3cm]{../chapters/experimental_background/plots/at_tpc_padplane.png}
+		\caption{Detector pad plane of the AT-TPC \footcite{Bradt2017a}}\label{fig:padplane}
+	\end{figure}
+	Each triangle represents spatial discrete regions of the detector surface. The pad-plane consists of some $10^4$ sensor pads on a circle with $r=29cm$
+\end{frame}
+
+
+\begin{frame}[t]{f1 score}
+	\begin{equation}\label{eq:recall}
+	\text{recall}= \frac{TP}{TP + FP}, \quad
+	\text{precision} = \frac{TP}{TP + FN}.
+	\end{equation}
+
+	\noindent The $f1$ score is defined as the harmonic mean of precision and recall for each class. Formally we define it as
+
+	\begin{equation}\label{eq:f1}
+	f1 = 2 \frac{\text{precision} \cdot \text{recall}}{\text{precision} + \text{recall}}.
+	\end{equation}
+\end{frame}
+
+\begin{frame}[t]{Bias-variance decomposition}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.55\linewidth]{../chapters/theory/figures/bias_var_degree.pdf}
+		\caption{Bias - variance decomposition of the MSE objective with iid. noise. Generalization error is denoted $E_{out}$, and is the sum of the Bias and Variance terms.}
+		\label{fig:bv}
+	\end{figure}
+	The quality of a model is measured by how well it does on data not seen during training, measured by $E_{out}$.
+\end{frame}
+
+\begin{frame}[t]{Implementing details}
+	Models implemented in Python with TensorFlow (TF), a ML framework developed by Google.
+	TensorFlow provided a base on which to build complex NN models.
+	Code written for this analyis includes 
+
+	\begin{enumerate}[I]
+		\item Abstraction for autoencoder networks,
+		\item Implementation of variations on the Variational Autoencoder,
+		\item Custom class implementations based on the high-level Keras API for deep clustering.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}[t]{Instability in clustering training}
+\centering 
+\includegraphics[width=\textwidth]{../chapters/results/clustering/plots/real_mixae.pdf}
+Several runs with the same hyperparameters.
+\end{frame}
+
+\note{
+	Perhaps the most curious result, not only the instability but the high Sample Entropy.
+}
 \end{document}
+
